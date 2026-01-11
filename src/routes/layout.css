@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-pumpkin-50: #faebe3;
+  --color-pumpkin-100: #f6d8c8;
+  --color-pumpkin-200: #edb494;
+  --color-pumpkin-300: #e59061;
+  --color-pumpkin-400: #d35400;
+  --color-pumpkin-500: #d35400;
+  --color-pumpkin-600: #a94300;
+  --color-pumpkin-700: #7f3200;
+  --color-pumpkin-800: #542100;
+  --color-pumpkin-900: #2a1100;
+
+  --font-serif: "Cinzel", serif;
+  --font-sans: "Lato", sans-serif;
+}
+
+body {
+  @apply bg-slate-900 text-slate-800 font-sans;
+}
