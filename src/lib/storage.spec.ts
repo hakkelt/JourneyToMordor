@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { loadData, saveData, addLog, deleteLog, resetData, STORAGE_KEY } from './storage';
+import { loadData, saveData, addLog, deleteLog, STORAGE_KEY } from './storage';
 
 // Mock localStorage
 const localStorageMock = (function () {

@@ -112,7 +112,7 @@
 							label: (context) => {
 								const yValue = context.parsed.y !== null ? context.parsed.y.toFixed(1) : '0.0';
 								let label = `${context.dataset.label}: ${yValue} km`;
-								const raw = context.raw as any;
+								const raw = context.raw as { label?: string };
 								if (raw && raw.label) {
 									label += ` (${raw.label})`;
 								}

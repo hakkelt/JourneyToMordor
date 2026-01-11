@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { LogEntry } from '$lib/storage';
-	import { LOCATIONS, type Milestone } from '$lib/data';
+	import { LOCATIONS } from '$lib/data';
 	import ProgressChart from './ProgressChart.svelte';
 
 	interface Props {
@@ -12,11 +12,6 @@
 
 	// Derived state
 	let totalDistance = $derived(logs.reduce((sum, log) => sum + log.distance, 0));
-
-	// Find current milestone (last one passed)
-	let currentMilestoneIndex = $derived(
-		[...LOCATIONS].reverse().findIndex((m) => totalDistance >= m.distance)
-	);
 
 	// reverse findIndex returns index from the end. We need index from start.
 	// Actually easier:

@@ -16,7 +16,7 @@
 		loaded = true;
 	});
 
-	function handleAddLog(entry: any) {
+	function handleAddLog(entry: Omit<LocalStorageSchema['logs'][number], 'id'>) {
 		const newData = addLog(entry);
 		data = newData;
 	}
