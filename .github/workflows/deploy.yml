@@ -1,0 +1,79 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Get Repository Name
+        id: repo-name
+        run: echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+
+      # --- Deploy Master (Dev) ---
+      - name: Build for Dev
+        if: github.ref == 'refs/heads/master'
+        env:
+          BASE_PATH: /${{ env.REPO_NAME }}/dev
+        run: bun run build
+
+      - name: Deploy Dev
+        if: github.ref == 'refs/heads/master'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build
+          target-folder: dev
+          clean: true
+
+      # --- Deploy Tag (Subfolder) ---
+      - name: Build for Tag
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          BASE_PATH: /${{ env.REPO_NAME }}/${{ github.ref_name }}
+        run: |
+          rm -rf build
+          bun run build
+
+      - name: Deploy Tag
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build
+          target-folder: ${{ github.ref_name }}
+          clean: true
+
+      # --- Deploy Root (Latest Tag) ---
+      - name: Build for Root
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          BASE_PATH: /${{ env.REPO_NAME }}
+        run: |
+          rm -rf build
+          bun run build
+
+      - name: Deploy Root
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build
+          target-folder: .
+          clean: true
+          clean-exclude: |
+            dev/
+            v*/
