@@ -80,15 +80,10 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
       <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-pumpkin-500">
         <div class="text-slate-500 text-xs font-bold uppercase tracking-wide mb-1">Total Distance</div>
         <div class="text-2xl font-bold text-slate-800">{totalDistance.toFixed(1)} <span class="text-sm font-normal text-slate-500">km</span></div>
-      </div>
-
-      <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
-        <div class="text-slate-500 text-xs font-bold uppercase tracking-wide mb-1">Progress</div>
-        <div class="text-2xl font-bold text-slate-800">{progressPercent.toFixed(1)}%</div>
       </div>
       
       <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-emerald-500">
@@ -97,7 +92,7 @@
       </div>
 
       <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500">
-        <div class="text-slate-500 text-xs font-bold uppercase tracking-wide mb-1">Remaining</div>
+        <div class="text-slate-500 text-xs font-bold uppercase tracking-wide mb-1">Remaining until next stop</div>
         <div class="text-2xl font-bold text-slate-800">
           {isFinished ? 'Done!' : `${distanceRemaining.toFixed(1)} km`}
         </div>

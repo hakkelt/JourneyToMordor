@@ -44,7 +44,7 @@
             bind:value={date}
             max={new Date().toISOString().split('T')[0]}
             required
-            class="w-full rounded-md border-slate-300 shadow-sm focus:border-pumpkin-500 focus:ring-pumpkin-500"
+            class="w-full rounded-md border-slate-300 shadow-sm focus:border-pumpkin-500 focus:ring-pumpkin-500 p-3"
           />
         </div>
         
@@ -58,7 +58,7 @@
             min="0.01"
             required
             placeholder="0.00"
-            class="w-full rounded-md border-slate-300 shadow-sm focus:border-pumpkin-500 focus:ring-pumpkin-500"
+            class="w-full rounded-md border-slate-300 shadow-sm focus:border-pumpkin-500 focus:ring-pumpkin-500 p-3"
           />
         </div>
       </div>
@@ -70,13 +70,13 @@
           id="note"
           bind:value={note}
           placeholder="Morning walk..."
-          class="w-full rounded-md border-slate-300 shadow-sm focus:border-pumpkin-500 focus:ring-pumpkin-500"
+          class="w-full rounded-md border-slate-300 shadow-sm focus:border-pumpkin-500 focus:ring-pumpkin-500 p-3"
         />
       </div>
 
       <button
         type="submit"
-        class="w-full bg-pumpkin-600 text-white py-2 px-4 rounded-md hover:bg-pumpkin-700 transition-colors font-medium"
+        class="block mx-auto bg-pumpkin-600 text-white py-2 px-8 rounded-md hover:bg-pumpkin-700 transition-colors font-medium"
       >
         Add Entry
       </button>

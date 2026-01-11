@@ -28,10 +28,8 @@
     const userDataPoints = sortedLogs.map(log => {
       const logDate = new Date(log.date);
       // Diff in days
-      const diffTime = Math.abs(logDate.getTime() - start.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Day 0 is start date? Or Day 1? 
-      // Frodo day 1 is start.
-      // Let's say startDate is Day 0, but user might log on Day 0.
+      const diffTime = logDate.getTime() - start.getTime();
+      const diffDays = diffTime / (1000 * 60 * 60 * 24); // Floating point days relative to start
       
       runningTotal += log.distance;
       return { x: diffDays, y: runningTotal };
@@ -45,7 +43,8 @@
     // 2. Process Frodo Data
     const frodoDataPoints = FRODO_JOURNEY.map(p => ({
       x: p.day,
-      y: p.totalDistance
+      y: p.totalDistance,
+      label: p.label
     }));
 
     return {
@@ -82,7 +81,7 @@
         responsive: true,
         maintainAspectRatio: false,
         interaction: {
-            mode: 'index',
+            mode: 'nearest', // Only show the closest point (separate tooltips)
             intersect: false,
         },
         scales: {
@@ -108,7 +107,15 @@
           },
           tooltip: {
              callbacks: {
-                 label: (context) => `${context.dataset.label}: ${context.parsed.y.toFixed(1)} km`
+                 label: (context) => {
+                    const yValue = context.parsed.y !== null ? context.parsed.y.toFixed(1) : '0.0';
+                    let label = `${context.dataset.label}: ${yValue} km`;
+                    const raw = context.raw as any;
+                    if (raw && raw.label) {
+                        label += ` (${raw.label})`;
+                    }
+                    return label;
+                 }
              }
           }
         }

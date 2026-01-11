@@ -57,12 +57,19 @@ export function addLog(entry: Omit<LogEntry, 'id'>): LocalStorageSchema {
     id: Date.now()
   };
   
+  // Check if new entry is before current start date
+  let newStartDate = current.userProfile.startDate;
+  if (entry.date < newStartDate) {
+    newStartDate = entry.date;
+  }
+  
   // Update last login implicitly? Or just update logs
   const updated: LocalStorageSchema = {
     ...current,
     logs: [newEntry, ...current.logs],
     userProfile: {
       ...current.userProfile,
+      startDate: newStartDate,
       lastLogin: new Date().toISOString().split('T')[0]
     }
   };
