@@ -5,13 +5,23 @@
 
 	interface Props {
 		logs: LogEntry[];
+		unit?: 'km' | 'miles';
 		onNavigate?: (tab: 'dashboard' | 'log') => void;
+		onUnitChange?: (unit: 'km' | 'miles') => void;
 	}
 
-	let { logs, onNavigate }: Props = $props();
+	let { logs, unit = 'km', onNavigate, onUnitChange }: Props = $props();
 
 	// Derived state
 	let totalDistance = $derived(logs.reduce((sum, log) => sum + log.distance, 0));
+
+	// Display helpers
+	const KM_TO_MILES = 0.621371;
+	function formatDist(km: number): string {
+		if (unit === 'miles') return (km * KM_TO_MILES).toFixed(1);
+		return km.toFixed(1);
+	}
+	let unitLabel = $derived(unit === 'miles' ? 'miles' : 'km');
 
 	// reverse findIndex returns index from the end. We need index from start.
 	// Actually easier:
@@ -40,6 +50,7 @@
 	{#if logs.length === 0}
 		<div class="rounded-lg border-t-4 border-pumpkin-500 bg-white p-8 text-center shadow-md">
 			<h2 class="mb-4 font-serif text-3xl text-slate-800">Welcome, Ringbearer</h2>
+
 			<div class="mb-8 space-y-4 text-left text-lg text-slate-600">
 				<p>
 					The <strong>Walking to Mordor</strong> challenge is the ultimate virtual fitness journey
@@ -53,8 +64,8 @@
 				<p>
 					While Frodo's journey took roughly <strong>six months (185 days)</strong>—from leaving the
 					Shire on September 23rd to the destruction of the Ring on March 25th—you can complete this
-					challenge at your own pace. Every kilometer you log tracks your progress across
-					Middle-earth.
+					challenge at your own pace. Every {unit === 'miles' ? 'mile' : 'kilometer'} you log tracks your
+					progress across Middle-earth.
 				</p>
 			</div>
 
@@ -71,7 +82,7 @@
 							onclick={() => onNavigate?.('log')}>Log Journey</button
 						> tab.
 					</li>
-					<li>Enter your daily walking or running distance.</li>
+					<li>Enter your daily distance (in {unitLabel}).</li>
 					<li>Watch your progress on the map and try to keep up with Frodo!</li>
 				</ol>
 			</div>
@@ -105,7 +116,8 @@
 					Total Distance
 				</div>
 				<div class="text-2xl font-bold text-slate-800">
-					{totalDistance.toFixed(1)} <span class="text-sm font-normal text-slate-500">km</span>
+					{formatDist(totalDistance)}
+					<span class="text-sm font-normal text-slate-500">{unitLabel}</span>
 				</div>
 			</div>
 
@@ -121,7 +133,7 @@
 					Remaining until next stop
 				</div>
 				<div class="text-2xl font-bold text-slate-800">
-					{isFinished ? 'Done!' : `${distanceRemaining.toFixed(1)} km`}
+					{isFinished ? 'Done!' : `${formatDist(distanceRemaining)} ${unitLabel}`}
 				</div>
 			</div>
 		</div>
@@ -157,7 +169,7 @@
 		<!-- Progress Chart -->
 		<div class="mt-8">
 			<h3 class="mb-4 font-serif text-xl text-slate-800">You vs Frodo</h3>
-			<ProgressChart {logs} />
+			<ProgressChart {logs} {unit} />
 		</div>
 
 		<!-- Challenge Info -->

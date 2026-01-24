@@ -3,23 +3,32 @@
 
 	interface Props {
 		logs: LogEntry[];
+		unit?: 'km' | 'miles';
 		onAdd: (entry: Omit<LogEntry, 'id'>) => void;
 		onDelete: (id: number) => void;
 	}
 
-	let { logs, onAdd, onDelete }: Props = $props();
+	let { logs, unit = 'km', onAdd, onDelete }: Props = $props();
 
 	let date = $state(new Date().toISOString().split('T')[0]);
 	let distance = $state<number | null>(null);
 	let note = $state('');
 
+	const MILES_TO_KM = 1.60934;
+	const KM_TO_MILES = 0.621371;
+
 	function handleSubmit(e: Event) {
 		e.preventDefault();
 		if (!distance || distance <= 0) return;
 
+		let distanceInKm = distance;
+		if (unit === 'miles') {
+			distanceInKm = distance * MILES_TO_KM;
+		}
+
 		onAdd({
 			date,
-			distance,
+			distance: distanceInKm,
 			note
 		});
 
@@ -27,6 +36,11 @@
 		date = new Date().toISOString().split('T')[0];
 		distance = null;
 		note = '';
+	}
+
+	function formatDist(km: number): string {
+		if (unit === 'miles') return (km * KM_TO_MILES).toFixed(2);
+		return km.toFixed(2);
 	}
 </script>
 
@@ -50,7 +64,7 @@
 
 				<div>
 					<label for="distance" class="mb-1 block text-sm font-medium text-slate-700"
-						>Distance (km)</label
+						>Distance ({unit === 'miles' ? 'miles' : 'km'})</label
 					>
 					<input
 						type="number"
@@ -98,7 +112,9 @@
 					<thead>
 						<tr class="border-b border-slate-200">
 							<th class="pb-2 font-medium text-slate-600">Date</th>
-							<th class="pb-2 font-medium text-slate-600">Distance</th>
+							<th class="pb-2 font-medium text-slate-600"
+								>Distance ({unit === 'miles' ? 'miles' : 'km'})</th
+							>
 							<th class="pb-2 font-medium text-slate-600">Note</th>
 							<th class="w-10 pb-2 font-medium text-slate-600"></th>
 						</tr>
@@ -107,7 +123,9 @@
 						{#each logs as log (log.id)}
 							<tr>
 								<td class="py-3 text-slate-800">{log.date}</td>
-								<td class="py-3 text-slate-800">{log.distance} km</td>
+								<td class="py-3 text-slate-800"
+									>{formatDist(log.distance)} {unit === 'miles' ? 'miles' : 'km'}</td
+								>
 								<td class="py-3 text-slate-600">{log.note || '-'}</td>
 								<td class="py-3 text-right">
 									<button

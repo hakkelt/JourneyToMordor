@@ -1,5 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { loadData, saveData, addLog, deleteLog, getStartDate, STORAGE_KEY } from './storage';
+import {
+	loadData,
+	saveData,
+	addLog,
+	deleteLog,
+	setUnit,
+	getStartDate,
+	STORAGE_KEY
+} from './storage';
 
 // Mock localStorage
 const localStorageMock = (function () {
@@ -37,7 +45,8 @@ describe('Storage', () => {
 
 	it('should save data correctly', () => {
 		const data = {
-			logs: []
+			logs: [],
+			unit: 'km' as const
 		};
 		saveData(data);
 		expect(localStorageMock.setItem).toHaveBeenCalledWith(STORAGE_KEY, JSON.stringify(data));
@@ -45,7 +54,8 @@ describe('Storage', () => {
 
 	it('should load saved data', () => {
 		const saved = {
-			logs: [{ id: 123, date: '2023-01-01', distance: 5 }]
+			logs: [{ id: 123, date: '2023-01-01', distance: 5 }],
+			unit: 'km' as const
 		};
 		localStorageMock.setItem(STORAGE_KEY, JSON.stringify(saved));
 
@@ -99,5 +109,77 @@ describe('Storage', () => {
 	it('getStartDate should return today if no logs', () => {
 		const today = new Date().toISOString().split('T')[0];
 		expect(getStartDate([])).toBe(today);
+	});
+
+	// Unit Selection Tests
+	describe('Unit Selection', () => {
+		it('should default to km when loading empty storage', () => {
+			const data = loadData();
+			expect(data.unit).toBe('km');
+		});
+
+		it('should set unit to miles', () => {
+			const result = setUnit('miles');
+			expect(result.unit).toBe('miles');
+
+			const loaded = loadData();
+			expect(loaded.unit).toBe('miles');
+		});
+
+		it('should set unit to km', () => {
+			// First set to miles
+			setUnit('miles');
+
+			// Then set back to km
+			const result = setUnit('km');
+			expect(result.unit).toBe('km');
+
+			const loaded = loadData();
+			expect(loaded.unit).toBe('km');
+		});
+
+		it('should persist unit preference across operations', () => {
+			// Set unit to miles
+			setUnit('miles');
+
+			// Add a log entry
+			const entry = { date: '2023-01-01', distance: 10, note: 'Run' };
+			const result = addLog(entry);
+
+			// Unit should still be miles
+			expect(result.unit).toBe('miles');
+
+			const loaded = loadData();
+			expect(loaded.unit).toBe('miles');
+		});
+
+		it('should preserve logs when changing unit', () => {
+			// Add some logs
+			addLog({ date: '2023-01-01', distance: 5, note: 'Walk' });
+			addLog({ date: '2023-01-02', distance: 10, note: 'Run' });
+
+			const beforeChange = loadData();
+			expect(beforeChange.logs).toHaveLength(2);
+
+			// Change unit
+			const result = setUnit('miles');
+
+			// Logs should be preserved
+			expect(result.logs).toHaveLength(2);
+			expect(result.logs[0].distance).toBe(10); // Distance stored in km should not change
+			expect(result.logs[1].distance).toBe(5);
+		});
+
+		it('should handle unit in old schema migration', () => {
+			const oldData = {
+				logs: [{ id: 123, date: '2023-01-05', distance: 5 }]
+				// No unit property
+			};
+			localStorageMock.setItem(STORAGE_KEY, JSON.stringify(oldData));
+
+			const loaded = loadData();
+			expect(loaded.unit).toBe('km'); // Should default to km
+			expect(loaded.logs).toEqual(oldData.logs);
+		});
 	});
 });

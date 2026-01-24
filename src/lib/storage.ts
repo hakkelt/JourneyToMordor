@@ -7,12 +7,14 @@ export interface LogEntry {
 
 export interface LocalStorageSchema {
 	logs: LogEntry[];
+	unit: 'km' | 'miles';
 }
 
 export const STORAGE_KEY = 'mordor_tracker_v1';
 
 export const DEFAULT_STATE: LocalStorageSchema = {
-	logs: []
+	logs: [],
+	unit: 'km'
 };
 
 // Helper to ensure we're in the browser
@@ -58,6 +60,7 @@ export function addLog(entry: Omit<LogEntry, 'id'>): LocalStorageSchema {
 	};
 
 	const updated: LocalStorageSchema = {
+		...current,
 		logs: [newEntry, ...current.logs]
 	};
 
@@ -68,7 +71,18 @@ export function addLog(entry: Omit<LogEntry, 'id'>): LocalStorageSchema {
 export function deleteLog(id: number): LocalStorageSchema {
 	const current = loadData();
 	const updated: LocalStorageSchema = {
+		...current,
 		logs: current.logs.filter((log) => log.id !== id)
+	};
+	saveData(updated);
+	return updated;
+}
+
+export function setUnit(unit: 'km' | 'miles'): LocalStorageSchema {
+	const current = loadData();
+	const updated: LocalStorageSchema = {
+		...current,
+		unit
 	};
 	saveData(updated);
 	return updated;

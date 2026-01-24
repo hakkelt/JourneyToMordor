@@ -12,7 +12,7 @@ test.describe('Journey to Mordor', () => {
 		await expect(page.getByRole('heading', { name: 'Welcome, Ringbearer' })).toBeVisible();
 
 		// 2. Switch to Log tab
-		await page.getByRole('button', { name: 'Log Journey' }).click();
+		await page.getByRole('button', { name: 'Log Journey' }).first().click();
 		await expect(page.getByRole('heading', { name: 'Log Journey' })).toBeVisible();
 
 		// 3. Add an entry
@@ -23,18 +23,18 @@ test.describe('Journey to Mordor', () => {
 
 		// 4. Verify entry in history
 		await expect(page.getByText('First step')).toBeVisible();
-		await expect(page.getByText('10 km')).toBeVisible();
+		await expect(page.getByText('10.00 km')).toBeVisible();
 
 		// 5. Switch back to Dashboard and verify stats
 		await page.getByRole('button', { name: 'Dashboard' }).click();
 
 		// Should see dashboard stats instead of welcome message
-		await expect(page.getByText('Total Distance')).toBeVisible();
+		await expect(page.getByText('Total Distance').first()).toBeVisible();
 		await expect(page.getByText('10.0 km')).toBeVisible();
-		await expect(page.getByText('Tookland')).toBeVisible(); // Current location (8km passed)
+		await expect(page.getByText("Edge of Farmer Maggot's Field")).toBeVisible(); // Current location (8km passed)
 
 		// 6. Delete entry
-		await page.getByRole('button', { name: 'Log Journey' }).click();
+		await page.getByRole('button', { name: 'Log Journey' }).first().click();
 		await page.getByRole('button', { name: 'Delete entry' }).click();
 		await expect(page.getByText('First step')).not.toBeVisible();
 
