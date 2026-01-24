@@ -57,7 +57,7 @@
 		<!-- Content -->
 		<div>
 			{#if activeTab === 'dashboard'}
-				<Dashboard logs={data.logs} />
+				<Dashboard logs={data.logs} onNavigate={(tab) => (activeTab = tab)} />
 			{:else}
 				<ActivityLog logs={data.logs} onAdd={handleAddLog} onDelete={handleDeleteLog} />
 			{/if}

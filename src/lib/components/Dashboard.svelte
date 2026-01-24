@@ -5,9 +5,10 @@
 
 	interface Props {
 		logs: LogEntry[];
+		onNavigate?: (tab: 'dashboard' | 'log') => void;
 	}
 
-	let { logs }: Props = $props();
+	let { logs, onNavigate }: Props = $props();
 
 	// Derived state
 	let totalDistance = $derived(logs.reduce((sum, log) => sum + log.distance, 0));
@@ -39,17 +40,39 @@
 	{#if logs.length === 0}
 		<div class="rounded-lg border-t-4 border-pumpkin-500 bg-white p-8 text-center shadow-md">
 			<h2 class="mb-4 font-serif text-3xl text-slate-800">Welcome, Ringbearer</h2>
-			<p class="mb-6 text-lg text-slate-600">
-				Your journey from the Shire to Mordor begins with a single step. Track your daily walking or
-				running distance to advance towards the fires of Mount Doom.
-			</p>
+			<div class="mb-8 space-y-4 text-left text-lg text-slate-600">
+				<p>
+					The <strong>Walking to Mordor</strong> challenge is the ultimate virtual fitness journey
+					for Middle-earth fans. Based on the epic quest of Frodo and Sam in
+					<em>The Lord of the Rings</em>, this challenge tasks you with covering the entire distance
+					from their doorstep in Bag End to the fiery chasm of Mount Doom.
+				</p>
+				<p class="py-2 text-center text-xl font-bold text-slate-800">
+					Total Distance: ~1,784 miles (2,871 km)
+				</p>
+				<p>
+					While Frodo's journey took roughly <strong>six months (185 days)</strong>—from leaving the
+					Shire on September 23rd to the destruction of the Ring on March 25th—you can complete this
+					challenge at your own pace. Every kilometer you log tracks your progress across
+					Middle-earth.
+				</p>
+			</div>
 
-			<div class="mx-auto mb-8 max-w-md rounded-md bg-slate-50 p-4 text-left">
-				<h3 class="mb-2 font-bold text-slate-700">How it works:</h3>
-				<ol class="list-decimal space-y-2 pl-5 text-slate-600">
-					<li>Go to the <strong>Log</strong> tab.</li>
-					<li>Enter your daily distance (in km).</li>
-					<li>Watch your progress on the map and compare your pace with Frodo's.</li>
+			<div
+				class="mx-auto mb-10 max-w-2xl rounded-xl border border-slate-200 bg-slate-50 p-8 text-left shadow-sm"
+			>
+				<h3 class="mb-6 font-serif text-2xl font-bold text-slate-800">
+					How to Join the Fellowship:
+				</h3>
+				<ol class="list-decimal space-y-4 pl-6 text-lg text-slate-700">
+					<li>
+						Navigate to the <button
+							class="inline font-bold text-pumpkin-600 hover:text-pumpkin-700 hover:underline"
+							onclick={() => onNavigate?.('log')}>Log Journey</button
+						> tab.
+					</li>
+					<li>Enter your daily walking or running distance.</li>
+					<li>Watch your progress on the map and try to keep up with Frodo!</li>
 				</ol>
 			</div>
 
@@ -135,6 +158,46 @@
 		<div class="mt-8">
 			<h3 class="mb-4 font-serif text-xl text-slate-800">You vs Frodo</h3>
 			<ProgressChart {logs} />
+		</div>
+
+		<!-- Challenge Info -->
+		<div class="mt-12 border-t border-slate-200 pt-6">
+			<details class="group">
+				<summary
+					class="flex cursor-pointer list-none items-center justify-between font-serif text-lg font-bold text-slate-700"
+				>
+					<span>About the Challenge</span>
+					<span class="transition group-open:rotate-180">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="h-6 w-6"
+						>
+							<path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+						</svg>
+					</span>
+				</summary>
+				<div class="mt-4 space-y-4 text-slate-600">
+					<p>
+						The <strong>Walking to Mordor</strong> challenge is the ultimate virtual fitness journey
+						for Middle-earth fans. Based on the epic quest of Frodo and Sam in
+						<em>The Lord of the Rings</em>, this challenge tasks you with covering the entire
+						distance from their doorstep in Bag End to the fiery chasm of Mount Doom.
+					</p>
+					<p>
+						<strong>Total Distance:</strong> ~1,784 miles (2,871 km)
+					</p>
+					<p>
+						While Frodo's journey took roughly <strong>six months (185 days)</strong>—from leaving
+						the Shire on September 23rd to the destruction of the Ring on March 25th—you can
+						complete this challenge at your own pace. Every kilometer you log tracks your progress
+						across Middle-earth.
+					</p>
+				</div>
+			</details>
 		</div>
 	{/if}
 </div>
