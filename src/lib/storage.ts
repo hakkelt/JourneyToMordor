@@ -78,6 +78,26 @@ export function deleteLog(id: number): LocalStorageSchema {
 	return updated;
 }
 
+export function deleteAllLogs(): LocalStorageSchema {
+	const current = loadData();
+	const updated: LocalStorageSchema = {
+		...current,
+		logs: []
+	};
+	saveData(updated);
+	return updated;
+}
+
+export function importLogs(newLogs: LogEntry[]): LocalStorageSchema {
+	const current = loadData();
+	const updated: LocalStorageSchema = {
+		...current,
+		logs: newLogs
+	};
+	saveData(updated);
+	return updated;
+}
+
 export function setUnit(unit: 'km' | 'miles'): LocalStorageSchema {
 	const current = loadData();
 	const updated: LocalStorageSchema = {

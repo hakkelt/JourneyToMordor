@@ -1,14 +1,17 @@
 <script lang="ts">
 	import type { LogEntry } from '$lib/storage';
+	import { convertToCSV, downloadCSV, parseCSV } from '$lib/csv';
 
 	interface Props {
 		logs: LogEntry[];
 		unit?: 'km' | 'miles';
 		onAdd: (entry: Omit<LogEntry, 'id'>) => void;
 		onDelete: (id: number) => void;
+		onDeleteAll: () => void;
+		onImport: (logs: LogEntry[]) => void;
 	}
 
-	let { logs, unit = 'km', onAdd, onDelete }: Props = $props();
+	let { logs, unit = 'km', onAdd, onDelete, onDeleteAll, onImport }: Props = $props();
 
 	let date = $state(new Date().toISOString().split('T')[0]);
 	let distance = $state<number | null>(null);
@@ -42,7 +45,114 @@
 		if (unit === 'miles') return (km * KM_TO_MILES).toFixed(2);
 		return km.toFixed(2);
 	}
+
+	function handleDownloadCSV() {
+		const csvContent = convertToCSV(logs, unit);
+		const timestamp = new Date().toISOString().split('T')[0];
+		downloadCSV(csvContent, `journey-to-mordor-${timestamp}.csv`);
+	}
+
+	let fileInput: HTMLInputElement;
+	let showDeleteConfirm = $state(false);
+	let showImportConfirm = $state(false);
+	let pendingImportLogs = $state<LogEntry[]>([]);
+	let importError = $state<string | null>(null);
+
+	function triggerImport() {
+		fileInput.click();
+	}
+
+	async function handleFileSelect(e: Event) {
+		const target = e.target as HTMLInputElement;
+		if (!target.files || target.files.length === 0) return;
+
+		const file = target.files[0];
+		try {
+			const text = await file.text();
+			const parsed = parseCSV(text);
+
+			if (logs.length > 0) {
+				pendingImportLogs = parsed;
+				importError = null;
+				showImportConfirm = true;
+			} else {
+				onImport(parsed);
+			}
+		} catch (err) {
+			console.error(err);
+			importError = (err as Error).message || 'Failed to parse CSV';
+			alert(`Error importing CSV: ${importError}`);
+		} finally {
+			// Reset input so same file can be selected again if needed
+			target.value = '';
+		}
+	}
+
+	function confirmImport() {
+		onImport(pendingImportLogs);
+		showImportConfirm = false;
+		pendingImportLogs = [];
+	}
+
+	function confirmDeleteAll() {
+		onDeleteAll();
+		showDeleteConfirm = false;
+	}
 </script>
+
+<input type="file" accept=".csv" class="hidden" bind:this={fileInput} onchange={handleFileSelect} />
+
+{#if showDeleteConfirm}
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+			<h3 class="mb-2 text-xl font-bold text-red-600">Warning: Data Loss</h3>
+			<p class="mb-6 text-slate-600">
+				Are you sure you want to delete ALL log entries? This action cannot be undone.
+			</p>
+			<div class="flex justify-end gap-3">
+				<button
+					class="rounded-md border border-slate-300 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50"
+					onclick={() => (showDeleteConfirm = false)}
+				>
+					Cancel
+				</button>
+				<button
+					class="rounded-md bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700"
+					onclick={confirmDeleteAll}
+				>
+					Delete All
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
+{#if showImportConfirm}
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+			<h3 class="mb-2 text-xl font-bold text-pumpkin-600">Confirm Import</h3>
+			<p class="mb-4 text-slate-600">
+				Importing will <strong>replace</strong> your current history with
+				<strong>{pendingImportLogs.length}</strong> entries.
+			</p>
+			<p class="mb-6 text-sm text-slate-500">Current data will be lost.</p>
+			<div class="flex justify-end gap-3">
+				<button
+					class="rounded-md border border-slate-300 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50"
+					onclick={() => (showImportConfirm = false)}
+				>
+					Cancel
+				</button>
+				<button
+					class="rounded-md bg-pumpkin-600 px-4 py-2 font-medium text-white hover:bg-pumpkin-700"
+					onclick={confirmImport}
+				>
+					Import Data
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <div class="space-y-8">
 	<div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
@@ -102,7 +212,76 @@
 	</div>
 
 	<div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-		<h2 class="mb-4 font-serif text-2xl text-slate-800">History</h2>
+		<div class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+			<h2 class="font-serif text-2xl text-slate-800">History</h2>
+			<div class="flex flex-wrap gap-2 text-sm text-slate-700">
+				<button
+					onclick={triggerImport}
+					class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-pumpkin-600"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="h-4 w-4"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+						/>
+					</svg>
+					Import CSV
+				</button>
+
+				{#if logs.length > 0}
+					<button
+						onclick={handleDownloadCSV}
+						class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-pumpkin-600"
+						aria-label="Download log entries as CSV"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="h-4 w-4"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+							/>
+						</svg>
+						Download CSV
+					</button>
+
+					<button
+						onclick={() => (showDeleteConfirm = true)}
+						class="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-1.5 font-medium text-red-700 transition-colors hover:bg-red-100"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="h-4 w-4"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+							/>
+						</svg>
+						Delete All
+					</button>
+				{/if}
+			</div>
+		</div>
 
 		{#if logs.length === 0}
 			<p class="py-4 text-center text-slate-500 italic">No entries yet. Start your journey!</p>

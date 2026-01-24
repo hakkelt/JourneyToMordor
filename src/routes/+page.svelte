@@ -1,6 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { loadData, addLog, deleteLog, setUnit, type LocalStorageSchema } from '$lib/storage';
+	import {
+		loadData,
+		addLog,
+		deleteLog,
+		deleteAllLogs,
+		importLogs,
+		setUnit,
+		type LocalStorageSchema,
+		type LogEntry
+	} from '$lib/storage';
 	import Dashboard from '$lib/components/Dashboard.svelte';
 	import ActivityLog from '$lib/components/ActivityLog.svelte';
 
@@ -23,6 +32,16 @@
 
 	function handleDeleteLog(id: number) {
 		const newData = deleteLog(id);
+		data = newData;
+	}
+
+	function handleDeleteAll() {
+		const newData = deleteAllLogs();
+		data = newData;
+	}
+
+	function handleImport(logs: LogEntry[]) {
+		const newData = importLogs(logs);
 		data = newData;
 	}
 
@@ -102,6 +121,8 @@
 					unit={data.unit}
 					onAdd={handleAddLog}
 					onDelete={handleDeleteLog}
+					onDeleteAll={handleDeleteAll}
+					onImport={handleImport}
 				/>
 			{/if}
 		</div>

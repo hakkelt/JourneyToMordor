@@ -7,10 +7,9 @@
 		logs: LogEntry[];
 		unit?: 'km' | 'miles';
 		onNavigate?: (tab: 'dashboard' | 'log') => void;
-		onUnitChange?: (unit: 'km' | 'miles') => void;
 	}
 
-	let { logs, unit = 'km', onNavigate, onUnitChange }: Props = $props();
+	let { logs, unit = 'km', onNavigate }: Props = $props();
 
 	// Derived state
 	let totalDistance = $derived(logs.reduce((sum, log) => sum + log.distance, 0));
