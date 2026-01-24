@@ -45,7 +45,7 @@ export const LOCATIONS: Milestone[] = [
 		name: 'Three-Farthing Stone',
 		distance: 7,
 		image:
-			'https://lotro-wiki.com/images/thumb/b/b6/Three_Farthing_Stone.jpg/800px-Three_Farthing_Stone.jpg?20241003063204',
+			'https://bookstr.com/wp-content/uploads/2022/12/sam-frodo-768x320.jpeg',
 		quote: 'The center point of the Shire.'
 	},
 	{
@@ -93,8 +93,8 @@ export const LOCATIONS: Milestone[] = [
 		id: 9,
 		name: 'Midgewater Marshes',
 		distance: 145,
-		image: '',
-		quote: 'Biting midges and wet feet.'
+		image: 'https://bookstr.com/wp-content/uploads/2022/12/second-breakfast-merry-pippin-768x324.jpeg',
+		quote: 'But what about second breakfast?'
 	},
 	{
 		id: 10,
@@ -108,21 +108,21 @@ export const LOCATIONS: Milestone[] = [
 		id: 11,
 		name: 'The Last Bridge',
 		distance: 263,
-		image: '',
+		image: 'https://tolkiengateway.net/w/images/9/91/Soni_Alcorn-Hender_-_Mitheithel_Bridge.jpg',
 		quote: 'Crossing the River Hoarwell.'
 	},
 	{
 		id: 12,
 		name: 'The Stone Trolls',
 		distance: 308,
-		image: '',
+		image: 'https://static.wikia.nocookie.net/lotr/images/d/d5/StonedTrolls2.jpg/revision/latest?cb=20130113164527',
 		quote: 'Bert, Tom, and William (turned to stone).'
 	},
 	{
 		id: 13,
 		name: 'Ford of Bruinen',
 		distance: 397,
-		image: '',
+		image: 'https://tolkiengateway.net/w/images/thumb/d/d3/Rob_Alexander_-_The_Wizards_River_Horses.jpg/1200px-Rob_Alexander_-_The_Wizards_River_Horses.jpg',
 		quote: 'The flood washes the Ringwraiths away.'
 	},
 	{
@@ -139,14 +139,14 @@ export const LOCATIONS: Milestone[] = [
 		id: 15,
 		name: 'Hollin Ridge',
 		distance: 585,
-		image: '',
+		image: 'https://scontent-vie1-1.xx.fbcdn.net/v/t39.30808-6/515674425_24477414505198733_3269595898502750967_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=5dRPBlP6VmUQ7kNvwEgjSl8&_nc_oc=Adlt6513jU_gJbJ3pltPQOKub1-Z12oHeXyGaes6Lp99NnVdqwVhKMxDm7wJ1zh3aLuFUpCeQ2BjTkkprRfjwE7w&_nc_zt=23&_nc_ht=scontent-vie1-1.xx&_nc_gid=IUHoqdmBeKXTqG3X4JB9Lg&oh=00_Afp_t2Fr_5Q6_jWxaYdny5z0TR1qg36ghKe4edzzpSh5Lw&oe=696D3503',
 		quote: 'Wargs howl in the distance.'
 	},
 	{
 		id: 16,
 		name: 'Redhorn Pass',
 		distance: 633,
-		image: '',
+		image: 'https://static.wikia.nocookie.net/lotr/images/a/a4/Caradhras.png/revision/latest?cb=20190428175521',
 		quote: 'Defeated by the snows of Caradhras.'
 	},
 	{
@@ -161,14 +161,14 @@ export const LOCATIONS: Milestone[] = [
 		id: 18,
 		name: "Moria (Durin's Bridge)",
 		distance: 800,
-		image: '',
+		image: 'https://tolkiengateway.net/w/images/1/1b/Alan_Lee_-_The_Bridge_of_Khazad-dum.jpg',
 		quote: 'You shall not pass!'
 	},
 	{
 		id: 19,
 		name: 'Dimrill Dale',
 		distance: 805,
-		image: '',
+		image: 'https://storage.googleapis.com/moviemaps/img/34x.1yihi.940.jpg',
 		quote: 'Mourning Gandalf outside the East Gate.'
 	},
 
@@ -177,21 +177,21 @@ export const LOCATIONS: Milestone[] = [
 		id: 20,
 		name: 'Lothlórien (Caras Galadhon)',
 		distance: 920,
-		image: 'https://upload.wikimedia.org/wikipedia/zh/3/31/Lothl%C3%B3rien.jpg',
+		image: 'https://static.wikia.nocookie.net/lotr/images/e/e1/Tara_Rueping_-_Lothlorien.jpg/revision/latest?cb=20160108151538',
 		quote: "The Lady Galadriel's mirror."
 	},
 	{
 		id: 21,
 		name: 'The Great River',
 		distance: 1000,
-		image: '',
+		image: 'https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2Fmpxy7blyq6q41.jpg',
 		quote: 'Paddling down the Anduin.'
 	},
 	{
 		id: 22,
 		name: 'The Brown Lands',
 		distance: 1100,
-		image: '',
+		image: 'https://tolkiengateway.net/w/images/thumb/4/41/%C5%A0%C3%A1rka_%C5%A0korp%C3%ADkov%C3%A1_-_Rhovanion_-_The_Brown_Lands.jpg/800px-%C5%A0%C3%A1rka_%C5%A0korp%C3%ADkov%C3%A1_-_Rhovanion_-_The_Brown_Lands.jpg',
 		quote: 'Desolate lands stripped by Sauron long ago.'
 	},
 	{
@@ -215,7 +215,7 @@ export const LOCATIONS: Milestone[] = [
 		id: 25,
 		name: 'Emyn Muil',
 		distance: 1329,
-		image: '',
+		image: 'https://tolkiengateway.net/w/images/c/c6/Ted_Nasmith_-_No_Way_Down.jpg',
 		quote: 'Lost in the razor-sharp rocks. Met Gollum.'
 	},
 	{
@@ -237,14 +237,14 @@ export const LOCATIONS: Milestone[] = [
 		id: 28,
 		name: 'Henneth Annûn',
 		distance: 1615,
-		image: '',
+		image: 'https://tolkiengateway.net/w/images/0/03/Ted_Nasmith_-_Henneth_Ann%C3%BBn.jpg',
 		quote: "Faramir's secret hideout."
 	},
 	{
 		id: 29,
 		name: 'The Cross-roads',
 		distance: 1650,
-		image: '',
+		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0x_t0ESIlgydxYAG8OkKJ02ygq6RGjbpEiQ&s',
 		quote: 'The fallen statue of the King.'
 	},
 	{
@@ -261,28 +261,28 @@ export const LOCATIONS: Milestone[] = [
 		id: 31,
 		name: 'Cirith Ungol Stairs',
 		distance: 1675,
-		image: '',
+		image: 'https://tolkiengateway.net/w/images/f/ff/Ted_Nasmith_-_The_Tower_of_the_Moon.jpg',
 		quote: 'Climbing the vertical stairs.'
 	},
 	{
 		id: 32,
 		name: "Shelob's Lair",
 		distance: 1680,
-		image: '',
+		image: 'https://i0.wp.com/theroadlotr.wordpress.com/wp-content/uploads/2019/07/ffg-toroch-ungol.jpg?fit=1200%2C876&ssl=1',
 		quote: 'Stung by the spider. Sam fights back.'
 	},
 	{
 		id: 33,
 		name: 'Tower of Cirith Ungol',
 		distance: 1690,
-		image: '',
+		image: 'https://tolkiengateway.net/w/images/6/66/Alan_Lee_-_Cirith_Ungol.jpg',
 		quote: 'Sam rescues Frodo from the orcs.'
 	},
 	{
 		id: 34,
 		name: 'The Isenmouthe',
 		distance: 1740,
-		image: '',
+		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPn3tIuis1GTFwRW-Bpk2e588WOiyIQ4zrVA&s',
 		quote: 'Dodging orc armies on the road to Doom.'
 	},
 	{

@@ -41,7 +41,7 @@
 		<div class="rounded-lg border-t-4 border-pumpkin-500 bg-white p-8 text-center shadow-md">
 			<h2 class="mb-4 font-serif text-3xl text-slate-800">Welcome, Ringbearer</h2>
 			<p class="mb-6 text-lg text-slate-600">
-				Your journey from the Shire to Mount Mordor begins with a single step. Track your daily
+				Your journey from the Shire to Mordor begins with a single step. Track your daily
 				walking or running distance to advance towards the fires of Mount Doom.
 			</p>
 
