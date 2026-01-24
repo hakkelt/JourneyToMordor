@@ -5,7 +5,6 @@
 	import ActivityLog from '$lib/components/ActivityLog.svelte';
 
 	let data = $state<LocalStorageSchema>({
-		userProfile: { startDate: new Date().toISOString(), lastLogin: '' },
 		logs: []
 	});
 	let activeTab = $state<'dashboard' | 'log'>('dashboard');
@@ -58,7 +57,7 @@
 		<!-- Content -->
 		<div>
 			{#if activeTab === 'dashboard'}
-				<Dashboard logs={data.logs} startDate={data.userProfile.startDate} />
+				<Dashboard logs={data.logs} />
 			{:else}
 				<ActivityLog logs={data.logs} onAdd={handleAddLog} onDelete={handleDeleteLog} />
 			{/if}

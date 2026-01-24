@@ -5,10 +5,9 @@
 
 	interface Props {
 		logs: LogEntry[];
-		startDate: string;
 	}
 
-	let { logs, startDate }: Props = $props();
+	let { logs }: Props = $props();
 
 	// Derived state
 	let totalDistance = $derived(logs.reduce((sum, log) => sum + log.distance, 0));
@@ -41,8 +40,8 @@
 		<div class="rounded-lg border-t-4 border-pumpkin-500 bg-white p-8 text-center shadow-md">
 			<h2 class="mb-4 font-serif text-3xl text-slate-800">Welcome, Ringbearer</h2>
 			<p class="mb-6 text-lg text-slate-600">
-				Your journey from the Shire to Mordor begins with a single step. Track your daily
-				walking or running distance to advance towards the fires of Mount Doom.
+				Your journey from the Shire to Mordor begins with a single step. Track your daily walking or
+				running distance to advance towards the fires of Mount Doom.
 			</p>
 
 			<div class="mx-auto mb-8 max-w-md rounded-md bg-slate-50 p-4 text-left">
@@ -135,7 +134,7 @@
 		<!-- Progress Chart -->
 		<div class="mt-8">
 			<h3 class="mb-4 font-serif text-xl text-slate-800">You vs Frodo</h3>
-			<ProgressChart {logs} {startDate} />
+			<ProgressChart {logs} />
 		</div>
 	{/if}
 </div>

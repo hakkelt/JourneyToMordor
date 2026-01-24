@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { loadData, saveData, addLog, deleteLog, STORAGE_KEY } from './storage';
+import { loadData, saveData, addLog, deleteLog, getStartDate, STORAGE_KEY } from './storage';
 
 // Mock localStorage
 const localStorageMock = (function () {
@@ -33,12 +33,10 @@ describe('Storage', () => {
 	it('should return default state when local storage is empty', () => {
 		const data = loadData();
 		expect(data.logs).toEqual([]);
-		expect(data.userProfile.startDate).toBeDefined();
 	});
 
 	it('should save data correctly', () => {
 		const data = {
-			userProfile: { startDate: '2023-01-01', lastLogin: '2023-01-01' },
 			logs: []
 		};
 		saveData(data);
@@ -47,7 +45,6 @@ describe('Storage', () => {
 
 	it('should load saved data', () => {
 		const saved = {
-			userProfile: { startDate: '2023-01-01', lastLogin: '2023-01-01' },
 			logs: [{ id: 123, date: '2023-01-01', distance: 5 }]
 		};
 		localStorageMock.setItem(STORAGE_KEY, JSON.stringify(saved));
@@ -88,5 +85,19 @@ describe('Storage', () => {
 		expect(data.logs).toEqual([]); // Should fall back to default
 		expect(consoleSpy).toHaveBeenCalled();
 		consoleSpy.mockRestore();
+	});
+
+	it('getStartDate should return earliest log date', () => {
+		const logs = [
+			{ id: 1, date: '2023-01-10', distance: 5 },
+			{ id: 2, date: '2023-01-05', distance: 3 },
+			{ id: 3, date: '2023-01-15', distance: 7 }
+		];
+		expect(getStartDate(logs)).toBe('2023-01-05');
+	});
+
+	it('getStartDate should return today if no logs', () => {
+		const today = new Date().toISOString().split('T')[0];
+		expect(getStartDate([])).toBe(today);
 	});
 });

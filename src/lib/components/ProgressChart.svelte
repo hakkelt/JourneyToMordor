@@ -2,22 +2,24 @@
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
 	import type { LogEntry } from '$lib/storage';
+	import { getStartDate } from '$lib/storage';
 	import { FRODO_JOURNEY } from '$lib/data';
 
 	interface Props {
 		logs: LogEntry[];
-		startDate: string; // YYYY-MM-DD
 	}
 
-	let { logs, startDate }: Props = $props();
+	let { logs }: Props = $props();
 	let chartCanvas: HTMLCanvasElement;
 	let chartInstance: Chart | null = null;
 
 	// Prepare Data
 	let chartData = $derived.by(() => {
+		// Calculate start date from logs
+		const startDate = getStartDate(logs);
+
 		// 1. Process User Data
 		// Group logs by day and sort
-		const start = new Date(startDate);
 		const sortedLogs = [...logs].sort(
 			(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
 		);
@@ -28,10 +30,13 @@
 
 		let runningTotal = 0;
 		const userDataPoints = sortedLogs.map((log) => {
-			const logDate = new Date(log.date);
-			// Diff in days
-			const diffTime = logDate.getTime() - start.getTime();
-			const diffDays = diffTime / (1000 * 60 * 60 * 24); // Floating point days relative to start
+			// Parse dates and normalize to midnight UTC to avoid timezone issues
+			const logDate = new Date(log.date + 'T00:00:00Z');
+			const startDateNormalized = new Date(startDate + 'T00:00:00Z');
+
+			// Calculate difference in days
+			const diffTime = logDate.getTime() - startDateNormalized.getTime();
+			const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
 			runningTotal += log.distance;
 			return { x: diffDays, y: runningTotal };

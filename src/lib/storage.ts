@@ -1,8 +1,3 @@
-export interface UserProfile {
-	startDate: string; // ISO Date string YYYY-MM-DD
-	lastLogin: string; // ISO Date string YYYY-MM-DD
-}
-
 export interface LogEntry {
 	id: number;
 	date: string; // YYYY-MM-DD
@@ -11,22 +6,27 @@ export interface LogEntry {
 }
 
 export interface LocalStorageSchema {
-	userProfile: UserProfile;
 	logs: LogEntry[];
 }
 
 export const STORAGE_KEY = 'mordor_tracker_v1';
 
 export const DEFAULT_STATE: LocalStorageSchema = {
-	userProfile: {
-		startDate: new Date().toISOString().split('T')[0],
-		lastLogin: new Date().toISOString().split('T')[0]
-	},
 	logs: []
 };
 
 // Helper to ensure we're in the browser
 const isBrowser = () => typeof localStorage !== 'undefined';
+
+// Helper to calculate start date from logs
+export function getStartDate(logs: LogEntry[]): string {
+	if (logs.length === 0) {
+		return new Date().toISOString().split('T')[0];
+	}
+	// Find the earliest log entry
+	const sortedDates = logs.map((log) => log.date).sort();
+	return sortedDates[0];
+}
 
 export function loadData(): LocalStorageSchema {
 	if (!isBrowser()) return DEFAULT_STATE;
@@ -57,21 +57,8 @@ export function addLog(entry: Omit<LogEntry, 'id'>): LocalStorageSchema {
 		id: Date.now()
 	};
 
-	// Check if new entry is before current start date
-	let newStartDate = current.userProfile.startDate;
-	if (entry.date < newStartDate) {
-		newStartDate = entry.date;
-	}
-
-	// Update last login implicitly? Or just update logs
 	const updated: LocalStorageSchema = {
-		...current,
-		logs: [newEntry, ...current.logs],
-		userProfile: {
-			...current.userProfile,
-			startDate: newStartDate,
-			lastLogin: new Date().toISOString().split('T')[0]
-		}
+		logs: [newEntry, ...current.logs]
 	};
 
 	saveData(updated);
@@ -81,7 +68,6 @@ export function addLog(entry: Omit<LogEntry, 'id'>): LocalStorageSchema {
 export function deleteLog(id: number): LocalStorageSchema {
 	const current = loadData();
 	const updated: LocalStorageSchema = {
-		...current,
 		logs: current.logs.filter((log) => log.id !== id)
 	};
 	saveData(updated);
