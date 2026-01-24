@@ -7,3 +7,6 @@ bun.lockb
 
 # Miscellaneous
 /static/
+
+# Data files (skip formatting for large data files)
+src/lib/data.ts
