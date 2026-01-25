@@ -109,6 +109,27 @@
 					}
 				},
 				plugins: {
+					legend: {
+						labels: {
+							usePointStyle: true,
+							generateLabels: (chart) => {
+								const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+								labels.forEach((label) => {
+									label.pointStyle = 'line';
+									if (label.datasetIndex !== undefined) {
+										const dataset = chart.data.datasets[label.datasetIndex];
+										// @ts-expect-error - Line chart datasets allow borderDash but types might be strict
+										if (dataset.borderDash) {
+											// @ts-expect-error - LegendItem has lineDash in recent Chart.js but types might lag
+											label.lineDash = dataset.borderDash;
+										}
+									}
+									label.lineWidth = 4;
+								});
+								return labels;
+							}
+						}
+					},
 					title: {
 						display: true,
 						text: 'The Fellowship Gap'
