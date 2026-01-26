@@ -2,14 +2,13 @@
 	import type { LogEntry } from '$lib/storage';
 	import { LOCATIONS } from '$lib/data';
 	import ProgressChart from './ProgressChart.svelte';
+	import { resolve } from '$app/paths';
 
 	interface Props {
 		logs: LogEntry[];
 		unit?: 'km' | 'miles';
-		onNavigate?: (tab: 'dashboard' | 'log') => void;
 	}
-
-	let { logs, unit = 'km', onNavigate }: Props = $props();
+	let { logs, unit = 'km' }: Props = $props();
 
 	// Derived state
 	let totalDistance = $derived(logs.reduce((sum, log) => sum + log.distance, 0));
@@ -40,7 +39,6 @@
 	let progressPercent = $derived(
 		Math.min(100, (totalDistance / LOCATIONS[LOCATIONS.length - 1].distance) * 100)
 	);
-
 	// Background image
 	let bgImage = $derived(currentLocation.image);
 </script>
@@ -68,6 +66,34 @@
 				</p>
 			</div>
 
+			<!-- Data Storage Info -->
+			<div
+				class="mx-auto mb-8 max-w-2xl space-y-4 rounded-xl border border-slate-200 bg-gradient-to-br from-blue-50 to-slate-50 p-6 text-left shadow-sm"
+			>
+				<h3 class="font-serif text-xl font-bold text-slate-800">📊 Your Data, Your Choice</h3>
+				<div class="space-y-3 text-base text-slate-700">
+					<div class="rounded-lg border-l-4 border-blue-500 bg-white p-4">
+						<p class="font-semibold text-blue-900">🔒 No Login Required</p>
+						<p class="mt-1 text-sm text-blue-800">
+							Start tracking immediately! Your journey data is stored locally in your browser. No
+							account needed, completely private.
+						</p>
+					</div>
+					<div class="rounded-lg border-l-4 border-pumpkin-500 bg-white p-4">
+						<p class="font-semibold text-pumpkin-900">☁️ Optional Cloud Backup</p>
+						<p class="mt-1 text-sm text-pumpkin-800">
+							Want to sync across devices? Sign in to back up your progress to the cloud and access
+							it from anywhere. Your local data will be merged with your cloud data.
+						</p>
+					</div>
+				</div>
+				<p class="text-center text-sm text-slate-600">
+					Learn more in our
+					<a href={resolve('/privacy')} class="font-semibold text-pumpkin-600 hover:underline"
+						>Privacy Policy</a
+					>
+				</p>
+			</div>
 			<div
 				class="mx-auto mb-10 max-w-2xl rounded-xl border border-slate-200 bg-slate-50 p-8 text-left shadow-sm"
 			>
@@ -76,10 +102,11 @@
 				</h3>
 				<ol class="list-decimal space-y-4 pl-6 text-lg text-slate-700">
 					<li>
-						Navigate to the <button
+						Navigate to the <a
+							href={resolve('/logs')}
 							class="inline font-bold text-pumpkin-600 hover:text-pumpkin-700 hover:underline"
-							onclick={() => onNavigate?.('log')}>Log Journey</button
-						> tab.
+							>Log Journey</a
+						> page.
 					</li>
 					<li>Enter your daily distance (in {unitLabel}).</li>
 					<li>Watch your progress on the map and try to keep up with Frodo!</li>

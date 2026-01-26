@@ -11,7 +11,7 @@ test.describe('Data Management', () => {
 
 	test('should delete all logs', async ({ page }) => {
 		// 1. Add some logs
-		await page.getByRole('button', { name: 'Log Journey' }).first().click();
+		await page.getByRole('link', { name: 'Logs' }).first().click();
 
 		await page.getByLabel('Date').fill('2024-01-01');
 		await page.getByLabel('Distance (km)').fill('10');
@@ -42,7 +42,7 @@ test.describe('Data Management', () => {
 
 	test('should warn when overwriting existing logs with import', async ({ page }) => {
 		// 1. Add a dummy log first
-		await page.getByRole('button', { name: 'Log Journey' }).first().click();
+		await page.getByRole('link', { name: 'Logs' }).first().click();
 		await page.getByLabel('Date').fill('2024-01-01');
 		await page.getByLabel('Distance (km)').fill('1');
 		await page.getByRole('button', { name: 'Add Entry' }).click();
@@ -80,7 +80,7 @@ test.describe('Data Management', () => {
 		fs.writeFileSync(testCsvPath, csvContent);
 
 		try {
-			await page.getByRole('button', { name: 'Log Journey' }).first().click();
+			await page.getByRole('link', { name: 'Logs' }).first().click();
 
 			const fileChooserPromise = page.waitForEvent('filechooser');
 			await page.getByRole('button', { name: 'Import CSV' }).click();
@@ -103,7 +103,7 @@ test.describe('Data Management', () => {
 		fs.writeFileSync(testCsvPath, csvContent);
 
 		try {
-			await page.getByRole('button', { name: 'Log Journey' }).first().click();
+			await page.getByRole('link', { name: 'Logs' }).first().click();
 
 			const fileChooserPromise = page.waitForEvent('filechooser');
 			await page.getByRole('button', { name: 'Import CSV' }).click();

@@ -9,7 +9,7 @@ test.describe('CSV Export', () => {
 
 	test('should successfully download CSV file with log entries', async ({ page }) => {
 		// 1. Navigate to Log Journey and add an entry
-		await page.getByRole('button', { name: 'Log Journey' }).first().click();
+		await page.getByRole('link', { name: 'Logs' }).first().click();
 		await page.getByLabel('Date').fill(new Date().toISOString().split('T')[0]);
 		await page.getByLabel('Distance (km)').fill('10');
 		await page.getByLabel('Note').fill('Test export');
@@ -48,7 +48,7 @@ test.describe('CSV Export', () => {
 	});
 
 	test('should verify download button visibility', async ({ page }) => {
-		await page.getByRole('button', { name: 'Log Journey' }).first().click();
+		await page.getByRole('link', { name: 'Logs' }).first().click();
 
 		// Button should not be visible initially (no logs)
 		await expect(
