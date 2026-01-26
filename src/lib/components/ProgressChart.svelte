@@ -60,8 +60,8 @@
 				{
 					label: 'You',
 					data: userDataPoints,
-					borderColor: '#D35400', // Pumpkin
-					backgroundColor: 'rgba(211, 84, 0, 0.1)',
+					borderColor: '#d97706', // Ring-500 (Gold/Amber)
+					backgroundColor: 'rgba(217, 119, 6, 0.1)',
 					fill: true,
 					tension: 0.2
 				},

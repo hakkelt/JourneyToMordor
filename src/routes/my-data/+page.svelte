@@ -82,11 +82,11 @@
 
 <div class="mx-auto max-w-4xl space-y-6">
 	<div class="rounded-lg bg-white p-8 shadow-md">
-		<h1 class="mb-6 font-serif text-4xl font-bold text-slate-800">My Data</h1>
+		<h1 class="mb-6 font-serif text-5xl font-normal text-slate-800">My Data</h1>
 
 		<!-- Account Information -->
 		<section class="mb-8 space-y-4">
-			<h2 class="font-serif text-2xl font-semibold text-slate-800">Account Information</h2>
+			<h2 class="font-serif text-3xl font-normal text-slate-800">Account Information</h2>
 			{#if $user}
 				<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
 					<div class="space-y-2">
@@ -115,8 +115,8 @@
 					</div>
 				</div>
 			{:else}
-				<div class="rounded-lg border border-blue-200 bg-blue-50 p-4">
-					<p class="text-blue-800">
+				<div class="rounded-lg border border-shire-200 bg-shire-50 p-4">
+					<p class="font-medium text-shire-900">
 						You are not signed in. Your data is stored locally in your browser only.
 					</p>
 				</div>
@@ -125,7 +125,7 @@
 
 		<!-- Journey Data -->
 		<section class="mb-8 space-y-4">
-			<h2 class="font-serif text-2xl font-semibold text-slate-800">Journey Data</h2>
+			<h2 class="font-serif text-3xl font-normal text-slate-800">Journey Data</h2>
 			<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
 				<div class="space-y-3">
 					<div>
@@ -196,13 +196,13 @@
 
 		<!-- Data Export -->
 		<section class="mb-8 space-y-4">
-			<h2 class="font-serif text-2xl font-semibold text-slate-800">Export Your Data</h2>
+			<h2 class="font-serif text-3xl font-normal text-slate-800">Export Your Data</h2>
 			<div class="space-y-3 text-slate-700">
 				<p>
 					<strong>Manual Backups & device transfer:</strong> For manually editing logs or moving
 					data between devices, we recommend using the <strong>CSV Export</strong> feature found on
 					the
-					<a href={resolve('/logs')} class="font-semibold text-pumpkin-600 hover:underline"
+					<a href={resolve('/logs')} class="font-semibold text-ring-600 hover:underline"
 						>Journey Logs</a
 					> page.
 				</p>
@@ -214,7 +214,7 @@
 			</div>
 			<button
 				onclick={downloadData}
-				class="rounded-lg bg-pumpkin-600 px-6 py-3 font-semibold text-white transition hover:bg-pumpkin-700"
+				class="rounded-lg bg-ring-600 px-6 py-3 font-semibold text-white transition hover:bg-ring-700"
 			>
 				📥 Download Full Data (JSON)
 			</button>
@@ -224,7 +224,7 @@
 		<section class="mb-8">
 			<a
 				href={resolve('/privacy')}
-				class="text-sm font-medium text-slate-500 hover:text-pumpkin-600 hover:underline"
+				class="text-sm font-medium text-slate-500 hover:text-ring-600 hover:underline"
 			>
 				View Privacy Policy
 			</a>
@@ -232,7 +232,7 @@
 
 		<!-- Data Management -->
 		<section class="space-y-6">
-			<h2 class="font-serif text-2xl font-semibold text-slate-800">Data Management</h2>
+			<h2 class="font-serif text-3xl font-normal text-slate-800">Data Management</h2>
 
 			<!-- Clear Local Data -->
 			<div class="rounded-lg border border-yellow-200 bg-yellow-50 p-6">
@@ -340,7 +340,7 @@
 		<div class="mt-8 border-t border-slate-200 pt-6">
 			<a
 				href={resolve('/')}
-				class="inline-block rounded-lg bg-slate-600 px-6 py-3 font-semibold text-white transition hover:bg-slate-700"
+				class="inline-block rounded-lg bg-ring-600 px-6 py-3 font-semibold text-white transition hover:bg-ring-700"
 			>
 				← Back to Journey
 			</a>

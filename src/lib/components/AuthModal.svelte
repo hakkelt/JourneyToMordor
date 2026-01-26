@@ -149,7 +149,7 @@
 
 		<div class="p-6">
 			{#if mode === 'select'}
-				<h2 class="mb-6 font-serif text-2xl font-bold text-slate-800">Sign In</h2>
+				<h2 class="mb-6 font-serif text-4xl font-normal text-slate-800">Sign In</h2>
 
 				<div class="space-y-3">
 					<!-- Google -->
@@ -241,13 +241,13 @@
 
 					<button
 						onclick={() => switchMode('email-signup')}
-						class="w-full rounded-lg bg-pumpkin-600 px-4 py-3 font-medium text-white transition hover:bg-pumpkin-700"
+						class="w-full rounded-lg bg-ring-600 px-4 py-3 font-medium text-white transition hover:bg-ring-700"
 					>
 						Create Account with Email
 					</button>
 				</div>
 			{:else if mode === 'email-signin'}
-				<h2 class="mb-6 font-serif text-2xl font-bold text-slate-800">Sign In with Email</h2>
+				<h2 class="mb-6 font-serif text-4xl font-normal text-slate-800">Sign In with Email</h2>
 
 				<form
 					onsubmit={(e) => {
@@ -263,7 +263,7 @@
 							type="email"
 							bind:value={email}
 							required
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-pumpkin-500 focus:ring-2 focus:ring-pumpkin-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
 							placeholder="you@example.com"
 						/>
 					</div>
@@ -277,7 +277,7 @@
 							type="password"
 							bind:value={password}
 							required
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-pumpkin-500 focus:ring-2 focus:ring-pumpkin-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
 							placeholder="••••••••"
 						/>
 					</div>
@@ -291,7 +291,7 @@
 					<button
 						type="submit"
 						disabled={loading}
-						class="w-full rounded-lg bg-pumpkin-600 px-4 py-3 font-medium text-white transition hover:bg-pumpkin-700 disabled:opacity-50"
+						class="w-full rounded-lg bg-ring-600 px-4 py-3 font-medium text-white transition hover:bg-ring-700 disabled:opacity-50"
 					>
 						{loading ? 'Signing in...' : 'Sign In'}
 					</button>
@@ -305,7 +305,7 @@
 					</button>
 				</form>
 			{:else if mode === 'email-signup'}
-				<h2 class="mb-6 font-serif text-2xl font-bold text-slate-800">Create Account</h2>
+				<h2 class="mb-6 font-serif text-4xl font-normal text-slate-800">Create Account</h2>
 
 				<form
 					onsubmit={(e) => {
@@ -323,7 +323,7 @@
 							type="email"
 							bind:value={email}
 							required
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-pumpkin-500 focus:ring-2 focus:ring-pumpkin-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
 							placeholder="you@example.com"
 						/>
 					</div>
@@ -338,7 +338,7 @@
 							bind:value={password}
 							required
 							minlength="6"
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-pumpkin-500 focus:ring-2 focus:ring-pumpkin-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
 							placeholder="••••••••"
 						/>
 						<p class="mt-1 text-xs text-slate-500">At least 6 characters</p>
@@ -354,7 +354,7 @@
 							bind:value={confirmPassword}
 							required
 							minlength="6"
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-pumpkin-500 focus:ring-2 focus:ring-pumpkin-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
 							placeholder="••••••••"
 						/>
 					</div>
@@ -368,7 +368,7 @@
 					<button
 						type="submit"
 						disabled={loading}
-						class="w-full rounded-lg bg-pumpkin-600 px-4 py-3 font-medium text-white transition hover:bg-pumpkin-700 disabled:opacity-50"
+						class="w-full rounded-lg bg-ring-600 px-4 py-3 font-medium text-white transition hover:bg-ring-700 disabled:opacity-50"
 					>
 						{loading ? 'Creating account...' : 'Create Account'}
 					</button>

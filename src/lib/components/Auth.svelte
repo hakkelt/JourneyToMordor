@@ -40,27 +40,29 @@
 				<img
 					src={$user.photoURL}
 					alt={$user.displayName ?? 'User'}
-					class="h-8 w-8 rounded-full border border-slate-300"
+					class="h-8 w-8 rounded-full border border-slate-700 shadow-sm"
 				/>
 			{/if}
 			<div class="hidden flex-col text-sm sm:flex">
-				<span class="font-medium text-slate-700">{$user.displayName}</span>
+				<span class="font-medium text-slate-200">{$user.displayName}</span>
 				<div class="flex gap-2">
 					<button
 						onclick={logout}
-						class="text-left text-xs text-slate-500 hover:text-pumpkin-600 hover:underline"
+						class="text-left text-xs text-slate-400 hover:text-ring-400 hover:underline"
 						>Sign Out</button
 					>
 				</div>
 			</div>
 			<div class="flex flex-col items-end gap-1 sm:hidden">
-				<button onclick={logout} class="text-sm text-slate-600">Sign Out</button>
+				<button onclick={logout} class="text-sm font-medium text-slate-300 active:text-ring-400"
+					>Sign Out</button
+				>
 			</div>
 		</div>
 	{:else}
 		<button
 			onclick={openModal}
-			class="rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-slate-300 ring-inset hover:bg-slate-50"
+			class="rounded-full bg-ring-600 px-5 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-ring-500 hover:shadow-md active:scale-95"
 		>
 			Sign In
 		</button>

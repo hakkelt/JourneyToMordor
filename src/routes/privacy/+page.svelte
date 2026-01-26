@@ -18,12 +18,12 @@
 
 <div class="mx-auto max-w-3xl space-y-6 rounded-lg bg-white p-8 shadow-md">
 	<div class="border-b border-slate-200 pb-4">
-		<h1 class="font-serif text-4xl font-bold text-slate-800">Privacy Policy</h1>
+		<h1 class="font-serif text-5xl font-normal text-slate-800">Privacy Policy</h1>
 		<p class="mt-2 text-sm text-slate-500">Last updated: January 26, 2026</p>
 	</div>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Overview</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Overview</h2>
 		<p class="text-slate-700">
 			Journey To Mordor is designed with your privacy in mind. We believe you should have full
 			control over your data, which is why we've built this application to work entirely without an
@@ -32,7 +32,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Data Controller</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Controller</h2>
 		<p class="text-slate-700">
 			For the purposes of the General Data Protection Regulation (GDPR), the data controller for
 			this application is the individual or entity operating this instance of Journey To Mordor.
@@ -42,12 +42,12 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Data Storage Options</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Storage Options</h2>
 
 		<div class="space-y-6">
-			<div class="rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4">
-				<h3 class="mb-2 font-semibold text-blue-900">Without Login (Default)</h3>
-				<ul class="list-disc space-y-2 pl-5 text-blue-800">
+			<div class="rounded-lg border-l-4 border-shire-500 bg-shire-50 p-4">
+				<h3 class="mb-2 font-semibold text-shire-900">Without Login (Default)</h3>
+				<ul class="list-disc space-y-2 pl-5 text-shire-800">
 					<li>All your journey data is stored locally in your browser's local storage</li>
 					<li>No data is sent to our servers or any third-party services</li>
 					<li>Your data remains on your device only</li>
@@ -59,9 +59,9 @@
 				</ul>
 			</div>
 
-			<div class="rounded-lg border-l-4 border-pumpkin-500 bg-orange-50 p-4">
-				<h3 class="mb-2 font-semibold text-pumpkin-900">With Login (Optional)</h3>
-				<ul class="list-disc space-y-2 pl-5 text-pumpkin-800">
+			<div class="rounded-lg border-l-4 border-ring-500 bg-ring-50 p-4">
+				<h3 class="mb-2 font-semibold text-ring-900">With Login (Optional)</h3>
+				<ul class="list-disc space-y-2 pl-5 text-ring-800">
 					<li>Your journey data is backed up to Firebase Cloud Firestore</li>
 					<li>You can access your progress from any device by logging in</li>
 					<li>Your data automatically syncs between devices</li>
@@ -79,7 +79,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Legal Basis for Processing</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Legal Basis for Processing</h2>
 		<p class="text-slate-700">
 			Under GDPR, we process your personal data based on the following legal grounds:
 		</p>
@@ -100,7 +100,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">
+		<h2 class="font-serif text-3xl font-normal text-slate-800">
 			Information We Collect (When Logged In)
 		</h2>
 		<div class="space-y-3 text-slate-700">
@@ -127,7 +127,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">How We Use Your Data</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">How We Use Your Data</h2>
 		<p class="text-slate-700">When you choose to log in, we use your data solely to:</p>
 		<ul class="list-disc space-y-2 pl-5 text-slate-700">
 			<li>Store and sync your journey progress across devices</li>
@@ -146,14 +146,14 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Data Retention</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Retention</h2>
 		<p class="text-slate-700">
 			We retain your data for as long as your account is active or as needed to provide you with our
 			services. You can request deletion of your data at any time by using the
 			<!-- eslint-disable svelte/no-navigation-without-resolve -->
 			<a
 				href={resolve('/my-data') + '#delete-account'}
-				class="font-semibold text-pumpkin-600 hover:underline"
+				class="font-semibold text-ring-600 hover:underline"
 			>
 				"Delete Account"
 			</a>
@@ -162,7 +162,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Data Sharing and Transfers</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Sharing and Transfers</h2>
 		<p class="text-slate-700">
 			We do not sell, trade, or rent your personal data to third parties. Your data is only shared
 			with:
@@ -185,7 +185,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Third-Party Services</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Third-Party Services</h2>
 		<div class="space-y-4 text-slate-700">
 			<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
 				<h3 class="mb-2 font-semibold text-slate-800">Firebase (Google LLC)</h3>
@@ -206,7 +206,7 @@
 						href="https://firebase.google.com/support/privacy"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-pumpkin-600 hover:underline"
+						class="text-ring-600 hover:underline"
 					>
 						firebase.google.com/support/privacy
 					</a>
@@ -246,7 +246,7 @@
 							href="https://policies.google.com/privacy"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-pumpkin-600 hover:underline">policies.google.com/privacy</a
+							class="text-ring-600 hover:underline">policies.google.com/privacy</a
 						>
 					</li>
 					<li>
@@ -255,7 +255,7 @@
 							href="https://www.facebook.com/privacy/policy"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-pumpkin-600 hover:underline">facebook.com/privacy/policy</a
+							class="text-ring-600 hover:underline">facebook.com/privacy/policy</a
 						>
 					</li>
 					<li>
@@ -264,7 +264,7 @@
 							href="https://privacy.microsoft.com/privacystatement"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-pumpkin-600 hover:underline">privacy.microsoft.com/privacystatement</a
+							class="text-ring-600 hover:underline">privacy.microsoft.com/privacystatement</a
 						>
 					</li>
 					<li>
@@ -273,7 +273,7 @@
 							href="https://www.apple.com/legal/privacy/"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-pumpkin-600 hover:underline">apple.com/legal/privacy</a
+							class="text-ring-600 hover:underline">apple.com/legal/privacy</a
 						>
 					</li>
 				</ul>
@@ -282,7 +282,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Data Security</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Security</h2>
 		<p class="text-slate-700">
 			We implement appropriate technical and organizational measures to protect your personal data
 			against unauthorized access, alteration, disclosure, or destruction:
@@ -301,7 +301,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Your Rights Under GDPR</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Your Rights Under GDPR</h2>
 		<p class="text-slate-700">
 			If you are in the European Economic Area (EEA), you have the following rights regarding your
 			personal data:
@@ -339,12 +339,12 @@
 			To exercise these rights, you can use the in-app features or contact us through the channels
 			listed below.
 		</p>
-		<div class="mt-4 rounded-lg border border-pumpkin-200 bg-pumpkin-50 p-4">
-			<p class="text-sm text-pumpkin-900">
+		<div class="mt-4 rounded-lg border border-ring-200 bg-ring-50 p-4">
+			<p class="text-sm text-ring-900">
 				<strong>💡 Tip:</strong> Visit our
 				<a
 					href={resolve('/my-data')}
-					class="font-semibold text-pumpkin-700 underline hover:text-pumpkin-800">My Data</a
+					class="font-semibold text-ring-700 underline hover:text-ring-800">My Data</a
 				>
 				page to view all your stored data, export it, or delete your account.
 			</p>
@@ -352,7 +352,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Children's Privacy</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Children's Privacy</h2>
 		<p class="text-slate-700">
 			This application is not directed to children under 16 (or the applicable age of digital
 			consent in your jurisdiction). We do not knowingly collect personal information from children.
@@ -362,7 +362,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Changes to This Policy</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Changes to This Policy</h2>
 		<p class="text-slate-700">
 			We may update this privacy policy from time to time to reflect changes in our practices or for
 			legal, operational, or regulatory reasons. We will notify you of any material changes by
@@ -373,7 +373,7 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-2xl font-semibold text-slate-800">Contact</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800">Contact</h2>
 		<p class="text-slate-700">
 			If you have any questions about this privacy policy, your data, or wish to exercise your GDPR
 			rights, please contact us through the GitHub repository for this project:
@@ -385,7 +385,7 @@
 					href="https://github.com/hakkelt/JourneyToMordor/discussions"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="text-pumpkin-600 hover:underline"
+					class="text-ring-600 hover:underline"
 				>
 					GitHub Discussions
 				</a>
@@ -396,7 +396,7 @@
 					href="https://github.com/hakkelt/JourneyToMordor/issues"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="text-pumpkin-600 hover:underline"
+					class="text-ring-600 hover:underline"
 				>
 					GitHub Issues
 				</a>
@@ -408,7 +408,7 @@
 				href="https://github.com/hakkelt/JourneyToMordor"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="text-pumpkin-600 hover:underline"
+				class="text-ring-600 hover:underline"
 			>
 				github.com/hakkelt/JourneyToMordor
 			</a>
@@ -418,7 +418,7 @@
 	<div class="mt-8 border-t border-slate-200 pt-6 text-center">
 		<a
 			href={resolve('/')}
-			class="inline-block rounded-lg bg-pumpkin-600 px-6 py-3 font-semibold text-white transition hover:bg-pumpkin-700"
+			class="inline-block rounded-lg bg-ring-600 px-6 py-3 font-semibold text-white transition hover:bg-ring-700"
 		>
 			← Back to Journey
 		</a>

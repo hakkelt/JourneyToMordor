@@ -130,7 +130,7 @@
 {#if showImportConfirm}
 	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
 		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
-			<h3 class="mb-2 text-xl font-bold text-pumpkin-600">Confirm Import</h3>
+			<h3 class="mb-2 text-xl font-bold text-ring-600">Confirm Import</h3>
 			<p class="mb-4 text-slate-600">
 				Importing will <strong>replace</strong> your current history with
 				<strong>{pendingImportLogs.length}</strong> entries.
@@ -144,7 +144,7 @@
 					Cancel
 				</button>
 				<button
-					class="rounded-md bg-pumpkin-600 px-4 py-2 font-medium text-white hover:bg-pumpkin-700"
+					class="rounded-md bg-ring-600 px-4 py-2 font-medium text-white hover:bg-ring-700"
 					onclick={confirmImport}
 				>
 					Import Data
@@ -156,7 +156,7 @@
 
 <div class="space-y-8">
 	<div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-		<h2 class="mb-4 font-serif text-2xl text-slate-800">Log Journey</h2>
+		<h2 class="mb-4 font-serif text-3xl text-slate-800">Log Journey</h2>
 
 		<form onsubmit={handleSubmit} class="space-y-4">
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -168,7 +168,7 @@
 						bind:value={date}
 						max={new Date().toISOString().split('T')[0]}
 						required
-						class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-pumpkin-500 focus:ring-pumpkin-500"
+						class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-ring-500 focus:ring-ring-500"
 					/>
 				</div>
 
@@ -184,7 +184,7 @@
 						min="0.01"
 						required
 						placeholder="0.00"
-						class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-pumpkin-500 focus:ring-pumpkin-500"
+						class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-ring-500 focus:ring-ring-500"
 					/>
 				</div>
 			</div>
@@ -198,13 +198,13 @@
 					id="note"
 					bind:value={note}
 					placeholder="Morning walk..."
-					class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-pumpkin-500 focus:ring-pumpkin-500"
+					class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-ring-500 focus:ring-ring-500"
 				/>
 			</div>
 
 			<button
 				type="submit"
-				class="mx-auto block rounded-md bg-pumpkin-600 px-8 py-2 font-medium text-white transition-colors hover:bg-pumpkin-700"
+				class="mx-auto block rounded-md bg-ring-600 px-8 py-2 font-medium text-white transition-colors hover:bg-ring-700"
 			>
 				Add Entry
 			</button>
@@ -213,11 +213,11 @@
 
 	<div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
 		<div class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-			<h2 class="font-serif text-2xl text-slate-800">History</h2>
+			<h2 class="font-serif text-3xl text-slate-800">History</h2>
 			<div class="flex flex-wrap gap-2 text-sm text-slate-700">
 				<button
 					onclick={triggerImport}
-					class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-pumpkin-600"
+					class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-ring-600"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -239,7 +239,7 @@
 				{#if logs.length > 0}
 					<button
 						onclick={handleDownloadCSV}
-						class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-pumpkin-600"
+						class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-ring-600"
 						aria-label="Download log entries as CSV"
 					>
 						<svg
@@ -298,7 +298,7 @@
 							<th class="w-10 pb-2 font-medium text-slate-600"></th>
 						</tr>
 					</thead>
-					<tbody class="divide-y divide-slate-100">
+					<tbody class="divide-y divide-earth-100">
 						{#each logs as log (log.id)}
 							<tr>
 								<td class="py-3 text-slate-800">{log.date}</td>

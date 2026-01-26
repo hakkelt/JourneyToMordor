@@ -45,8 +45,8 @@
 
 <div class="space-y-6">
 	{#if logs.length === 0}
-		<div class="rounded-lg border-t-4 border-pumpkin-500 bg-white p-8 text-center shadow-md">
-			<h2 class="mb-4 font-serif text-3xl text-slate-800">Welcome, Ringbearer</h2>
+		<div class="rounded-lg border-t-4 border-ring-500 bg-white p-8 text-center shadow-md">
+			<h2 class="mb-4 font-serif text-4xl text-slate-800 md:text-5xl">Welcome, Ringbearer</h2>
 
 			<div class="mb-8 space-y-4 text-left text-lg text-slate-600">
 				<p>
@@ -68,20 +68,20 @@
 
 			<!-- Data Storage Info -->
 			<div
-				class="mx-auto mb-8 max-w-2xl space-y-4 rounded-xl border border-slate-200 bg-gradient-to-br from-blue-50 to-slate-50 p-6 text-left shadow-sm"
+				class="mx-auto mb-8 max-w-2xl space-y-4 rounded-xl border border-slate-200 bg-gradient-to-br from-earth-50 to-slate-50 p-6 text-left shadow-sm"
 			>
 				<h3 class="font-serif text-xl font-bold text-slate-800">📊 Your Data, Your Choice</h3>
 				<div class="space-y-3 text-base text-slate-700">
-					<div class="rounded-lg border-l-4 border-blue-500 bg-white p-4">
-						<p class="font-semibold text-blue-900">🔒 No Login Required</p>
-						<p class="mt-1 text-sm text-blue-800">
+					<div class="rounded-lg border-l-4 border-shire-500 bg-white p-4">
+						<p class="font-semibold text-shire-900">🔒 No Login Required</p>
+						<p class="mt-1 text-sm text-shire-800">
 							Start tracking immediately! Your journey data is stored locally in your browser. No
 							account needed, completely private.
 						</p>
 					</div>
-					<div class="rounded-lg border-l-4 border-pumpkin-500 bg-white p-4">
-						<p class="font-semibold text-pumpkin-900">☁️ Optional Cloud Backup</p>
-						<p class="mt-1 text-sm text-pumpkin-800">
+					<div class="rounded-lg border-l-4 border-ring-500 bg-white p-4">
+						<p class="font-semibold text-ring-900">☁️ Optional Cloud Backup</p>
+						<p class="mt-1 text-sm text-ring-800">
 							Want to sync across devices? Sign in to back up your progress to the cloud and access
 							it from anywhere. Your local data will be merged with your cloud data.
 						</p>
@@ -89,7 +89,7 @@
 				</div>
 				<p class="text-center text-sm text-slate-600">
 					Learn more in our
-					<a href={resolve('/privacy')} class="font-semibold text-pumpkin-600 hover:underline"
+					<a href={resolve('/privacy')} class="font-semibold text-ring-600 hover:underline"
 						>Privacy Policy</a
 					>
 				</p>
@@ -104,7 +104,7 @@
 					<li>
 						Navigate to the <a
 							href={resolve('/logs')}
-							class="inline font-bold text-pumpkin-600 hover:text-pumpkin-700 hover:underline"
+							class="inline font-bold text-ring-600 hover:text-ring-700 hover:underline"
 							>Log Journey</a
 						> page.
 					</li>
@@ -113,7 +113,7 @@
 				</ol>
 			</div>
 
-			<p class="font-medium text-pumpkin-700 italic">
+			<p class="font-medium text-ring-700 italic">
 				"This is it. If I take one more step, it'll be the farthest away from home I've ever been."
 			</p>
 		</div>
@@ -124,20 +124,20 @@
 				class="absolute inset-0 bg-cover bg-center"
 				style="background-image: url('{bgImage}');"
 			></div>
-			<div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-90"></div>
+			<div class="absolute inset-0 bg-gradient-to-t from-earth-900 to-transparent opacity-90"></div>
 
 			<div class="relative z-10 w-full p-6 text-white">
-				<div class="mb-1 text-sm font-bold tracking-wider text-pumpkin-400 uppercase">
+				<div class="mb-1 text-sm font-bold tracking-wider text-ring-400 uppercase">
 					Current Location
 				</div>
-				<h2 class="mb-2 font-serif text-3xl font-bold">{currentLocation.name}</h2>
+				<h2 class="mb-2 font-display text-4xl font-normal md:text-5xl">{currentLocation.name}</h2>
 				<p class="text-sm italic opacity-80">"{currentLocation.quote}"</p>
 			</div>
 		</div>
 
 		<!-- Stats Grid -->
 		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-			<div class="rounded-lg border-l-4 border-pumpkin-500 bg-white p-4 shadow-sm">
+			<div class="rounded-lg border-l-4 border-ring-500 bg-white p-4 shadow-sm">
 				<div class="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">
 					Total Distance
 				</div>
@@ -147,14 +147,14 @@
 				</div>
 			</div>
 
-			<div class="rounded-lg border-l-4 border-emerald-500 bg-white p-4 shadow-sm">
+			<div class="rounded-lg border-l-4 border-shire-500 bg-white p-4 shadow-sm">
 				<div class="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">Next Stop</div>
 				<div class="truncate text-2xl font-bold text-slate-800" title={nextMilestone.name}>
 					{nextMilestone.name}
 				</div>
 			</div>
 
-			<div class="rounded-lg border-l-4 border-purple-500 bg-white p-4 shadow-sm">
+			<div class="rounded-lg border-l-4 border-earth-500 bg-white p-4 shadow-sm">
 				<div class="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">
 					Remaining until next stop
 				</div>
@@ -175,7 +175,7 @@
 						cy="50"
 						r="45"
 						fill="none"
-						class="stroke-pumpkin-500 transition-all duration-1000 ease-out"
+						class="stroke-ring-500 transition-all duration-1000 ease-out"
 						stroke-width="10"
 						stroke-dasharray="283"
 						stroke-dashoffset={283 - (283 * progressPercent) / 100}
@@ -194,7 +194,7 @@
 
 		<!-- Progress Chart -->
 		<div class="mt-8">
-			<h3 class="mb-4 font-serif text-xl text-slate-800">You vs Frodo</h3>
+			<h3 class="mb-4 font-serif text-3xl text-slate-800">You vs Frodo</h3>
 			<ProgressChart {logs} {unit} />
 		</div>
 

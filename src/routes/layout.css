@@ -1,22 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap');
 @import 'tailwindcss';
 
 @theme {
-	--color-pumpkin-50: #faebe3;
-	--color-pumpkin-100: #f6d8c8;
-	--color-pumpkin-200: #edb494;
-	--color-pumpkin-300: #e59061;
-	--color-pumpkin-400: #d35400;
-	--color-pumpkin-500: #d35400;
-	--color-pumpkin-600: #a94300;
-	--color-pumpkin-700: #7f3200;
-	--color-pumpkin-800: #542100;
-	--color-pumpkin-900: #2a1100;
+	/* Lord of the Rings Color Palette */
+	/* The One Ring - Gold/Amber (Primary) */
+	--color-ring-50: #fef9e7;
+	--color-ring-100: #fef3c7;
+	--color-ring-200: #fde68a;
+	--color-ring-300: #fcd34d;
+	--color-ring-400: #fbbf24;
+	--color-ring-500: #d97706;
+	--color-ring-600: #b45309;
+	--color-ring-700: #92400e;
+	--color-ring-800: #78350f;
+	--color-ring-900: #451a03;
 
+	/* Middle Earth - Earthy Browns (Secondary) */
+	--color-earth-50: #faf8f5;
+	--color-earth-100: #f5f1ea;
+	--color-earth-200: #e7dfd0;
+	--color-earth-300: #d4c4a8;
+	--color-earth-400: #b8a080;
+	--color-earth-500: #9c7c5c;
+	--color-earth-600: #7d5e3f;
+	--color-earth-700: #5d4430;
+	--color-earth-800: #3d2e20;
+	--color-earth-900: #2a1f16;
+
+	/* The Shire - Muted Greens (Accent) */
+	--color-shire-50: #f0fdf4;
+	--color-shire-100: #dcfce7;
+	--color-shire-200: #bbf7d0;
+	--color-shire-300: #86efac;
+	--color-shire-400: #4ade80;
+	--color-shire-500: #22c55e;
+	--color-shire-600: #16a34a;
+	--color-shire-700: #15803d;
+	--color-shire-800: #166534;
+	--color-shire-900: #14532d;
+
+	/* Fonts */
+	--font-display: 'Bilbo Swash Caps', cursive;
 	--font-serif: 'Cinzel', serif;
 	--font-sans: 'Lato', sans-serif;
 }
 
 body {
-	@apply bg-slate-900 font-sans text-slate-800;
+	@apply bg-earth-900 font-sans text-slate-800;
 }
