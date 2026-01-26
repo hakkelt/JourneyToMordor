@@ -35,7 +35,7 @@ test.describe('Unit Selection', () => {
 		await expect(page.getByText('10.00 km')).toBeVisible();
 
 		// Switch to miles using header toggle
-		await page.getByRole('button', { name: 'mi' }).click();
+		await page.getByRole('button', { name: 'Set units to miles' }).click();
 
 		// Verify history updates to miles (10 km ≈ 6.21 miles)
 		await expect(page.getByText(/6\.21 miles/)).toBeVisible();
@@ -53,7 +53,7 @@ test.describe('Unit Selection', () => {
 
 	test('should convert miles to km when logging with miles selected', async ({ page }) => {
 		// Switch to miles first
-		await page.getByRole('button', { name: 'mi' }).click();
+		await page.getByRole('button', { name: 'Set units to miles' }).click();
 
 		// Add entry in miles
 		await page.getByRole('link', { name: 'Logs' }).first().click();
@@ -65,7 +65,7 @@ test.describe('Unit Selection', () => {
 		await expect(page.getByText('10.00 miles')).toBeVisible();
 
 		// Switch back to km
-		await page.getByRole('button', { name: 'km' }).click();
+		await page.getByRole('button', { name: 'Set units to kilometers' }).click();
 
 		// Verify it now shows as ~16.09 km (10 miles * 1.60934)
 		await expect(page.getByText(/16\.09 km/)).toBeVisible();
@@ -73,7 +73,7 @@ test.describe('Unit Selection', () => {
 
 	test('should persist unit selection across page reloads', async ({ page }) => {
 		// Switch to miles
-		await page.getByRole('button', { name: 'mi' }).click();
+		await page.getByRole('button', { name: 'Set units to miles' }).click();
 
 		// Add an entry
 		await page.getByRole('link', { name: 'Logs' }).first().click();
@@ -104,7 +104,7 @@ test.describe('Unit Selection', () => {
 		await page.waitForTimeout(500);
 
 		// Switch to miles
-		await page.getByRole('button', { name: 'mi' }).click();
+		await page.getByRole('button', { name: 'Set units to miles' }).click();
 
 		// Wait for chart to update
 		await page.waitForTimeout(500);
@@ -123,7 +123,7 @@ test.describe('Unit Selection', () => {
 		await page.getByRole('button', { name: 'Add Entry' }).click();
 
 		// Switch to miles
-		await page.getByRole('button', { name: 'mi' }).click();
+		await page.getByRole('button', { name: 'Set units to miles' }).click();
 
 		// Add second entry in miles
 		await page.getByLabel('Date').fill('2026-01-21');
@@ -136,7 +136,7 @@ test.describe('Unit Selection', () => {
 		await expect(page.getByText(/3\.11 miles/)).toBeVisible(); // 5 km ≈ 3.11 miles
 
 		// Switch back to km
-		await page.getByRole('button', { name: 'km' }).click();
+		await page.getByRole('button', { name: 'Set units to kilometers' }).click();
 
 		// Verify both entries show in km
 		await expect(page.getByText('5.00 km')).toBeVisible();
@@ -164,7 +164,7 @@ test.describe('Unit Selection', () => {
 		await expect(page.getByText('100.0 km')).toBeVisible();
 
 		// Switch to miles
-		await page.getByRole('button', { name: 'mi' }).click();
+		await page.getByRole('button', { name: 'Set units to miles' }).click();
 
 		// Verify all stats updated to miles
 		await expect(page.getByText(/62\.1 miles/)).toBeVisible();
@@ -172,7 +172,7 @@ test.describe('Unit Selection', () => {
 
 	test('should maintain unit selection when navigating between tabs', async ({ page }) => {
 		// Switch to miles
-		await page.getByRole('button', { name: 'mi' }).click();
+		await page.getByRole('button', { name: 'Set units to miles' }).click();
 
 		// Go to Log Journey tab
 		await page.getByRole('link', { name: 'Logs' }).first().click();
@@ -188,10 +188,10 @@ test.describe('Unit Selection', () => {
 		await expect(page.getByLabel('Distance (miles)')).toBeVisible();
 
 		// Switch to km
-		await page.getByRole('button', { name: 'km' }).click();
+		await page.getByRole('button', { name: 'Set units to kilometers' }).click();
 
 		// Navigate between tabs
-		await page.getByRole('link', { name: 'Dashboard' }).click(); // Dashboard works as it is a link but text is Dashboard? No, wait. Dashboard link in Nav is link.
+		await page.getByRole('link', { name: 'Dashboard' }).click();
 		await page.getByRole('link', { name: 'Logs' }).first().click();
 
 		// Should be km

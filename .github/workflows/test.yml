@@ -24,11 +24,11 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      - name: Unit Tests
-        run: bun run test:unit --run
-
       - name: Install Playwright Browsers
         run: bun x playwright install --with-deps
+
+      - name: Unit Tests
+        run: bun run test:unit --run
 
       - name: E2E Tests
         run: bun run test:e2e
