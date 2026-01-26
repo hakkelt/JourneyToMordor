@@ -6,6 +6,7 @@ These instructions must be followed by all agents working on this project.
 
 - **Use Bun**: Always use `bun` instead of `npm` or `yarn` for running scripts and installing packages.
   - Run scripts with `bun run <script>` (e.g., `bun run dev`, `bun run test`).
+  - **Note**: Always use `bun run test` to execute the project's test suite. `bun test` invokes Bun's native runner, which is not used here and will fail.
   - Install dependencies with `bun install` or `bun add`.
 
 ## Testing Strategy
