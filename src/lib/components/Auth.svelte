@@ -41,6 +41,8 @@
 					src={$user.photoURL}
 					alt={$user.displayName ?? 'User'}
 					class="h-8 w-8 rounded-full border border-slate-700 shadow-sm"
+					width="32"
+					height="32"
 				/>
 			{/if}
 			<div class="hidden flex-col text-sm sm:flex">

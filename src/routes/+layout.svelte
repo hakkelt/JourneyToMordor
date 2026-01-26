@@ -1,6 +1,5 @@
 <script lang="ts">
 	import './layout.css';
-	import favicon from '$lib/assets/favicon.png';
 	import Header from '$lib/components/Header.svelte';
 	import { loadData } from '$lib/storage';
 	import { onMount } from 'svelte';
@@ -13,7 +12,7 @@
 	});
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head><link rel="icon" href="/favicon-32.png" /></svelte:head>
 
 <div class="flex min-h-screen flex-col bg-earth-50">
 	<Header />

@@ -4,7 +4,6 @@
 	import { journeyStore, setUnit } from '$lib/storage';
 	import { user } from '$lib/stores/auth';
 	import Auth from './Auth.svelte';
-	import favicon from '$lib/assets/favicon.png';
 
 	function handleSetUnit(unit: 'km' | 'miles') {
 		setUnit(unit, $user);
@@ -15,7 +14,13 @@
 	<div class="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
 		<div class="flex items-center gap-6">
 			<a href={resolve('/')} class="flex items-center gap-3 transition-opacity hover:opacity-80">
-				<img src={favicon} alt="The One Ring" class="h-10 w-10 drop-shadow-lg" />
+				<img
+					src="/header-40.png"
+					alt="The One Ring"
+					class="h-10 w-10 drop-shadow-lg"
+					width="40"
+					height="40"
+				/>
 				<span class="font-display text-3xl font-normal tracking-wide text-ring-400 md:text-4xl">
 					Journey to Mordor
 				</span>
@@ -68,6 +73,8 @@
 							? 'bg-ring-600 text-white shadow-sm'
 							: 'text-slate-400 hover:text-slate-200'}"
 						onclick={() => handleSetUnit('km')}
+						aria-label="Set units to kilometers"
+						aria-pressed={$journeyStore.unit === 'km'}
 					>
 						km
 					</button>
@@ -77,6 +84,8 @@
 							? 'bg-ring-600 text-white shadow-sm'
 							: 'text-slate-400 hover:text-slate-200'}"
 						onclick={() => handleSetUnit('miles')}
+						aria-label="Set units to miles"
+						aria-pressed={$journeyStore.unit === 'miles'}
 					>
 						miles
 					</button>
