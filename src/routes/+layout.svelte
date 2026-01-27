@@ -4,6 +4,7 @@
 	import { loadData } from '$lib/storage';
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import favicon from '$lib/assets/favicon-32.png';
 
 	let { children } = $props();
 
@@ -12,7 +13,7 @@
 	});
 </script>
 
-<svelte:head><link rel="icon" href="/favicon-32.png" /></svelte:head>
+<svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <div class="flex min-h-screen flex-col bg-earth-50">
 	<Header />

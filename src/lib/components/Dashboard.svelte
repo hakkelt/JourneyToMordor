@@ -46,10 +46,11 @@
 <div class="space-y-6">
 	<!-- Status Header -->
 	<div class="relative flex h-64 items-end overflow-hidden rounded-lg shadow-md">
-		<div
-			class="absolute inset-0 bg-cover bg-center"
-			style="background-image: url('{bgImage}');"
-		></div>
+		<enhanced:img
+			src={bgImage}
+			alt={currentLocation.name}
+			class="absolute inset-0 h-full w-full object-cover"
+		/>
 		<div class="absolute inset-0 bg-gradient-to-t from-earth-900 to-transparent opacity-90"></div>
 
 		<div class="relative z-10 w-full p-6 text-white">

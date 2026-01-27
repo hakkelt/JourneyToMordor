@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { resolve } from '$app/paths';
+	import headerLogo from '$lib/assets/header-40.png?enhanced';
 	import { journeyStore, setUnit } from '$lib/storage';
 	import { user } from '$lib/stores/auth';
 	import Auth from './Auth.svelte';
@@ -14,8 +15,8 @@
 	<div class="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
 		<div class="flex items-center gap-6">
 			<a href={resolve('/')} class="flex items-center gap-3 transition-opacity hover:opacity-80">
-				<img
-					src="/header-40.png"
+				<enhanced:img
+					src={headerLogo}
 					alt="The One Ring"
 					class="h-10 w-10 drop-shadow-lg"
 					width="40"

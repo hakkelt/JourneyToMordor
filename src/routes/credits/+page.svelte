@@ -12,7 +12,8 @@
 	// Map locations to a simplified credit object for display
 	const combinedCredits = LOCATIONS.map((loc) => {
 		let displayText = '';
-		let href = loc.image;
+		const imageUrl = typeof loc.image === 'string' ? loc.image : loc.image.img.src;
+		let href = imageUrl;
 
 		if (loc.credit) {
 			href = loc.credit.url;
@@ -28,7 +29,7 @@
 				displayText = getDomain(loc.credit.url);
 			}
 		} else {
-			displayText = getDomain(loc.image);
+			displayText = getDomain(imageUrl);
 		}
 
 		return {
@@ -160,12 +161,12 @@
 			All images used in this challenge are property of their respective creators.
 		</p>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-			{#each combinedCredits as loc (loc.id + loc.image)}
+			{#each combinedCredits as loc (`${loc.id}-${loc.name}`)}
 				<div
 					class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
 				>
 					<div class="aspect-video w-full overflow-hidden bg-slate-100">
-						<img src={loc.image} alt={loc.name} class="h-full w-full object-cover" />
+						<enhanced:img src={loc.image} alt={loc.name} class="h-full w-full object-cover" />
 					</div>
 					<div class="p-4">
 						<h3 class="font-serif text-xl font-bold text-slate-800">{loc.name}</h3>

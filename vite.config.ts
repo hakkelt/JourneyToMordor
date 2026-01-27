@@ -2,10 +2,12 @@ import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { enhancedImages } from '@sveltejs/enhanced-img';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
 	plugins: [
+		enhancedImages(),
 		tailwindcss(),
 		sveltekit(),
 		VitePWA({

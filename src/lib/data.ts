@@ -7,11 +7,13 @@ export interface MilestoneCredit {
 	game?: string;
 }
 
+import type { Picture } from 'vite-imagetools';
+
 export interface Milestone {
 	id: number;
 	name: string;
 	distance: number; // in km
-	image: string;
+	image: string | Picture;
 	quote: string;
 	credit?: MilestoneCredit;
 }
@@ -21,6 +23,11 @@ export interface FrodoPace {
 	totalDistance: number; // in km
 	label?: string;
 }
+
+const milestoneImages = import.meta.glob('./assets/images/milestones/*.webp', {
+	eager: true,
+	query: 'enhanced'
+});
 
 const MILES_TO_KM = 1.60934;
 
@@ -50,7 +57,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 2,
+		id: 3,
 		name: "Edge of Farmer Maggot's Field",
 		distance: 5,
 		image: '/images/milestones/milestone-3.webp',
@@ -62,7 +69,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 3,
+		id: 4,
 		name: 'Three-Farthing Stone',
 		distance: 7,
 		image: '/images/milestones/milestone-4.webp',
@@ -74,7 +81,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 4,
+		id: 5,
 		name: 'Woody End',
 		distance: 16,
 		image: '/images/milestones/milestone-5.webp',
@@ -87,7 +94,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 5,
+		id: 6,
 		name: 'Bucklebury Ferry',
 		distance: 26,
 		image: '/images/milestones/milestone-6.webp',
@@ -98,7 +105,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 6,
+		id: 7,
 		name: "Tom Bombadil's House",
 		distance: 63,
 		image: '/images/milestones/milestone-7.webp',
@@ -111,7 +118,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 7,
+		id: 8,
 		name: 'Barrow-downs',
 		distance: 85,
 		image: '/images/milestones/milestone-8.webp',
@@ -123,7 +130,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 8,
+		id: 9,
 		name: 'Bree (Prancing Pony)',
 		distance: 135,
 		image: '/images/milestones/milestone-9.webp',
@@ -134,7 +141,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 9,
+		id: 10,
 		name: 'Midgewater Marshes',
 		distance: 145,
 		image: '/images/milestones/milestone-10.webp',
@@ -146,7 +153,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 10,
+		id: 11,
 		name: 'Weathertop',
 		distance: 198,
 		image: '/images/milestones/milestone-11.webp',
@@ -157,7 +164,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 11,
+		id: 12,
 		name: 'The Last Bridge',
 		distance: 263,
 		image: '/images/milestones/milestone-12.webp',
@@ -170,7 +177,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 12,
+		id: 13,
 		name: 'The Stone Trolls',
 		distance: 308,
 		image: '/images/milestones/milestone-13.webp',
@@ -182,7 +189,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 13,
+		id: 14,
 		name: 'Ford of Bruinen',
 		distance: 397,
 		image: '/images/milestones/milestone-14.webp',
@@ -195,7 +202,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 14,
+		id: 15,
 		name: 'Rivendell',
 		distance: 458,
 		image: '/images/milestones/milestone-15.webp',
@@ -208,7 +215,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 15,
+		id: 16,
 		name: 'Hollin Ridge',
 		distance: 585,
 		image: '/images/milestones/milestone-16.webp',
@@ -220,7 +227,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 16,
+		id: 17,
 		name: 'Redhorn Pass',
 		distance: 633,
 		image: '/images/milestones/milestone-17.webp',
@@ -232,7 +239,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 17,
+		id: 18,
 		name: 'Moria (West Gate)',
 		distance: 760,
 		image: '/images/milestones/milestone-18.webp',
@@ -244,7 +251,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 18,
+		id: 19,
 		name: "Moria (Durin's Bridge)",
 		distance: 800,
 		image: '/images/milestones/milestone-19.webp',
@@ -257,7 +264,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 19,
+		id: 20,
 		name: 'Dimrill Dale',
 		distance: 805,
 		image: '/images/milestones/milestone-20.webp',
@@ -269,7 +276,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 20,
+		id: 21,
 		name: 'Lothlórien (Caras Galadhon)',
 		distance: 920,
 		image: '/images/milestones/milestone-21.webp',
@@ -282,7 +289,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 21,
+		id: 22,
 		name: 'The Great River',
 		distance: 1000,
 		image: '/images/milestones/milestone-22.webp',
@@ -293,7 +300,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 22,
+		id: 23,
 		name: 'The Brown Lands',
 		distance: 1100,
 		image: '/images/milestones/milestone-23.webp',
@@ -306,7 +313,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 23,
+		id: 24,
 		name: 'The Argonath',
 		distance: 1190,
 		image: '/images/milestones/milestone-24.webp',
@@ -318,7 +325,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 24,
+		id: 25,
 		name: 'Falls of Rauros',
 		distance: 1309,
 		image: '/images/milestones/milestone-25.webp',
@@ -330,7 +337,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 25,
+		id: 26,
 		name: 'Emyn Muil',
 		distance: 1329,
 		image: '/images/milestones/milestone-26.webp',
@@ -343,7 +350,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 26,
+		id: 27,
 		name: 'The Dead Marshes',
 		distance: 1400,
 		image: '/images/milestones/milestone-27.webp',
@@ -355,7 +362,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 27,
+		id: 28,
 		name: 'The Black Gate',
 		distance: 1550,
 		image: '/images/milestones/milestone-28.webp',
@@ -367,7 +374,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 28,
+		id: 29,
 		name: 'Henneth Annûn',
 		distance: 1615,
 		image: '/images/milestones/milestone-29.webp',
@@ -380,7 +387,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 29,
+		id: 30,
 		name: 'The Cross-roads',
 		distance: 1650,
 		image: '/images/milestones/milestone-30.webp',
@@ -392,7 +399,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 30,
+		id: 31,
 		name: 'Minas Morgul',
 		distance: 1660,
 		image: '/images/milestones/milestone-31.webp',
@@ -404,7 +411,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 31,
+		id: 32,
 		name: 'Cirith Ungol Stairs',
 		distance: 1675,
 		image: '/images/milestones/milestone-32.webp',
@@ -417,7 +424,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 32,
+		id: 33,
 		name: "Shelob's Lair",
 		distance: 1680,
 		image: '/images/milestones/milestone-33.webp',
@@ -430,7 +437,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 33,
+		id: 34,
 		name: 'Tower of Cirith Ungol',
 		distance: 1690,
 		image: '/images/milestones/milestone-34.webp',
@@ -443,7 +450,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 34,
+		id: 35,
 		name: 'The Isenmouthe',
 		distance: 1740,
 		image: '/images/milestones/milestone-35.webp',
@@ -455,7 +462,7 @@ export const LOCATIONS: Milestone[] = [
 		}
 	},
 	{
-		id: 35,
+		id: 36,
 		name: 'Mount Doom',
 		distance: 1784,
 		image: '/images/milestones/milestone-36.webp',
@@ -466,7 +473,18 @@ export const LOCATIONS: Milestone[] = [
 			game: 'The Lord of the Rings: The Card Game'
 		}
 	} as const
-].map((l) => ({ ...l, distance: l.distance * MILES_TO_KM }) as Milestone);
+].map(
+	(l) =>
+		({
+			...l,
+			distance: l.distance * MILES_TO_KM,
+			image: (
+				milestoneImages[`./assets/images/milestones/${l.image.split('/').pop()}`] as {
+					default: Milestone['image'];
+				}
+			)?.default
+		}) as Milestone
+);
 
 export const FRODO_JOURNEY: FrodoPace[] = [
 	// --- THE SHIRE & BREE (Sept 23 - Sept 29) ---
