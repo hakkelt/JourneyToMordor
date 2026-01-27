@@ -1,9 +1,19 @@
+export interface MilestoneCredit {
+	url: string;
+	type: 'film' | 'artist' | 'game' | 'other';
+	artist?: string;
+	title?: string;
+	movie?: string;
+	game?: string;
+}
+
 export interface Milestone {
 	id: number;
 	name: string;
 	distance: number; // in km
 	image: string;
 	quote: string;
+	credit?: MilestoneCredit;
 }
 
 export interface FrodoPace {
@@ -15,284 +25,448 @@ export interface FrodoPace {
 const MILES_TO_KM = 1.60934;
 
 export const LOCATIONS: Milestone[] = [
-	// --- THE SHIRE & BREE-LAND ---
 	{
 		id: 1,
 		name: 'Bag End',
 		distance: 0,
-		image:
-			'https://www.fancypantshomes.com/wp-content/uploads/2022/01/the-real-hobbit-house-in-new-zealand.jpg',
-		quote: 'The journey begins. One small step for a Hobbit.'
+		image: '/images/milestones/milestone-1.webp',
+		quote: 'The journey begins. One small step for a Hobbit.',
+		credit: {
+			url: 'https://www.hobbitontours.com/experiences/hobbiton-movie-set-tour/',
+			type: 'other'
+		}
 	},
 	{
 		id: 2,
 		name: 'The Green Dragon',
 		distance: 2,
-		image:
-			'https://tolkiengateway.net/w/images/thumb/a/aa/Mat%C4%9Bj_%C4%8Cadil_-_Green_Dragon_Inn.jpg/640px-Mat%C4%9Bj_%C4%8Cadil_-_Green_Dragon_Inn.jpg',
-		quote: 'One last pint before the edge of the wild.'
+		image: '/images/milestones/milestone-2.webp',
+		quote: 'One last pint before the edge of the wild.',
+		credit: {
+			url: 'https://www.matejcadil.cz/',
+			type: 'artist',
+			artist: 'Matěj Čadil',
+			title: 'The Green Dragon Inn'
+		}
 	},
 	{
 		id: 2,
 		name: "Edge of Farmer Maggot's Field",
 		distance: 5,
-		image:
-			'https://www.looper.com/img/gallery/the-backstory-of-the-lord-of-the-rings-hobbits-explained/life-changing-frienships-1587650781.jpg',
-		quote: "Avoiding Farmer Maggot's wrath."
+		image: '/images/milestones/milestone-3.webp',
+		quote: "Avoiding Farmer Maggot's wrath.",
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
 	{
 		id: 3,
 		name: 'Three-Farthing Stone',
 		distance: 7,
-		image:
-			'https://bookstr.com/wp-content/uploads/2022/12/sam-frodo-768x320.jpeg',
-		quote: 'The center point of the Shire.'
+		image: '/images/milestones/milestone-4.webp',
+		quote: 'The center point of the Shire.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
 	{
 		id: 4,
 		name: 'Woody End',
 		distance: 16,
-		image:
-			'https://tolkiengateway.net/w/images/thumb/0/0a/Ted_Nasmith_-_Elves_in_the_Woody_End.jpg/1024px-Ted_Nasmith_-_Elves_in_the_Woody_End.jpg',
-		quote: 'Hiding from the first Black Rider.'
+		image: '/images/milestones/milestone-5.webp',
+		quote: 'Hiding from the first Black Rider.',
+		credit: {
+			url: 'https://www.tednasmith.com/tolkien/elves-in-the-woody-end/',
+			type: 'artist',
+			artist: 'Ted Nasmith',
+			title: 'Elves in the Woody End'
+		}
 	},
 	{
 		id: 5,
 		name: 'Bucklebury Ferry',
 		distance: 26,
-		image:
-			'https://images.steamusercontent.com/ugc/2339125443384412660/91CE721F60D05AD1A95F4575DFCF81050B17849F/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false',
-		quote: 'Crossing the Brandywine River.'
+		image: '/images/milestones/milestone-6.webp',
+		quote: 'Crossing the Brandywine River.',
+		credit: {
+			url: 'https://steamcommunity.com/sharedfiles/filedetails/?id=3155190896',
+			type: 'other'
+		}
 	},
 	{
 		id: 6,
 		name: "Tom Bombadil's House",
 		distance: 63,
-		image:
-			'https://substackcdn.com/image/fetch/$s_!sXG5!,w_1200,h_600,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F49a82357-7d54-4744-a027-f88b8d3e92fe_1024x1024.jpeg',
-		quote: 'A safe haven in the Old Forest.'
+		image: '/images/milestones/milestone-7.webp',
+		quote: 'A safe haven in the Old Forest.',
+		credit: {
+			url: 'https://www.deviantart.com/williweissfuss/art/Tom-Bombadil-402724162',
+			type: 'artist',
+			artist: 'Willi Weissfuß',
+			title: 'Tom Bombadil'
+		}
 	},
 	{
 		id: 7,
 		name: 'Barrow-downs',
 		distance: 85,
-		image:
-			'https://static.wikia.nocookie.net/lotr/images/4/42/Barrow-downs%2C_Cardolan%27s_capital.JPG/revision/latest/scale-to-width-down/1023?cb=20090917154715',
-		quote: 'Fog on the barrow-downs. Danger awaits.'
+		image: '/images/milestones/milestone-8.webp',
+		quote: 'Fog on the barrow-downs. Danger awaits.',
+		credit: {
+			url: 'https://tolkiengateway.net/wiki/The_Lord_of_the_Rings:_The_Battle_for_Middle-earth_II:_The_Rise_of_the_Witch-king',
+			type: 'game',
+			game: 'The Battle for Middle-earth II: The Rise of the Witch-king'
+		}
 	},
 	{
 		id: 8,
 		name: 'Bree (Prancing Pony)',
 		distance: 135,
-		image: 'https://i.ytimg.com/vi/-_DMJ8BNvAI/sddefault.jpg?v=5ddd710f',
-		quote: 'Meeting Strider in the common room.'
+		image: '/images/milestones/milestone-9.webp',
+		quote: 'Meeting Strider in the common room.',
+		credit: {
+			url: 'https://www.youtube.com/watch?v=-_DMJ8BNvAI',
+			type: 'other'
+		}
 	},
-
-	// --- THE WILD & RIVENDELL ---
 	{
 		id: 9,
 		name: 'Midgewater Marshes',
 		distance: 145,
-		image: 'https://bookstr.com/wp-content/uploads/2022/12/second-breakfast-merry-pippin-768x324.jpeg',
-		quote: 'But what about second breakfast?'
+		image: '/images/milestones/milestone-10.webp',
+		quote: 'But what about second breakfast?',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
 	{
 		id: 10,
 		name: 'Weathertop',
 		distance: 198,
-		image:
-			'https://preview.redd.it/4ul3x2awb2b51.jpg?width=1080&crop=smart&auto=webp&s=0cf9479b18c7186da95268818fd9fc788a7bcb5f',
-		quote: 'The attack of the Nazgûl.'
+		image: '/images/milestones/milestone-11.webp',
+		quote: 'The attack of the Nazgûl.',
+		credit: {
+			url: 'https://www.reddit.com/r/inkarnate/comments/hrsun2/weathertop/',
+			type: 'other'
+		}
 	},
 	{
 		id: 11,
 		name: 'The Last Bridge',
 		distance: 263,
-		image: 'https://tolkiengateway.net/w/images/9/91/Soni_Alcorn-Hender_-_Mitheithel_Bridge.jpg',
-		quote: 'Crossing the River Hoarwell.'
+		image: '/images/milestones/milestone-12.webp',
+		quote: 'Crossing the River Hoarwell.',
+		credit: {
+			url: 'https://tolkiengateway.net/wiki/Soni_Alcorn-Hender',
+			type: 'artist',
+			artist: 'Soni Alcorn-Hender',
+			title: 'At The Last Bridge'
+		}
 	},
 	{
 		id: 12,
 		name: 'The Stone Trolls',
 		distance: 308,
-		image: 'https://static.wikia.nocookie.net/lotr/images/d/d5/StonedTrolls2.jpg/revision/latest?cb=20130113164527',
-		quote: 'Bert, Tom, and William (turned to stone).'
+		image: '/images/milestones/milestone-13.webp',
+		quote: 'Bert, Tom, and William (turned to stone).',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
 	{
 		id: 13,
 		name: 'Ford of Bruinen',
 		distance: 397,
-		image: 'https://tolkiengateway.net/w/images/thumb/d/d3/Rob_Alexander_-_The_Wizards_River_Horses.jpg/1200px-Rob_Alexander_-_The_Wizards_River_Horses.jpg',
-		quote: 'The flood washes the Ringwraiths away.'
+		image: '/images/milestones/milestone-14.webp',
+		quote: 'The flood washes the Ringwraiths away.',
+		credit: {
+			url: 'https://www.robalexander.com/index.php/product/wizards-river-horses/',
+			type: 'artist',
+			artist: 'Rob Alexander',
+			title: 'Wizards River Horses'
+		}
 	},
 	{
 		id: 14,
 		name: 'Rivendell',
 		distance: 458,
-		image:
-			'https://w0.peakpx.com/wallpaper/422/785/HD-wallpaper-the-lord-of-the-rings-the-lord-of-the-rings-rivendell.jpg',
-		quote: 'The Fellowship is formed.'
+		image: '/images/milestones/milestone-15.webp',
+		quote: 'The Fellowship is formed.',
+		credit: {
+			url: 'https://www.artstation.com/khomsaz',
+			type: 'artist',
+			artist: 'Khomsaz',
+			title: 'Rivendell'
+		}
 	},
-
-	// --- THE MISTY MOUNTAINS ---
 	{
 		id: 15,
 		name: 'Hollin Ridge',
 		distance: 585,
-		image: 'https://scontent-vie1-1.xx.fbcdn.net/v/t39.30808-6/515674425_24477414505198733_3269595898502750967_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=5dRPBlP6VmUQ7kNvwEgjSl8&_nc_oc=Adlt6513jU_gJbJ3pltPQOKub1-Z12oHeXyGaes6Lp99NnVdqwVhKMxDm7wJ1zh3aLuFUpCeQ2BjTkkprRfjwE7w&_nc_zt=23&_nc_ht=scontent-vie1-1.xx&_nc_gid=IUHoqdmBeKXTqG3X4JB9Lg&oh=00_Afp_t2Fr_5Q6_jWxaYdny5z0TR1qg36ghKe4edzzpSh5Lw&oe=696D3503',
-		quote: 'Wargs howl in the distance.'
+		image: '/images/milestones/milestone-16.webp',
+		quote: 'Wargs howl in the distance.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
 	{
 		id: 16,
 		name: 'Redhorn Pass',
 		distance: 633,
-		image: 'https://static.wikia.nocookie.net/lotr/images/a/a4/Caradhras.png/revision/latest?cb=20190428175521',
-		quote: 'Defeated by the snows of Caradhras.'
+		image: '/images/milestones/milestone-17.webp',
+		quote: 'Defeated by the snows of Caradhras.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
 	{
 		id: 17,
 		name: 'Moria (West Gate)',
 		distance: 760,
-		image:
-			'https://static.wikia.nocookie.net/lotr/images/d/d3/Doors_of_Durin.jpeg/revision/latest/smart/width/386/height/259?cb=20181212223954',
-		quote: 'The Watcher in the Water attacks.'
+		image: '/images/milestones/milestone-18.webp',
+		quote: 'The Watcher in the Water attacks.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
 	{
 		id: 18,
 		name: "Moria (Durin's Bridge)",
 		distance: 800,
-		image: 'https://tolkiengateway.net/w/images/1/1b/Alan_Lee_-_The_Bridge_of_Khazad-dum.jpg',
-		quote: 'You shall not pass!'
+		image: '/images/milestones/milestone-19.webp',
+		quote: 'You shall not pass!',
+		credit: {
+			url: 'https://tolkiengateway.net/wiki/Alan_Lee',
+			type: 'artist',
+			artist: 'Alan Lee',
+			title: 'The Bridge of Khazad-dûm'
+		}
 	},
 	{
 		id: 19,
 		name: 'Dimrill Dale',
 		distance: 805,
-		image: 'https://storage.googleapis.com/moviemaps/img/34x.1yihi.940.jpg',
-		quote: 'Mourning Gandalf outside the East Gate.'
+		image: '/images/milestones/milestone-20.webp',
+		quote: 'Mourning Gandalf outside the East Gate.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
-
-	// --- LOTHLORIEN & THE RIVER ---
 	{
 		id: 20,
 		name: 'Lothlórien (Caras Galadhon)',
 		distance: 920,
-		image: 'https://static.wikia.nocookie.net/lotr/images/e/e1/Tara_Rueping_-_Lothlorien.jpg/revision/latest?cb=20160108151538',
-		quote: "The Lady Galadriel's mirror."
+		image: '/images/milestones/milestone-21.webp',
+		quote: "The Lady Galadriel's mirror.",
+		credit: {
+			url: 'https://conceptartworld.com/artists/tara-rueping/',
+			type: 'artist',
+			artist: 'Tara Rueping',
+			title: 'Lothlórien Overview'
+		}
 	},
 	{
 		id: 21,
 		name: 'The Great River',
 		distance: 1000,
-		image: 'https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2Fmpxy7blyq6q41.jpg',
-		quote: 'Paddling down the Anduin.'
+		image: '/images/milestones/milestone-22.webp',
+		quote: 'Paddling down the Anduin.',
+		credit: {
+			url: 'https://www.reddit.com/r/lotr/comments/fsxg2o/visited_kawarau_river_aka_anduin_river_in/',
+			type: 'other'
+		}
 	},
 	{
 		id: 22,
 		name: 'The Brown Lands',
 		distance: 1100,
-		image: 'https://tolkiengateway.net/w/images/thumb/4/41/%C5%A0%C3%A1rka_%C5%A0korp%C3%ADkov%C3%A1_-_Rhovanion_-_The_Brown_Lands.jpg/800px-%C5%A0%C3%A1rka_%C5%A0korp%C3%ADkov%C3%A1_-_Rhovanion_-_The_Brown_Lands.jpg',
-		quote: 'Desolate lands stripped by Sauron long ago.'
+		image: '/images/milestones/milestone-23.webp',
+		quote: 'Desolate lands stripped by Sauron long ago.',
+		credit: {
+			url: 'https://tolkiengateway.net/wiki/%C5%A0%C3%A1rka_%C5%A0korp%C3%ADkov%C3%A1',
+			type: 'artist',
+			artist: 'Šárka Škorpíková',
+			title: 'The Brown Lands'
+		}
 	},
 	{
 		id: 23,
 		name: 'The Argonath',
 		distance: 1190,
-		image: 'https://i.pinimg.com/736x/4d/fb/3a/4dfb3a4bc8ae0be0fc679db1e0ba9fcb.jpg',
-		quote: 'The Pillars of Kings.'
+		image: '/images/milestones/milestone-24.webp',
+		quote: 'The Pillars of Kings.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
 	{
 		id: 24,
 		name: 'Falls of Rauros',
 		distance: 1309,
-		image:
-			'https://upload.wikimedia.org/wikipedia/it/thumb/9/9c/Il_Signore_degli_Anelli_128.JPG/960px-Il_Signore_degli_Anelli_128.JPG',
-		quote: 'The Fellowship breaks; Boromir falls.'
+		image: '/images/milestones/milestone-25.webp',
+		quote: 'The Fellowship breaks; Boromir falls.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0120737/',
+			type: 'film',
+			movie: 'The Fellowship of the Ring'
+		}
 	},
-
-	// --- THE APPROACH TO MORDOR ---
 	{
 		id: 25,
 		name: 'Emyn Muil',
 		distance: 1329,
-		image: 'https://tolkiengateway.net/w/images/c/c6/Ted_Nasmith_-_No_Way_Down.jpg',
-		quote: 'Lost in the razor-sharp rocks. Met Gollum.'
+		image: '/images/milestones/milestone-26.webp',
+		quote: 'Lost in the razor-sharp rocks. Met Gollum.',
+		credit: {
+			url: 'https://www.tednasmith.com/tolkien/no-way-down/',
+			type: 'artist',
+			artist: 'Ted Nasmith',
+			title: 'No Way Down'
+		}
 	},
 	{
 		id: 26,
 		name: 'The Dead Marshes',
 		distance: 1400,
-		image:
-			'https://m.media-amazon.com/images/M/MV5BOGRkZWIxMTctZTY1MS00ZWNiLWFkMGYtMzYzY2NiZDdmZmM5XkEyXkFqcGc@._V1_.jpg',
-		quote: 'Faces in the water.'
+		image: '/images/milestones/milestone-27.webp',
+		quote: 'Faces in the water.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0167261/',
+			type: 'film',
+			movie: 'The Two Towers'
+		}
 	},
 	{
 		id: 27,
 		name: 'The Black Gate',
 		distance: 1550,
-		image: 'https://assets.moxfield.net/cards/card-en3g1-art_crop.webp',
-		quote: 'The gate is shut. You must find another way.'
+		image: '/images/milestones/milestone-28.webp',
+		quote: 'The gate is shut. You must find another way.',
+		credit: {
+			url: 'https://moxfield.com/decks/JbHFyl_DkUmbYNYUg2-wMw',
+			type: 'game',
+			game: 'Magic: The Gathering "Tales of Middle-earth" set. "The Black Gate" card.'
+		}
 	},
 	{
 		id: 28,
 		name: 'Henneth Annûn',
 		distance: 1615,
-		image: 'https://tolkiengateway.net/w/images/0/03/Ted_Nasmith_-_Henneth_Ann%C3%BBn.jpg',
-		quote: "Faramir's secret hideout."
+		image: '/images/milestones/milestone-29.webp',
+		quote: "Faramir's secret hideout.",
+		credit: {
+			url: 'https://www.tednasmith.com/tolkien/the-terrace-at-henneth-annun/',
+			type: 'artist',
+			artist: 'Ted Nasmith',
+			title: 'The Terrace at Henneth Annûn'
+		}
 	},
 	{
 		id: 29,
 		name: 'The Cross-roads',
 		distance: 1650,
-		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0x_t0ESIlgydxYAG8OkKJ02ygq6RGjbpEiQ&s',
-		quote: 'The fallen statue of the King.'
+		image: '/images/milestones/milestone-30.webp',
+		quote: 'The fallen statue of the King.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0167261/',
+			type: 'film',
+			movie: 'The Two Towers'
+		}
 	},
 	{
 		id: 30,
 		name: 'Minas Morgul',
 		distance: 1660,
-		image:
-			'https://upload.wikimedia.org/wikipedia/tr/thumb/e/e6/Minas_morgul.jpg/500px-Minas_morgul.jpg',
-		quote: 'The witch-king leads his army out.'
+		image: '/images/milestones/milestone-31.webp',
+		quote: 'The witch-king leads his army out.',
+		credit: {
+			url: 'https://www.imdb.com/title/tt0167260/',
+			type: 'film',
+			movie: 'The Return of the King'
+		}
 	},
-
-	// --- INSIDE MORDOR ---
 	{
 		id: 31,
 		name: 'Cirith Ungol Stairs',
 		distance: 1675,
-		image: 'https://tolkiengateway.net/w/images/f/ff/Ted_Nasmith_-_The_Tower_of_the_Moon.jpg',
-		quote: 'Climbing the vertical stairs.'
+		image: '/images/milestones/milestone-32.webp',
+		quote: 'Climbing the vertical stairs.',
+		credit: {
+			url: 'http://www.rahnart.com/',
+			type: 'artist',
+			artist: 'Chris Rahn',
+			title: 'Cirith Ungol Stairs'
+		}
 	},
 	{
 		id: 32,
 		name: "Shelob's Lair",
 		distance: 1680,
-		image: 'https://i0.wp.com/theroadlotr.wordpress.com/wp-content/uploads/2019/07/ffg-toroch-ungol.jpg?fit=1200%2C876&ssl=1',
-		quote: 'Stung by the spider. Sam fights back.'
+		image: '/images/milestones/milestone-33.webp',
+		quote: 'Stung by the spider. Sam fights back.',
+		credit: {
+			url: 'https://www.justingerard.com/',
+			type: 'artist',
+			artist: 'Justin Gerard',
+			title: "Shelob's Lair"
+		}
 	},
 	{
 		id: 33,
 		name: 'Tower of Cirith Ungol',
 		distance: 1690,
-		image: 'https://tolkiengateway.net/w/images/6/66/Alan_Lee_-_Cirith_Ungol.jpg',
-		quote: 'Sam rescues Frodo from the orcs.'
+		image: '/images/milestones/milestone-34.webp',
+		quote: 'Sam rescues Frodo from the orcs.',
+		credit: {
+			url: 'https://tolkiengateway.net/wiki/Alan_Lee',
+			type: 'artist',
+			artist: 'Alan Lee',
+			title: 'Tower of Cirith Ungol'
+		}
 	},
 	{
 		id: 34,
 		name: 'The Isenmouthe',
 		distance: 1740,
-		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPn3tIuis1GTFwRW-Bpk2e588WOiyIQ4zrVA&s',
-		quote: 'Dodging orc armies on the road to Doom.'
+		image: '/images/milestones/milestone-35.webp',
+		quote: 'Dodging orc armies on the road to Doom.',
+		credit: {
+			url: 'https://www.lotro.com/',
+			type: 'game',
+			game: 'The Lord of the Rings Online'
+		}
 	},
 	{
 		id: 35,
 		name: 'Mount Doom',
 		distance: 1784,
-		image: 'https://i.pinimg.com/originals/84/60/5b/84605b713ed69eb4578f588797b0b6fc.jpg',
-		quote: 'The Ring is destroyed.'
-	}
-].map((l) => ({ ...l, distance: l.distance * MILES_TO_KM }));
+		image: '/images/milestones/milestone-36.webp',
+		quote: 'The Ring is destroyed.',
+		credit: {
+			url: 'https://www.fantasyflightgames.com/',
+			type: 'game',
+			game: 'The Lord of the Rings: The Card Game'
+		}
+	} as const
+].map((l) => ({ ...l, distance: l.distance * MILES_TO_KM }) as Milestone);
 
 export const FRODO_JOURNEY: FrodoPace[] = [
 	// --- THE SHIRE & BREE (Sept 23 - Sept 29) ---

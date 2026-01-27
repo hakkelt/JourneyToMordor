@@ -9,4 +9,4 @@ bun.lockb
 /static/
 
 # Data files (skip formatting for large data files)
-src/lib/data.ts
+src/lib/image-credits.ts

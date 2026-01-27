@@ -44,6 +44,54 @@
 </script>
 
 <div class="space-y-6">
+	<!-- Status Header -->
+	<div class="relative flex h-64 items-end overflow-hidden rounded-lg shadow-md">
+		<div
+			class="absolute inset-0 bg-cover bg-center"
+			style="background-image: url('{bgImage}');"
+		></div>
+		<div class="absolute inset-0 bg-gradient-to-t from-earth-900 to-transparent opacity-90"></div>
+
+		<div class="relative z-10 w-full p-6 text-white">
+			<div class="mb-1 text-sm font-bold tracking-wider text-ring-400 uppercase">
+				Current Location
+			</div>
+			<h2 class="mb-2 font-display text-4xl font-normal md:text-5xl">{currentLocation.name}</h2>
+			<p class="text-sm italic opacity-80">"{currentLocation.quote}"</p>
+		</div>
+	</div>
+
+	<!-- Stats Grid -->
+	{#if logs.length > 0}
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+			<div class="rounded-lg border-l-4 border-ring-500 bg-white p-4 shadow-sm">
+				<div class="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">
+					Total Distance
+				</div>
+				<div class="text-2xl font-bold text-slate-800">
+					{formatDist(totalDistance)}
+					<span class="text-sm font-normal text-slate-500">{unitLabel}</span>
+				</div>
+			</div>
+
+			<div class="rounded-lg border-l-4 border-shire-500 bg-white p-4 shadow-sm">
+				<div class="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">Next Stop</div>
+				<div class="truncate text-2xl font-bold text-slate-800" title={nextMilestone.name}>
+					{nextMilestone.name}
+				</div>
+			</div>
+
+			<div class="rounded-lg border-l-4 border-earth-500 bg-white p-4 shadow-sm">
+				<div class="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">
+					Remaining until next stop
+				</div>
+				<div class="text-2xl font-bold text-slate-800">
+					{isFinished ? 'Done!' : `${formatDist(distanceRemaining)} ${unitLabel}`}
+				</div>
+			</div>
+		</div>
+	{/if}
+
 	{#if logs.length === 0}
 		<div class="rounded-lg border-t-4 border-ring-500 bg-white p-8 text-center shadow-md">
 			<h2 class="mb-4 font-serif text-4xl text-slate-800 md:text-5xl">Welcome, Ringbearer</h2>
@@ -118,52 +166,6 @@
 			</p>
 		</div>
 	{:else}
-		<!-- Status Header -->
-		<div class="relative flex h-64 items-end overflow-hidden rounded-lg shadow-md">
-			<div
-				class="absolute inset-0 bg-cover bg-center"
-				style="background-image: url('{bgImage}');"
-			></div>
-			<div class="absolute inset-0 bg-gradient-to-t from-earth-900 to-transparent opacity-90"></div>
-
-			<div class="relative z-10 w-full p-6 text-white">
-				<div class="mb-1 text-sm font-bold tracking-wider text-ring-400 uppercase">
-					Current Location
-				</div>
-				<h2 class="mb-2 font-display text-4xl font-normal md:text-5xl">{currentLocation.name}</h2>
-				<p class="text-sm italic opacity-80">"{currentLocation.quote}"</p>
-			</div>
-		</div>
-
-		<!-- Stats Grid -->
-		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-			<div class="rounded-lg border-l-4 border-ring-500 bg-white p-4 shadow-sm">
-				<div class="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">
-					Total Distance
-				</div>
-				<div class="text-2xl font-bold text-slate-800">
-					{formatDist(totalDistance)}
-					<span class="text-sm font-normal text-slate-500">{unitLabel}</span>
-				</div>
-			</div>
-
-			<div class="rounded-lg border-l-4 border-shire-500 bg-white p-4 shadow-sm">
-				<div class="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">Next Stop</div>
-				<div class="truncate text-2xl font-bold text-slate-800" title={nextMilestone.name}>
-					{nextMilestone.name}
-				</div>
-			</div>
-
-			<div class="rounded-lg border-l-4 border-earth-500 bg-white p-4 shadow-sm">
-				<div class="mb-1 text-xs font-bold tracking-wide text-slate-500 uppercase">
-					Remaining until next stop
-				</div>
-				<div class="text-2xl font-bold text-slate-800">
-					{isFinished ? 'Done!' : `${formatDist(distanceRemaining)} ${unitLabel}`}
-				</div>
-			</div>
-		</div>
-
 		<!-- Ring Progress Visual placeholder -->
 		<div class="mt-8 flex justify-center py-6">
 			<div class="relative h-40 w-40">

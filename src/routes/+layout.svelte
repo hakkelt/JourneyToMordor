@@ -33,6 +33,10 @@
 			<a href={resolve('/privacy')} class="text-ring-400 hover:text-ring-300 hover:underline"
 				>Privacy Policy</a
 			>
+			<span class="text-slate-600">|</span>
+			<a href={resolve('/credits')} class="text-ring-400 hover:text-ring-300 hover:underline"
+				>Image Credits</a
+			>
 		</p>
 	</footer>
 </div>
