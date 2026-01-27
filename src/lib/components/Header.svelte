@@ -21,7 +21,7 @@
 					width="40"
 					height="40"
 				/>
-				<span class="font-display text-3xl font-normal tracking-wide text-ring-400 md:text-4xl">
+				<span class="font-display text-xl font-normal tracking-wide text-ring-400 md:text-4xl">
 					Journey to Mordor
 				</span>
 			</a>
