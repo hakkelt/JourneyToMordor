@@ -50,13 +50,15 @@
 				<div class="flex gap-2">
 					<button
 						onclick={logout}
-						class="text-left text-xs text-slate-400 hover:text-ring-400 hover:underline"
+						class="text-left text-xs whitespace-nowrap text-slate-400 hover:text-ring-400 hover:underline"
 						>Sign Out</button
 					>
 				</div>
 			</div>
 			<div class="flex flex-col items-end gap-1 sm:hidden">
-				<button onclick={logout} class="text-sm font-medium text-slate-300 active:text-ring-400"
+				<button
+					onclick={logout}
+					class="text-sm font-medium whitespace-nowrap text-slate-300 active:text-ring-400"
 					>Sign Out</button
 				>
 			</div>
@@ -64,7 +66,7 @@
 	{:else}
 		<button
 			onclick={openModal}
-			class="rounded-full bg-ring-600 px-5 py-2 text-sm font-bold text-white shadow-sm transition-all hover:bg-ring-500 hover:shadow-md active:scale-95"
+			class="rounded-full bg-ring-600 px-5 py-2 text-sm font-bold whitespace-nowrap text-white shadow-sm transition-all hover:bg-ring-500 hover:shadow-md active:scale-95"
 		>
 			Sign In
 		</button>

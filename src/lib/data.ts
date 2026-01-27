@@ -160,7 +160,9 @@ export const LOCATIONS: Milestone[] = [
 		quote: 'The attack of the Nazgûl.',
 		credit: {
 			url: 'https://www.reddit.com/r/inkarnate/comments/hrsun2/weathertop/',
-			type: 'other'
+			type: 'artist',
+			artist: 'Bryan Marshall',
+			title: 'Weathertop'
 		}
 	},
 	{
