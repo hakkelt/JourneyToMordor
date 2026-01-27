@@ -13,6 +13,8 @@ import {
 	STORAGE_KEY
 } from './storage';
 import type { User } from 'firebase/auth';
+import { get } from 'svelte/store';
+import { isOnline, hasPendingSync } from './stores/network';
 
 // Mock Firebase
 vi.mock('./firebase', () => ({
@@ -459,6 +461,24 @@ describe('Storage', () => {
 				await new Promise((resolve) => setTimeout(resolve, 10));
 				expect(setDoc).toHaveBeenCalled();
 			});
+		});
+	});
+
+	describe('Offline Mode', () => {
+		it('should queue sync when offline', async () => {
+			const { setDoc } = await import('firebase/firestore');
+			const mockUser = { uid: 'test-offline' } as any;
+			isOnline.set(false);
+			hasPendingSync.set(false);
+
+			addLog({ date: '2023-01-01', distance: 10 }, mockUser);
+
+			// Should not call setDoc
+			expect(setDoc).not.toHaveBeenCalled();
+			// Should set pending sync
+			expect(get(hasPendingSync)).toBe(true);
+
+			isOnline.set(true); // Restore
 		});
 	});
 

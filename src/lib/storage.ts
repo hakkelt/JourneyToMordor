@@ -14,6 +14,7 @@ import { get, writable } from 'svelte/store';
 import { db } from './firebase';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { type User, deleteUser } from 'firebase/auth';
+import { isOnline, hasPendingSync } from './stores/network';
 
 export const STORAGE_KEY = 'mordor_tracker_v1';
 
@@ -57,6 +58,13 @@ export function loadData(): LocalStorageSchema {
 export async function syncWithFirestore(user: User): Promise<void> {
 	if (!user) return;
 
+	// Check if we're online before attempting sync
+	if (!get(isOnline)) {
+		console.log('Offline: sync will be attempted when connection is restored');
+		hasPendingSync.set(true);
+		return;
+	}
+
 	const userDocRef = doc(db, 'users', user.uid);
 	const localData = get(journeyStore);
 
@@ -79,8 +87,13 @@ export async function syncWithFirestore(user: User): Promise<void> {
 			// No remote data, upload local
 			await setDoc(userDocRef, localData);
 		}
+
+		// Clear pending sync flag on successful sync
+		hasPendingSync.set(false);
 	} catch (e) {
 		console.error('Sync failed:', e);
+		// Mark as pending sync if it failed
+		hasPendingSync.set(true);
 	}
 }
 
@@ -113,6 +126,17 @@ function mergeData(local: LocalStorageSchema, remote: LocalStorageSchema): Local
 	return mergedData;
 }
 
+async function syncOrQueue(user: User | null | undefined, data: LocalStorageSchema) {
+	if (user) {
+		if (get(isOnline)) {
+			const userDocRef = doc(db, 'users', user.uid);
+			setDoc(userDocRef, data).catch((e) => console.error('Failed to save to firestore', e));
+		} else {
+			hasPendingSync.set(true);
+		}
+	}
+}
+
 export function saveData(data: LocalStorageSchema): void {
 	if (!isBrowser()) return;
 	localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -133,11 +157,7 @@ export function addLog(entry: Omit<LogEntry, 'id'>, currentUser?: User | null): 
 	saveData(updated);
 	journeyStore.set(updated);
 
-	// Optimistic update done, now try to sync if user logged in
-	if (currentUser) {
-		const userDocRef = doc(db, 'users', currentUser.uid);
-		setDoc(userDocRef, updated).catch((e) => console.error('Failed to save to firestore', e));
-	}
+	syncOrQueue(currentUser, updated);
 
 	return updated;
 }
@@ -151,10 +171,7 @@ export function deleteLog(id: number, currentUser?: User | null): LocalStorageSc
 	saveData(updated);
 	journeyStore.set(updated);
 
-	if (currentUser) {
-		const userDocRef = doc(db, 'users', currentUser.uid);
-		setDoc(userDocRef, updated).catch((e) => console.error('Failed to save to firestore', e));
-	}
+	syncOrQueue(currentUser, updated);
 
 	return updated;
 }
@@ -168,10 +185,7 @@ export function deleteAllLogs(currentUser?: User | null): LocalStorageSchema {
 	saveData(updated);
 	journeyStore.set(updated);
 
-	if (currentUser) {
-		const userDocRef = doc(db, 'users', currentUser.uid);
-		setDoc(userDocRef, updated).catch((e) => console.error('Failed to save to firestore', e));
-	}
+	syncOrQueue(currentUser, updated);
 	return updated;
 }
 
@@ -184,10 +198,7 @@ export function importLogs(newLogs: LogEntry[], currentUser?: User | null): Loca
 	saveData(updated);
 	journeyStore.set(updated);
 
-	if (currentUser) {
-		const userDocRef = doc(db, 'users', currentUser.uid);
-		setDoc(userDocRef, updated).catch((e) => console.error('Failed to save to firestore', e));
-	}
+	syncOrQueue(currentUser, updated);
 	return updated;
 }
 
@@ -200,11 +211,7 @@ export function setUnit(unit: 'km' | 'miles', currentUser?: User | null): LocalS
 	saveData(updated);
 	journeyStore.set(updated);
 
-	// Note: We might want to sync unit pref too?
-	if (currentUser) {
-		const userDocRef = doc(db, 'users', currentUser.uid);
-		setDoc(userDocRef, updated).catch((e) => console.error('Failed to save to firestore', e));
-	}
+	syncOrQueue(currentUser, updated);
 	return updated;
 }
 

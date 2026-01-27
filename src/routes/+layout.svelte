@@ -2,15 +2,41 @@
 	import './layout.css';
 	import Header from '$lib/components/Header.svelte';
 	import { loadData } from '$lib/storage';
+	import { isOnline } from '$lib/stores/network';
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import { warmImageCache } from '$lib/image-cache';
 	import favicon from '$lib/assets/favicon-32.png';
 
+	interface BeforeInstallPromptEvent extends Event {
+		prompt: () => void;
+		userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+	}
+
 	let { children } = $props();
+	let installPrompt = $state<BeforeInstallPromptEvent | null>(null);
 
 	onMount(() => {
+		const handler = (e: Event) => {
+			e.preventDefault();
+			installPrompt = e as BeforeInstallPromptEvent;
+		};
+		window.addEventListener('beforeinstallprompt', handler);
+
 		loadData();
+		warmImageCache();
+
+		return () => window.removeEventListener('beforeinstallprompt', handler);
 	});
+
+	async function installApp() {
+		if (!installPrompt) return;
+		installPrompt.prompt();
+		const { outcome } = await installPrompt.userChoice;
+		if (outcome === 'accepted') {
+			installPrompt = null;
+		}
+	}
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
@@ -32,6 +58,8 @@
 				target="_blank"
 				rel="noopener noreferrer"
 				class="inline-flex items-center text-ring-400 transition-colors hover:text-ring-300"
+				class:opacity-50={!$isOnline}
+				class:pointer-events-none={!$isOnline}
 				aria-label="GitHub Repository"
 			>
 				<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -44,10 +72,16 @@
 			</a>
 		</div>
 		<p class="mt-2 space-x-4">
-			<a href={resolve('/my-data')} class="text-ring-400 hover:text-ring-300 hover:underline"
-				>My Data</a
-			>
-			<span class="text-slate-600">|</span>
+			{#if installPrompt}
+				<button
+					onclick={installApp}
+					class="text-ring-400 hover:text-ring-300 hover:underline disabled:pointer-events-none disabled:opacity-50"
+					disabled={!$isOnline}
+				>
+					Install App
+				</button>
+				<span class="text-slate-600">|</span>
+			{/if}
 			<a href={resolve('/privacy')} class="text-ring-400 hover:text-ring-300 hover:underline"
 				>Privacy Policy</a
 			>
@@ -60,14 +94,18 @@
 				href="https://github.com/hakkelt/JourneyToMordor/discussions"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="text-ring-400 hover:text-ring-300 hover:underline">Discussions</a
+				class="text-ring-400 hover:text-ring-300 hover:underline"
+				class:opacity-50={!$isOnline}
+				class:pointer-events-none={!$isOnline}>Discussions</a
 			>
 			<span class="text-slate-600">|</span>
 			<a
 				href="https://github.com/hakkelt/JourneyToMordor/issues"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="text-ring-400 hover:text-ring-300 hover:underline">Bug Reports</a
+				class="text-ring-400 hover:text-ring-300 hover:underline"
+				class:opacity-50={!$isOnline}
+				class:pointer-events-none={!$isOnline}>Bug Reports</a
 			>
 		</p>
 	</footer>

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { LogEntry } from '$lib/storage';
 	import { convertToCSV, downloadCSV, parseCSV } from '$lib/csv';
+	import { user } from '$lib/stores/auth';
+	import { isOnline, hasPendingSync } from '$lib/stores/network';
 
 	interface Props {
 		logs: LogEntry[];
@@ -98,6 +100,49 @@
 		onDeleteAll();
 		showDeleteConfirm = false;
 	}
+
+	let showSyncBanner = $state(false);
+	let syncStartTime = 0;
+	let hideTimer: ReturnType<typeof setTimeout> | undefined;
+
+	$effect(() => {
+		const actuallySyncing = $user && $isOnline && $hasPendingSync;
+
+		// Clear existing timer if any
+		if (hideTimer) {
+			clearTimeout(hideTimer);
+			hideTimer = undefined;
+		}
+
+		if (actuallySyncing) {
+			if (!showSyncBanner) {
+				showSyncBanner = true;
+				syncStartTime = Date.now();
+			}
+		} else {
+			// Not syncing
+			if (showSyncBanner) {
+				if (!$isOnline) {
+					// User went offline: hide sync banner immediately (offline banner takes precedence)
+					showSyncBanner = false;
+				} else {
+					// Online and done: delay hide
+					const elapsed = Date.now() - syncStartTime;
+					const delay = Math.max(0, 3000 - elapsed);
+
+					hideTimer = setTimeout(() => {
+						if (!$hasPendingSync) {
+							showSyncBanner = false;
+						}
+					}, delay);
+				}
+			}
+		}
+
+		return () => {
+			if (hideTimer) clearTimeout(hideTimer);
+		};
+	});
 </script>
 
 <input type="file" accept=".csv" class="hidden" bind:this={fileInput} onchange={handleFileSelect} />
@@ -155,6 +200,43 @@
 {/if}
 
 <div class="space-y-8">
+	{#if $user && (!$isOnline || showSyncBanner)}
+		<div
+			class="mx-auto max-w-4xl rounded-md border p-4 {$isOnline
+				? 'border-amber-200 bg-amber-50 text-amber-800'
+				: 'border-slate-200 bg-slate-100 text-slate-700'}"
+		>
+			<div class="flex items-center gap-3">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+					class="h-5 w-5"
+				>
+					{#if !$isOnline}
+						<path
+							fill-rule="evenodd"
+							d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z"
+							clip-rule="evenodd"
+						/>
+					{:else}
+						<path
+							fill-rule="evenodd"
+							d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z"
+							clip-rule="evenodd"
+						/>
+					{/if}
+				</svg>
+				<p class="text-sm font-medium">
+					{#if !$isOnline}
+						You are currently offline. Changes will be saved locally and synced when you reconnect.
+					{:else}
+						Syncing changes...
+					{/if}
+				</p>
+			</div>
+		</div>
+	{/if}
 	<div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
 		<h2 class="mb-4 font-serif text-3xl text-slate-800">Log Journey</h2>
 

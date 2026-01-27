@@ -2,6 +2,7 @@
 	import type { LogEntry } from '$lib/storage';
 	import { LOCATIONS } from '$lib/data';
 	import ProgressChart from './ProgressChart.svelte';
+	import InstallPrompt from './InstallPrompt.svelte';
 	import { resolve } from '$app/paths';
 
 	interface Props {
@@ -135,6 +136,7 @@
 							it from anywhere. Your local data will be merged with your cloud data.
 						</p>
 					</div>
+					<InstallPrompt />
 				</div>
 				<p class="text-center text-sm text-slate-600">
 					Learn more in our
