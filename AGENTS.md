@@ -21,8 +21,18 @@ These instructions must be followed by all agents working on this project.
 
 #### End-to-End Tests (Playwright)
 
+**Standard approach** (uses Vite cache for faster rebuilds):
+
+- To run all e2e tests: `bun run test:e2e`
 - To run a specific test file: `bun run test:e2e e2e/unit-selection.test.ts`
 - To run a specific test by title: `bun run test:e2e -g "should display distances in km"`
+
+**Fast iterative testing** (for repeated test runs):
+
+1. Terminal 1: `bun run test:e2e:server` (build once and keep server running)
+2. Terminal 2: `bun run test:e2e` (runs tests instantly, reuses server)
+
+See `docs/e2e-testing.md` for detailed performance optimization information.
 
 #### Unit Tests (Vitest)
 

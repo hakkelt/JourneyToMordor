@@ -14,7 +14,8 @@
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
 		"test": "bun run test:unit -- --run && bun run test:e2e",
-		"test:e2e": "bunx playwright test"
+		"test:e2e": "bunx playwright test",
+		"test:e2e:server": "bash scripts/e2e-server.sh"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.4.1",

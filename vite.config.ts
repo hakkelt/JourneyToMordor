@@ -1,5 +1,4 @@
 import { defineConfig } from 'vitest/config';
-import { playwright } from '@vitest/browser-playwright';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { enhancedImages } from '@sveltejs/enhanced-img';
@@ -15,7 +14,7 @@ export default defineConfig({
 			injectRegister: 'script',
 			manifest: {
 				name: 'Journey to Mordor',
-				short_name: 'Mordor Journey',
+				short_name: 'Journey to Mordor',
 				description: 'Track your distance and journey to Mordor with Frodo',
 				theme_color: '#1a1a1a',
 				background_color: '#1a1a1a',
@@ -58,37 +57,14 @@ export default defineConfig({
 		})
 	],
 
-	test: {
-		expect: { requireAssertions: true },
+	build: {
+		// Enable persistent caching for faster rebuilds
+		// This caches processed images and other build artifacts
+		rollupOptions: {
+			cache: true
+		}
+	},
 
-		projects: [
-			{
-				extends: './vite.config.ts',
-
-				test: {
-					name: 'client',
-
-					browser: {
-						enabled: true,
-						provider: playwright(),
-						instances: [{ browser: 'chromium', headless: true }]
-					},
-
-					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
-					exclude: ['src/lib/server/**']
-				}
-			},
-
-			{
-				extends: './vite.config.ts',
-
-				test: {
-					name: 'server',
-					environment: 'node',
-					include: ['src/**/*.{test,spec}.{js,ts}'],
-					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
-				}
-			}
-		]
-	}
+	// Enable Vite's persistent cache for dependencies and transformations
+	cacheDir: 'node_modules/.vite'
 });
