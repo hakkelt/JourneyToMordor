@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta
+			name="description"
+			content="Track your fitness journey to Mordor. Compare your progress with Frodo and Sam."
+		/>
+		<link rel="manifest" href="manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+		<meta name="theme-color" content="#1a1a1a" />
+		<script src="registerSW.js"></script>
+		<title>Journey to Mordor</title>
+		
+		<link rel="modulepreload" href="./_app/immutable/entry/start.DJX1pL8D.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/B_Md7Se5.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/Cszbqulu.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/C7-kx7IX.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/BLxUVI0Z.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/b0IE8X-v.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.yZHkIVGZ.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/BZoQOtPd.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/oQvJ08_9.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/DMZUN15h.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/BAjmNCzn.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/ByVlSEKy.js">
+	</head>
+
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+			<script>
+				{
+					__sveltekit_1s85d6c = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						assets: "/JourneyToMordor/v1.0.0-beta2"
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("./_app/immutable/entry/start.DJX1pL8D.js"),
+						import("./_app/immutable/entry/app.yZHkIVGZ.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
