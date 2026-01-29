@@ -70,8 +70,8 @@
 						(km/miles)
 					</li>
 					<li>
-						Authentication is handled by Firebase Authentication using your chosen provider (Google,
-						Facebook, Microsoft, Apple, or Email)
+						Authentication is handled by Firebase Authentication using your chosen provider (Google
+						or Email)
 					</li>
 				</ul>
 			</div>
@@ -173,8 +173,8 @@
 				your data on our behalf as a data processor
 			</li>
 			<li>
-				<strong>OAuth Providers:</strong> When you choose to sign in with Google, Facebook, Microsoft,
-				or Apple, minimal authentication data is shared with these providers
+				<strong>OAuth Providers:</strong> When you choose to sign in with Google, minimal authentication
+				data is shared with the provider
 			</li>
 		</ul>
 		<p class="text-slate-700">
@@ -216,8 +216,8 @@
 			<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
 				<h3 class="mb-2 font-semibold text-slate-800">OAuth Authentication Providers</h3>
 				<p class="mb-2">
-					When you sign in with Google, Facebook, Microsoft, or Apple, these providers handle the
-					authentication process. In practice, this means:
+					When you sign in with Google, the provider handles the authentication process. In
+					practice, this means:
 				</p>
 				<ul class="list-disc space-y-1 pl-5 text-sm">
 					<li>
@@ -247,33 +247,6 @@
 							target="_blank"
 							rel="noopener noreferrer"
 							class="text-ring-600 hover:underline">policies.google.com/privacy</a
-						>
-					</li>
-					<li>
-						Facebook:
-						<a
-							href="https://www.facebook.com/privacy/policy"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-ring-600 hover:underline">facebook.com/privacy/policy</a
-						>
-					</li>
-					<li>
-						Microsoft:
-						<a
-							href="https://privacy.microsoft.com/privacystatement"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-ring-600 hover:underline">privacy.microsoft.com/privacystatement</a
-						>
-					</li>
-					<li>
-						Apple:
-						<a
-							href="https://www.apple.com/legal/privacy/"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-ring-600 hover:underline">apple.com/legal/privacy</a
 						>
 					</li>
 				</ul>

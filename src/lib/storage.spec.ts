@@ -20,10 +20,7 @@ import { isOnline, hasPendingSync } from './stores/network';
 vi.mock('./firebase', () => ({
 	db: {},
 	auth: { currentUser: null },
-	googleProvider: {},
-	facebookProvider: {},
-	microsoftProvider: {},
-	appleProvider: {}
+	googleProvider: {}
 }));
 
 // Mock Firestore functions
@@ -483,27 +480,9 @@ describe('Storage', () => {
 	});
 
 	// Note: Facebook and Apple auth provider tests are skipped as they are not yet configured
-	describe('Authentication Providers (Integration)', () => {
-		it.skip('should authenticate with Facebook (not yet configured)', () => {
-			// This test is skipped because Facebook auth is not yet set up
-			// When configured, test should verify Facebook OAuth flow
-		});
-
-		it.skip('should authenticate with Apple (not yet configured)', () => {
-			// This test is skipped because Apple auth is not yet set up
-			// When configured, test should verify Apple OAuth flow
-		});
-
-		it('should support Google authentication', async () => {
-			// Google provider is configured and should be available
-			const { googleProvider } = await import('./firebase');
-			expect(googleProvider).toBeDefined();
-		});
-
-		it('should support Microsoft authentication', async () => {
-			// Microsoft provider is configured and should be available
-			const { microsoftProvider } = await import('./firebase');
-			expect(microsoftProvider).toBeDefined();
-		});
+	it('should support Google authentication', async () => {
+		// Google provider is configured and should be available
+		const { googleProvider } = await import('./firebase');
+		expect(googleProvider).toBeDefined();
 	});
 });
