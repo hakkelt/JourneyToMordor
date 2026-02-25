@@ -17,6 +17,12 @@
 
 	const KM_TO_MILES = 0.621371;
 
+	type ScaleOptions = {
+		title?: { text: string; color?: string };
+		ticks?: { color?: string };
+		grid?: { color?: string };
+	};
+
 	// Prepare Data
 	let chartData = $derived.by(() => {
 		// Calculate start date from logs
@@ -56,8 +62,7 @@
 			label: p.label
 		}));
 
-		const isDark = $theme === 'dark';
-		const frodoColor = isDark ? '#94a3b8' : '#2C3E50';
+		const frodoColor = getChartColors().frodoColor;
 
 		return {
 			datasets: [
@@ -88,7 +93,8 @@
 			tickColor: isDark ? '#94a3b8' : '#64748b',
 			gridColor: isDark ? 'rgba(148, 163, 184, 0.15)' : 'rgba(0, 0, 0, 0.1)',
 			titleColor: isDark ? '#cbd5e1' : '#334155',
-			legendColor: isDark ? '#cbd5e1' : '#334155'
+			legendColor: isDark ? '#cbd5e1' : '#334155',
+			frodoColor: isDark ? '#94a3b8' : '#2C3E50'
 		};
 	}
 
@@ -190,20 +196,8 @@
 			const colors = getChartColors();
 			chartInstance.data = chartData;
 			// Update y-axis label dynamically
-			const xScale = chartInstance.options.scales?.x as
-				| {
-						title?: { text: string; color?: string };
-						ticks?: { color?: string };
-						grid?: { color?: string };
-				  }
-				| undefined;
-			const yScale = chartInstance.options.scales?.y as
-				| {
-						title?: { text: string; color?: string };
-						ticks?: { color?: string };
-						grid?: { color?: string };
-				  }
-				| undefined;
+			const xScale = chartInstance.options.scales?.x as ScaleOptions | undefined;
+			const yScale = chartInstance.options.scales?.y as ScaleOptions | undefined;
 			if (yScale?.title) {
 				yScale.title.text = `Distance (${unit === 'miles' ? 'miles' : 'km'})`;
 				yScale.title.color = colors.titleColor;
