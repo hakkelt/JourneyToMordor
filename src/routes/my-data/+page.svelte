@@ -81,36 +81,40 @@
 </svelte:head>
 
 <div class="mx-auto max-w-4xl space-y-6">
-	<div class="rounded-lg bg-white p-8 shadow-md">
-		<h1 class="mb-6 font-serif text-5xl font-normal text-slate-800">My Data</h1>
+	<div class="rounded-lg bg-white p-8 shadow-md dark:bg-slate-700">
+		<h1 class="mb-6 font-serif text-5xl font-normal text-slate-800 dark:text-slate-100">My Data</h1>
 
 		<!-- Account Information -->
 		<section class="mb-8 space-y-4">
-			<h2 class="font-serif text-3xl font-normal text-slate-800">Account Information</h2>
+			<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+				Account Information
+			</h2>
 			{#if $user}
-				<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+				<div
+					class="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-600 dark:bg-slate-600"
+				>
 					<div class="space-y-2">
 						<div class="flex items-start justify-between">
 							<div>
-								<p class="text-sm font-medium text-slate-600">User ID</p>
-								<p class="font-mono text-sm text-slate-800">{$user.uid}</p>
+								<p class="text-sm font-medium text-slate-600 dark:text-slate-400">User ID</p>
+								<p class="font-mono text-sm text-slate-800 dark:text-slate-200">{$user.uid}</p>
 							</div>
 						</div>
 						{#if $user.email}
 							<div>
-								<p class="text-sm font-medium text-slate-600">Email</p>
-								<p class="text-slate-800">{$user.email}</p>
+								<p class="text-sm font-medium text-slate-600 dark:text-slate-400">Email</p>
+								<p class="text-slate-800 dark:text-slate-200">{$user.email}</p>
 							</div>
 						{/if}
 						{#if $user.displayName}
 							<div>
-								<p class="text-sm font-medium text-slate-600">Display Name</p>
-								<p class="text-slate-800">{$user.displayName}</p>
+								<p class="text-sm font-medium text-slate-600 dark:text-slate-400">Display Name</p>
+								<p class="text-slate-800 dark:text-slate-200">{$user.displayName}</p>
 							</div>
 						{/if}
 						<div>
-							<p class="text-sm font-medium text-slate-600">Email Verified</p>
-							<p class="text-slate-800">{$user.emailVerified ? 'Yes' : 'No'}</p>
+							<p class="text-sm font-medium text-slate-600 dark:text-slate-400">Email Verified</p>
+							<p class="text-slate-800 dark:text-slate-200">{$user.emailVerified ? 'Yes' : 'No'}</p>
 						</div>
 					</div>
 				</div>
@@ -125,28 +129,36 @@
 
 		<!-- Journey Data -->
 		<section class="mb-8 space-y-4">
-			<h2 class="font-serif text-3xl font-normal text-slate-800">Journey Data</h2>
-			<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+			<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+				Journey Data
+			</h2>
+			<div
+				class="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-600 dark:bg-slate-600"
+			>
 				<div class="space-y-3">
 					<div>
-						<p class="text-sm font-medium text-slate-600">Total Log Entries</p>
-						<p class="text-2xl font-bold text-slate-800">{$journeyStore.logs.length}</p>
+						<p class="text-sm font-medium text-slate-600 dark:text-slate-400">Total Log Entries</p>
+						<p class="text-2xl font-bold text-slate-800 dark:text-slate-100">
+							{$journeyStore.logs.length}
+						</p>
 					</div>
 					<div>
-						<p class="text-sm font-medium text-slate-600">Unit Preference</p>
-						<p class="text-slate-800">{$journeyStore.unit === 'km' ? 'Kilometers' : 'Miles'}</p>
+						<p class="text-sm font-medium text-slate-600 dark:text-slate-400">Unit Preference</p>
+						<p class="text-slate-800 dark:text-slate-200">
+							{$journeyStore.unit === 'km' ? 'Kilometers' : 'Miles'}
+						</p>
 					</div>
 					<div>
-						<p class="text-sm font-medium text-slate-600">Total Distance</p>
-						<p class="text-slate-800">
+						<p class="text-sm font-medium text-slate-600 dark:text-slate-400">Total Distance</p>
+						<p class="text-slate-800 dark:text-slate-200">
 							{$journeyStore.logs.reduce((sum, log) => sum + log.distance, 0).toFixed(1)}
 							{$journeyStore.unit}
 						</p>
 					</div>
 					{#if $journeyStore.logs.length > 0}
 						<div>
-							<p class="text-sm font-medium text-slate-600">Date Range</p>
-							<p class="text-slate-800">
+							<p class="text-sm font-medium text-slate-600 dark:text-slate-400">Date Range</p>
+							<p class="text-slate-800 dark:text-slate-200">
 								{new Date(
 									Math.min(...$journeyStore.logs.map((log) => new Date(log.date).getTime()))
 								).toLocaleDateString()}
@@ -163,16 +175,20 @@
 			<!-- Log Entries Preview -->
 			{#if $journeyStore.logs.length > 0}
 				<div class="mt-4">
-					<h3 class="mb-2 text-lg font-semibold text-slate-800">Recent Entries (Last 5)</h3>
+					<h3 class="mb-2 text-lg font-semibold text-slate-800 dark:text-slate-100">
+						Recent Entries (Last 5)
+					</h3>
 					<div class="space-y-2">
 						{#each $journeyStore.logs.slice(0, 5) as log (log.id)}
-							<div class="rounded border border-slate-200 bg-white p-3">
+							<div
+								class="rounded border border-slate-200 bg-white p-3 dark:border-slate-600 dark:bg-slate-600"
+							>
 								<div class="flex items-start justify-between">
 									<div>
-										<p class="font-medium text-slate-800">
+										<p class="font-medium text-slate-800 dark:text-slate-200">
 											{new Date(log.date).toLocaleDateString()}
 										</p>
-										<p class="text-sm text-slate-600">
+										<p class="text-sm text-slate-600 dark:text-slate-400">
 											{log.distance}
 											{$journeyStore.unit}
 											{#if log.note}
@@ -186,7 +202,7 @@
 						{/each}
 					</div>
 					{#if $journeyStore.logs.length > 5}
-						<p class="mt-2 text-sm text-slate-500">
+						<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
 							... and {$journeyStore.logs.length - 5} more entries
 						</p>
 					{/if}
@@ -196,8 +212,10 @@
 
 		<!-- Data Export -->
 		<section class="mb-8 space-y-4">
-			<h2 class="font-serif text-3xl font-normal text-slate-800">Export Your Data</h2>
-			<div class="space-y-3 text-slate-700">
+			<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+				Export Your Data
+			</h2>
+			<div class="space-y-3 text-slate-700 dark:text-slate-300">
 				<p>
 					<strong>Manual Backups & device transfer:</strong> For manually editing logs or moving
 					data between devices, we recommend using the <strong>CSV Export</strong> feature found on
@@ -224,7 +242,7 @@
 		<section class="mb-8">
 			<a
 				href={resolve('/privacy')}
-				class="text-sm font-medium text-slate-500 hover:text-ring-600 hover:underline"
+				class="text-sm font-medium text-slate-500 hover:text-ring-600 hover:underline dark:text-slate-400"
 			>
 				View Privacy Policy
 			</a>
@@ -232,32 +250,40 @@
 
 		<!-- Data Management -->
 		<section class="space-y-6">
-			<h2 class="font-serif text-3xl font-normal text-slate-800">Data Management</h2>
+			<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+				Data Management
+			</h2>
 
 			<!-- Clear Local Data -->
-			<div class="rounded-lg border border-yellow-200 bg-yellow-50 p-6">
-				<h3 class="mb-2 text-lg font-semibold text-yellow-900">Clear Local Data</h3>
-				<p class="mb-4 text-sm text-yellow-800">
+			<div
+				class="rounded-lg border border-yellow-200 bg-yellow-50 p-6 dark:border-yellow-700/50 dark:bg-yellow-900/20"
+			>
+				<h3 class="mb-2 text-lg font-semibold text-yellow-900 dark:text-yellow-300">
+					Clear Local Data
+				</h3>
+				<p class="mb-4 text-sm text-yellow-800 dark:text-yellow-400">
 					This will remove all journey data from your browser's local storage. If you're signed in,
 					your cloud data will remain intact and will re-sync when you reload the page.
 				</p>
 				{#if !showLocalDataConfirm}
 					<button
 						onclick={() => (showLocalDataConfirm = true)}
-						class="rounded-lg border-2 border-yellow-600 bg-white px-4 py-2 font-semibold text-yellow-700 transition hover:bg-yellow-100"
+						class="rounded-lg border-2 border-yellow-600 bg-white px-4 py-2 font-semibold text-yellow-700 transition hover:bg-yellow-100 dark:bg-slate-700 dark:text-yellow-400 dark:hover:bg-slate-600"
 					>
 						Clear Local Data
 					</button>
 				{:else}
 					<div class="space-y-3">
-						<p class="font-medium text-yellow-900">
-							Are you sure? Type <code class="rounded bg-yellow-200 px-1">CLEAR</code> to confirm:
+						<p class="font-medium text-yellow-900 dark:text-yellow-300">
+							Are you sure? Type <code class="rounded bg-yellow-200 px-1 dark:bg-yellow-800/50"
+								>CLEAR</code
+							> to confirm:
 						</p>
 						<input
 							type="text"
 							bind:value={localDataConfirmText}
 							placeholder="Type CLEAR"
-							class="w-full max-w-xs rounded-lg border border-yellow-300 px-4 py-2 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 focus:outline-none"
+							class="w-full max-w-xs rounded-lg border border-yellow-300 px-4 py-2 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 focus:outline-none dark:border-yellow-600 dark:bg-slate-600 dark:text-slate-100"
 						/>
 						<div class="flex gap-3">
 							<button
@@ -271,7 +297,7 @@
 									showLocalDataConfirm = false;
 									localDataConfirmText = '';
 								}}
-								class="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-50"
+								class="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-500 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500"
 							>
 								Cancel
 							</button>
@@ -282,29 +308,34 @@
 
 			<!-- Delete Account -->
 			{#if $user}
-				<div id="delete-account" class="rounded-lg border border-red-200 bg-red-50 p-6">
-					<h3 class="mb-2 text-lg font-semibold text-red-900">Delete Account</h3>
-					<p class="mb-4 text-sm text-red-800">
+				<div
+					id="delete-account"
+					class="rounded-lg border border-red-200 bg-red-50 p-6 dark:border-red-700/50 dark:bg-red-900/20"
+				>
+					<h3 class="mb-2 text-lg font-semibold text-red-900 dark:text-red-300">Delete Account</h3>
+					<p class="mb-4 text-sm text-red-800 dark:text-red-400">
 						This will permanently delete your account and all associated cloud data. Your local data
 						will also be cleared. This action cannot be undone.
 					</p>
 					{#if !showDeleteConfirm}
 						<button
 							onclick={() => (showDeleteConfirm = true)}
-							class="rounded-lg border-2 border-red-600 bg-white px-4 py-2 font-semibold text-red-700 transition hover:bg-red-100"
+							class="rounded-lg border-2 border-red-600 bg-white px-4 py-2 font-semibold text-red-700 transition hover:bg-red-100 dark:bg-slate-700 dark:text-red-400 dark:hover:bg-slate-600"
 						>
 							Delete Account
 						</button>
 					{:else}
 						<div class="space-y-3">
-							<p class="font-medium text-red-900">
-								Are you absolutely sure? Type <code class="rounded bg-red-200 px-1">DELETE</code> to confirm:
+							<p class="font-medium text-red-900 dark:text-red-300">
+								Are you absolutely sure? Type <code
+									class="rounded bg-red-200 px-1 dark:bg-red-800/50">DELETE</code
+								> to confirm:
 							</p>
 							<input
 								type="text"
 								bind:value={deleteConfirmText}
 								placeholder="Type DELETE"
-								class="w-full max-w-xs rounded-lg border border-red-300 px-4 py-2 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none"
+								class="w-full max-w-xs rounded-lg border border-red-300 px-4 py-2 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none dark:border-red-600 dark:bg-slate-600 dark:text-slate-100"
 							/>
 							<div class="flex gap-3">
 								<button
@@ -318,7 +349,7 @@
 										showDeleteConfirm = false;
 										deleteConfirmText = '';
 									}}
-									class="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-50"
+									class="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-500 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500"
 								>
 									Cancel
 								</button>
@@ -327,8 +358,10 @@
 					{/if}
 				</div>
 			{:else}
-				<div class="rounded-lg border border-slate-200 bg-slate-50 p-6">
-					<p class="text-slate-600">
+				<div
+					class="rounded-lg border border-slate-200 bg-slate-50 p-6 dark:border-slate-600 dark:bg-slate-600"
+				>
+					<p class="text-slate-600 dark:text-slate-300">
 						You need to be signed in to delete your account. Since you're not signed in, you can
 						only clear your local data.
 					</p>
@@ -337,7 +370,7 @@
 		</section>
 
 		<!-- Back Link -->
-		<div class="mt-8 border-t border-slate-200 pt-6">
+		<div class="mt-8 border-t border-slate-200 pt-6 dark:border-slate-600">
 			<a
 				href={resolve('/')}
 				class="inline-block rounded-lg bg-ring-600 px-6 py-3 font-semibold text-white transition hover:bg-ring-700"

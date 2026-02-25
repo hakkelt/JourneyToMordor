@@ -3,6 +3,7 @@
 	import Header from '$lib/components/Header.svelte';
 	import { loadData } from '$lib/storage';
 	import { isOnline } from '$lib/stores/network';
+	import { theme } from '$lib/stores/theme';
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { warmImageCache } from '$lib/image-cache';
@@ -41,7 +42,10 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-<div class="flex min-h-screen flex-col bg-earth-50">
+<div
+	class="flex min-h-screen flex-col bg-earth-50 dark:bg-slate-800"
+	class:dark={$theme === 'dark'}
+>
 	<Header />
 
 	<main class="flex-grow p-4 md:p-6">

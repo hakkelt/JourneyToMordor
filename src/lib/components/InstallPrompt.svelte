@@ -33,7 +33,9 @@
 </script>
 
 {#if deferredPrompt}
-	<div class="rounded-lg border-l-4 border-sky-500 bg-white p-4 transition-all hover:shadow-md">
+	<div
+		class="rounded-lg border-l-4 border-sky-500 bg-white p-4 transition-all hover:shadow-md dark:bg-slate-700"
+	>
 		<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 			<div>
 				<p class="font-semibold text-sky-900">📲 Install App</p>

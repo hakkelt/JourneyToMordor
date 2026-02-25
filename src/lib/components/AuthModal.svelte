@@ -120,7 +120,7 @@
 <!-- Modal -->
 <div class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4">
 	<div
-		class="pointer-events-auto relative w-full max-w-md rounded-lg bg-white shadow-xl"
+		class="pointer-events-auto relative w-full max-w-md rounded-lg bg-white shadow-xl dark:bg-slate-700"
 		role="dialog"
 		aria-modal="true"
 		tabindex="-1"
@@ -128,7 +128,7 @@
 		<!-- Close button -->
 		<button
 			onclick={onClose}
-			class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+			class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
 			aria-label="Close"
 		>
 			<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,14 +143,16 @@
 
 		<div class="p-6">
 			{#if mode === 'select'}
-				<h2 class="mb-6 font-serif text-4xl font-normal text-slate-800">Sign In</h2>
+				<h2 class="mb-6 font-serif text-4xl font-normal text-slate-800 dark:text-slate-100">
+					Sign In
+				</h2>
 
 				<div class="space-y-3">
 					<!-- Google -->
 					<button
 						onclick={() => handleProviderSignIn(googleProvider, 'Google')}
 						disabled={loading}
-						class="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+						class="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-500 dark:bg-slate-600 dark:text-slate-200 dark:hover:bg-slate-500"
 					>
 						<svg class="h-5 w-5" viewBox="0 0 24 24">
 							<path
@@ -175,17 +177,19 @@
 
 					<div class="relative my-6">
 						<div class="absolute inset-0 flex items-center">
-							<div class="w-full border-t border-slate-300"></div>
+							<div class="w-full border-t border-slate-300 dark:border-slate-500"></div>
 						</div>
 						<div class="relative flex justify-center text-sm">
-							<span class="bg-white px-2 text-slate-500">Or</span>
+							<span class="bg-white px-2 text-slate-500 dark:bg-slate-700 dark:text-slate-400"
+								>Or</span
+							>
 						</div>
 					</div>
 
 					<!-- Email options -->
 					<button
 						onclick={() => switchMode('email-signin')}
-						class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+						class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-500 dark:bg-slate-600 dark:text-slate-200 dark:hover:bg-slate-500"
 					>
 						Sign in with Email
 					</button>
@@ -198,7 +202,9 @@
 					</button>
 				</div>
 			{:else if mode === 'email-signin'}
-				<h2 class="mb-6 font-serif text-4xl font-normal text-slate-800">Sign In with Email</h2>
+				<h2 class="mb-6 font-serif text-4xl font-normal text-slate-800 dark:text-slate-100">
+					Sign In with Email
+				</h2>
 
 				<form
 					onsubmit={(e) => {
@@ -208,19 +214,24 @@
 					class="space-y-4"
 				>
 					<div>
-						<label for="email" class="mb-1 block text-sm font-medium text-slate-700">Email</label>
+						<label
+							for="email"
+							class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Email</label
+						>
 						<input
 							id="email"
 							type="email"
 							bind:value={email}
 							required
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none dark:border-slate-500 dark:bg-slate-600 dark:text-slate-100"
 							placeholder="you@example.com"
 						/>
 					</div>
 
 					<div>
-						<label for="password" class="mb-1 block text-sm font-medium text-slate-700"
+						<label
+							for="password"
+							class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
 							>Password</label
 						>
 						<input
@@ -228,13 +239,15 @@
 							type="password"
 							bind:value={password}
 							required
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none dark:border-slate-500 dark:bg-slate-600 dark:text-slate-100"
 							placeholder="••••••••"
 						/>
 					</div>
 
 					{#if error}
-						<div class="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+						<div
+							class="rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/30 dark:text-red-400"
+						>
 							{error}
 						</div>
 					{/if}
@@ -250,13 +263,15 @@
 					<button
 						type="button"
 						onclick={() => switchMode('select')}
-						class="w-full text-sm text-slate-600 hover:text-slate-800"
+						class="w-full text-sm text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
 					>
 						← Back to all options
 					</button>
 				</form>
 			{:else if mode === 'email-signup'}
-				<h2 class="mb-6 font-serif text-4xl font-normal text-slate-800">Create Account</h2>
+				<h2 class="mb-6 font-serif text-4xl font-normal text-slate-800 dark:text-slate-100">
+					Create Account
+				</h2>
 
 				<form
 					onsubmit={(e) => {
@@ -266,21 +281,24 @@
 					class="space-y-4"
 				>
 					<div>
-						<label for="signup-email" class="mb-1 block text-sm font-medium text-slate-700"
-							>Email</label
+						<label
+							for="signup-email"
+							class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Email</label
 						>
 						<input
 							id="signup-email"
 							type="email"
 							bind:value={email}
 							required
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none dark:border-slate-500 dark:bg-slate-600 dark:text-slate-100"
 							placeholder="you@example.com"
 						/>
 					</div>
 
 					<div>
-						<label for="signup-password" class="mb-1 block text-sm font-medium text-slate-700"
+						<label
+							for="signup-password"
+							class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
 							>Password</label
 						>
 						<input
@@ -289,14 +307,16 @@
 							bind:value={password}
 							required
 							minlength="6"
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none dark:border-slate-500 dark:bg-slate-600 dark:text-slate-100"
 							placeholder="••••••••"
 						/>
-						<p class="mt-1 text-xs text-slate-500">At least 6 characters</p>
+						<p class="mt-1 text-xs text-slate-500 dark:text-slate-400">At least 6 characters</p>
 					</div>
 
 					<div>
-						<label for="confirm-password" class="mb-1 block text-sm font-medium text-slate-700"
+						<label
+							for="confirm-password"
+							class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
 							>Confirm Password</label
 						>
 						<input
@@ -305,13 +325,15 @@
 							bind:value={confirmPassword}
 							required
 							minlength="6"
-							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none"
+							class="w-full rounded-lg border border-slate-300 px-4 py-2 focus:border-ring-500 focus:ring-2 focus:ring-ring-200 focus:outline-none dark:border-slate-500 dark:bg-slate-600 dark:text-slate-100"
 							placeholder="••••••••"
 						/>
 					</div>
 
 					{#if error}
-						<div class="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+						<div
+							class="rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/30 dark:text-red-400"
+						>
 							{error}
 						</div>
 					{/if}
@@ -327,7 +349,7 @@
 					<button
 						type="button"
 						onclick={() => switchMode('select')}
-						class="w-full text-sm text-slate-600 hover:text-slate-800"
+						class="w-full text-sm text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
 					>
 						← Back to all options
 					</button>

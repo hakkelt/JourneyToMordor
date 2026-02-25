@@ -5,6 +5,7 @@
 	import { journeyStore, setUnit } from '$lib/storage';
 	import { user } from '$lib/stores/auth';
 	import Auth from './Auth.svelte';
+	import DarkModeToggle from './DarkModeToggle.svelte';
 
 	function handleSetUnit(unit: 'km' | 'miles') {
 		setUnit(unit, $user);
@@ -91,6 +92,10 @@
 						miles
 					</button>
 				</div>
+
+				<div class="hidden h-6 w-px bg-earth-700 sm:block"></div>
+
+				<DarkModeToggle />
 
 				<div class="hidden h-6 w-px bg-earth-700 sm:block"></div>
 

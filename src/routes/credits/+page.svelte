@@ -46,21 +46,27 @@
 
 <div class="space-y-12 pb-12">
 	<header class="text-center">
-		<h1 class="font-serif text-4xl text-slate-800 md:text-5xl">Credits</h1>
-		<p class="mt-4 text-lg text-slate-600">
+		<h1 class="font-serif text-4xl text-slate-800 md:text-5xl dark:text-slate-100">Credits</h1>
+		<p class="mt-4 text-lg text-slate-600 dark:text-slate-300">
 			This project is a tribute to J.R.R. Tolkien's masterpiece. We attribute all sources of data
 			and imagery used to bring this journey to life.
 		</p>
 	</header>
 
 	<section class="space-y-6">
-		<div class="border-b border-slate-200 pb-2">
-			<h2 class="font-serif text-2xl font-bold text-slate-800 italic">Data & Journey Sources</h2>
+		<div class="border-b border-slate-200 pb-2 dark:border-slate-600">
+			<h2 class="font-serif text-2xl font-bold text-slate-800 italic dark:text-slate-100">
+				Data & Journey Sources
+			</h2>
 		</div>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-			<div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-				<h3 class="font-serif text-xl font-bold text-slate-800">The Eowyn Challenge</h3>
-				<p class="mt-2 text-slate-600">
+			<div
+				class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-600 dark:bg-slate-700"
+			>
+				<h3 class="font-serif text-xl font-bold text-slate-800 dark:text-slate-100">
+					The Eowyn Challenge
+				</h3>
+				<p class="mt-2 text-slate-600 dark:text-slate-300">
 					The primary inspiration and source for the daily distances and milestone tracking of
 					Frodo's journey from Bag End to Mount Doom.
 				</p>
@@ -74,9 +80,13 @@
 				</a>
 			</div>
 
-			<div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-				<h3 class="font-serif text-xl font-bold text-slate-800">The Atlas of Middle-earth</h3>
-				<p class="mt-2 text-slate-600">
+			<div
+				class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-600 dark:bg-slate-700"
+			>
+				<h3 class="font-serif text-xl font-bold text-slate-800 dark:text-slate-100">
+					The Atlas of Middle-earth
+				</h3>
+				<p class="mt-2 text-slate-600 dark:text-slate-300">
 					By Karen Wynn Fonstad. The definitive geographical guide to Middle-earth, providing the
 					foundational measurements and mapping used for calculating distances.
 				</p>
@@ -90,9 +100,13 @@
 				</a>
 			</div>
 
-			<div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-				<h3 class="font-serif text-xl font-bold text-slate-800">Community Journey Trackers</h3>
-				<p class="mt-2 text-slate-600">
+			<div
+				class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-600 dark:bg-slate-700"
+			>
+				<h3 class="font-serif text-xl font-bold text-slate-800 dark:text-slate-100">
+					Community Journey Trackers
+				</h3>
+				<p class="mt-2 text-slate-600 dark:text-slate-300">
 					Various community-maintained Google Sheets that provide detailed day-by-day breakdowns of
 					the journey.
 				</p>
@@ -135,9 +149,13 @@
 				</div>
 			</div>
 
-			<div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-				<h3 class="font-serif text-xl font-bold text-slate-800">Tolkien Gateway</h3>
-				<p class="mt-2 text-slate-600">
+			<div
+				class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-600 dark:bg-slate-700"
+			>
+				<h3 class="font-serif text-xl font-bold text-slate-800 dark:text-slate-100">
+					Tolkien Gateway
+				</h3>
+				<p class="mt-2 text-slate-600 dark:text-slate-300">
 					The ultimate collaborative encyclopedia for everything Tolkien, used for verifying quotes,
 					dates, and historical details.
 				</p>
@@ -154,23 +172,27 @@
 	</section>
 
 	<section class="space-y-6">
-		<div class="border-b border-slate-200 pb-2">
-			<h2 class="font-serif text-2xl font-bold text-slate-800 italic">Image Attribution</h2>
+		<div class="border-b border-slate-200 pb-2 dark:border-slate-600">
+			<h2 class="font-serif text-2xl font-bold text-slate-800 italic dark:text-slate-100">
+				Image Attribution
+			</h2>
 		</div>
-		<p class="text-slate-600">
+		<p class="text-slate-600 dark:text-slate-300">
 			All images used in this challenge are property of their respective creators.
 		</p>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 			{#each combinedCredits as loc (`${loc.id}-${loc.name}`)}
 				<div
-					class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+					class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-600 dark:bg-slate-700"
 				>
-					<div class="aspect-video w-full overflow-hidden bg-slate-100">
+					<div class="aspect-video w-full overflow-hidden bg-slate-100 dark:bg-slate-600">
 						<enhanced:img src={loc.image} alt={loc.name} class="h-full w-full object-cover" />
 					</div>
 					<div class="p-4">
-						<h3 class="font-serif text-xl font-bold text-slate-800">{loc.name}</h3>
-						<p class="mt-1 text-sm text-slate-500">Source:</p>
+						<h3 class="font-serif text-xl font-bold text-slate-800 dark:text-slate-100">
+							{loc.name}
+						</h3>
+						<p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Source:</p>
 						<a
 							href={loc.originalUrl}
 							target="_blank"
@@ -185,7 +207,7 @@
 		</div>
 	</section>
 
-	<footer class="pt-8 text-center text-slate-500">
+	<footer class="pt-8 text-center text-slate-500 dark:text-slate-400">
 		<p>
 			If you are the owner of any content displayed here and wish for it to be removed or attributed
 			differently, please contact us.

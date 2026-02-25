@@ -4,6 +4,7 @@
 	import type { LogEntry } from '$lib/storage';
 	import { getStartDate } from '$lib/storage';
 	import { FRODO_JOURNEY } from '$lib/data';
+	import { theme } from '$lib/stores/theme';
 
 	interface Props {
 		logs: LogEntry[];
@@ -55,6 +56,9 @@
 			label: p.label
 		}));
 
+		const isDark = $theme === 'dark';
+		const frodoColor = isDark ? '#94a3b8' : '#2C3E50';
+
 		return {
 			datasets: [
 				{
@@ -68,7 +72,7 @@
 				{
 					label: 'Frodo',
 					data: frodoDataPoints,
-					borderColor: '#2C3E50', // Dark Slate
+					borderColor: frodoColor,
 					borderDash: [5, 5],
 					pointRadius: 0,
 					fill: false,
@@ -78,9 +82,21 @@
 		};
 	});
 
+	function getChartColors() {
+		const isDark = $theme === 'dark';
+		return {
+			tickColor: isDark ? '#94a3b8' : '#64748b',
+			gridColor: isDark ? 'rgba(148, 163, 184, 0.15)' : 'rgba(0, 0, 0, 0.1)',
+			titleColor: isDark ? '#cbd5e1' : '#334155',
+			legendColor: isDark ? '#cbd5e1' : '#334155'
+		};
+	}
+
 	function initChart() {
 		if (!chartCanvas) return;
 		if (chartInstance) chartInstance.destroy();
+
+		const colors = getChartColors();
 
 		chartInstance = new Chart(chartCanvas, {
 			type: 'line',
@@ -97,20 +113,27 @@
 						type: 'linear',
 						title: {
 							display: true,
-							text: 'Days since start'
+							text: 'Days since start',
+							color: colors.titleColor
 						},
+						ticks: { color: colors.tickColor },
+						grid: { color: colors.gridColor },
 						suggestedMax: 185 // Frodo's journey length
 					},
 					y: {
 						title: {
 							display: true,
-							text: `Distance (${unit === 'miles' ? 'miles' : 'km'})`
-						}
+							text: `Distance (${unit === 'miles' ? 'miles' : 'km'})`,
+							color: colors.titleColor
+						},
+						ticks: { color: colors.tickColor },
+						grid: { color: colors.gridColor }
 					}
 				},
 				plugins: {
 					legend: {
 						labels: {
+							color: colors.legendColor,
 							usePointStyle: true,
 							generateLabels: (chart) => {
 								const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
@@ -132,7 +155,8 @@
 					},
 					title: {
 						display: true,
-						text: 'The Fellowship Gap'
+						text: 'The Fellowship Gap',
+						color: colors.titleColor
 					},
 					tooltip: {
 						callbacks: {
@@ -160,20 +184,53 @@
 		};
 	});
 
-	// React to data changes
+	// React to data changes and theme changes
 	$effect(() => {
 		if (chartInstance) {
+			const colors = getChartColors();
 			chartInstance.data = chartData;
 			// Update y-axis label dynamically
-			const yScale = chartInstance.options.scales?.y as { title?: { text: string } } | undefined;
+			const xScale = chartInstance.options.scales?.x as
+				| {
+						title?: { text: string; color?: string };
+						ticks?: { color?: string };
+						grid?: { color?: string };
+				  }
+				| undefined;
+			const yScale = chartInstance.options.scales?.y as
+				| {
+						title?: { text: string; color?: string };
+						ticks?: { color?: string };
+						grid?: { color?: string };
+				  }
+				| undefined;
 			if (yScale?.title) {
 				yScale.title.text = `Distance (${unit === 'miles' ? 'miles' : 'km'})`;
+				yScale.title.color = colors.titleColor;
 			}
+			if (yScale?.ticks) yScale.ticks.color = colors.tickColor;
+			if (yScale?.grid) yScale.grid.color = colors.gridColor;
+			if (xScale?.title) {
+				xScale.title.color = colors.titleColor;
+			}
+			if (xScale?.ticks) xScale.ticks.color = colors.tickColor;
+			if (xScale?.grid) xScale.grid.color = colors.gridColor;
+
+			// Update legend and title colors
+			const plugins = chartInstance.options.plugins as {
+				legend?: { labels?: { color?: string } };
+				title?: { color?: string };
+			};
+			if (plugins?.legend?.labels) plugins.legend.labels.color = colors.legendColor;
+			if (plugins?.title) plugins.title.color = colors.titleColor;
+
 			chartInstance.update();
 		}
 	});
 </script>
 
-<div class="h-80 w-full rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+<div
+	class="h-80 w-full rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-600 dark:bg-slate-700"
+>
 	<canvas bind:this={chartCanvas}></canvas>
 </div>
