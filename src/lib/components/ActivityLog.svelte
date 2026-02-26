@@ -203,8 +203,8 @@
 	{#if $user && (!$isOnline || showSyncBanner)}
 		<div
 			class="mx-auto max-w-4xl rounded-md border p-4 {$isOnline
-				? 'border-amber-200 bg-amber-50 text-amber-800'
-				: 'border-slate-200 bg-slate-100 text-slate-700'}"
+				? 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800/50 dark:bg-amber-900/20 dark:text-amber-400'
+				: 'border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-600 dark:bg-slate-600/50 dark:text-slate-300'}"
 		>
 			<div class="flex items-center gap-3">
 				<svg
@@ -352,7 +352,7 @@
 
 					<button
 						onclick={() => (showDeleteConfirm = true)}
-						class="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-1.5 font-medium text-red-700 transition-colors hover:bg-red-100"
+						class="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-1.5 font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

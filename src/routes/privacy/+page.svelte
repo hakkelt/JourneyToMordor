@@ -51,9 +51,11 @@
 		</h2>
 
 		<div class="space-y-6">
-			<div class="rounded-lg border-l-4 border-shire-500 bg-shire-50 p-4">
-				<h3 class="mb-2 font-semibold text-shire-900">Without Login (Default)</h3>
-				<ul class="list-disc space-y-2 pl-5 text-shire-800">
+			<div class="rounded-lg border-l-4 border-shire-500 bg-shire-50 p-4 dark:bg-shire-900/20">
+				<h3 class="mb-2 font-semibold text-shire-900 dark:text-shire-300">
+					Without Login (Default)
+				</h3>
+				<ul class="list-disc space-y-2 pl-5 text-shire-800 dark:text-shire-300">
 					<li>All your journey data is stored locally in your browser's local storage</li>
 					<li>No data is sent to our servers or any third-party services</li>
 					<li>Your data remains on your device only</li>
@@ -65,9 +67,9 @@
 				</ul>
 			</div>
 
-			<div class="rounded-lg border-l-4 border-ring-500 bg-ring-50 p-4">
-				<h3 class="mb-2 font-semibold text-ring-900">With Login (Optional)</h3>
-				<ul class="list-disc space-y-2 pl-5 text-ring-800">
+			<div class="rounded-lg border-l-4 border-ring-500 bg-ring-50 p-4 dark:bg-ring-900/20">
+				<h3 class="mb-2 font-semibold text-ring-900 dark:text-ring-300">With Login (Optional)</h3>
+				<ul class="list-disc space-y-2 pl-5 text-ring-800 dark:text-ring-300">
 					<li>Your journey data is backed up to Firebase Cloud Firestore</li>
 					<li>You can access your progress from any device by logging in</li>
 					<li>Your data automatically syncs between devices</li>
@@ -342,8 +344,10 @@
 			To exercise these rights, you can use the in-app features or contact us through the channels
 			listed below.
 		</p>
-		<div class="mt-4 rounded-lg border border-ring-200 bg-ring-50 p-4">
-			<p class="text-sm text-ring-900">
+		<div
+			class="mt-4 rounded-lg border border-ring-200 bg-ring-50 p-4 dark:border-ring-800/30 dark:bg-ring-900/20"
+		>
+			<p class="text-sm text-ring-900 dark:text-ring-300">
 				<strong>💡 Tip:</strong> Visit our
 				<a
 					href={resolve('/my-data')}

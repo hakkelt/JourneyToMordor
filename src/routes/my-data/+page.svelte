@@ -119,8 +119,10 @@
 					</div>
 				</div>
 			{:else}
-				<div class="rounded-lg border border-shire-200 bg-shire-50 p-4">
-					<p class="font-medium text-shire-900">
+				<div
+					class="rounded-lg border border-shire-200 bg-shire-50 p-4 dark:border-shire-800/50 dark:bg-shire-900/20"
+				>
+					<p class="font-medium text-shire-900 dark:text-shire-300">
 						You are not signed in. Your data is stored locally in your browser only.
 					</p>
 				</div>
