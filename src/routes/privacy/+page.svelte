@@ -16,15 +16,17 @@
 	/>
 </svelte:head>
 
-<div class="mx-auto max-w-3xl space-y-6 rounded-lg bg-white p-8 shadow-md">
-	<div class="border-b border-slate-200 pb-4">
-		<h1 class="font-serif text-5xl font-normal text-slate-800">Privacy Policy</h1>
-		<p class="mt-2 text-sm text-slate-500">Last updated: January 26, 2026</p>
+<div class="mx-auto max-w-3xl space-y-6 rounded-lg bg-white p-8 shadow-md dark:bg-slate-700">
+	<div class="border-b border-slate-200 pb-4 dark:border-slate-600">
+		<h1 class="font-serif text-5xl font-normal text-slate-800 dark:text-slate-100">
+			Privacy Policy
+		</h1>
+		<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Last updated: January 26, 2026</p>
 	</div>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Overview</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">Overview</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			Journey To Mordor is designed with your privacy in mind. We believe you should have full
 			control over your data, which is why we've built this application to work entirely without an
 			account if you prefer.
@@ -32,8 +34,10 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Controller</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Data Controller
+		</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			For the purposes of the General Data Protection Regulation (GDPR), the data controller for
 			this application is the individual or entity operating this instance of Journey To Mordor.
 			When you use Firebase authentication and cloud storage features, Google LLC acts as a data
@@ -42,12 +46,16 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Storage Options</h2>
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Data Storage Options
+		</h2>
 
 		<div class="space-y-6">
-			<div class="rounded-lg border-l-4 border-shire-500 bg-shire-50 p-4">
-				<h3 class="mb-2 font-semibold text-shire-900">Without Login (Default)</h3>
-				<ul class="list-disc space-y-2 pl-5 text-shire-800">
+			<div class="rounded-lg border-l-4 border-shire-500 bg-shire-50 p-4 dark:bg-shire-900/20">
+				<h3 class="mb-2 font-semibold text-shire-900 dark:text-shire-300">
+					Without Login (Default)
+				</h3>
+				<ul class="list-disc space-y-2 pl-5 text-shire-800 dark:text-shire-300">
 					<li>All your journey data is stored locally in your browser's local storage</li>
 					<li>No data is sent to our servers or any third-party services</li>
 					<li>Your data remains on your device only</li>
@@ -59,9 +67,9 @@
 				</ul>
 			</div>
 
-			<div class="rounded-lg border-l-4 border-ring-500 bg-ring-50 p-4">
-				<h3 class="mb-2 font-semibold text-ring-900">With Login (Optional)</h3>
-				<ul class="list-disc space-y-2 pl-5 text-ring-800">
+			<div class="rounded-lg border-l-4 border-ring-500 bg-ring-50 p-4 dark:bg-ring-900/20">
+				<h3 class="mb-2 font-semibold text-ring-900 dark:text-ring-300">With Login (Optional)</h3>
+				<ul class="list-disc space-y-2 pl-5 text-ring-800 dark:text-ring-300">
 					<li>Your journey data is backed up to Firebase Cloud Firestore</li>
 					<li>You can access your progress from any device by logging in</li>
 					<li>Your data automatically syncs between devices</li>
@@ -79,11 +87,13 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Legal Basis for Processing</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Legal Basis for Processing
+		</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			Under GDPR, we process your personal data based on the following legal grounds:
 		</p>
-		<ul class="list-disc space-y-2 pl-5 text-slate-700">
+		<ul class="list-disc space-y-2 pl-5 text-slate-700 dark:text-slate-300">
 			<li>
 				<strong>Consent:</strong> When you choose to create an account and log in, you provide explicit
 				consent for us to process your authentication and journey data
@@ -100,12 +110,14 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
 			Information We Collect (When Logged In)
 		</h2>
-		<div class="space-y-3 text-slate-700">
+		<div class="space-y-3 text-slate-700 dark:text-slate-300">
 			<div>
-				<h3 class="font-semibold text-slate-800">Authentication Information:</h3>
+				<h3 class="font-semibold text-slate-800 dark:text-slate-200">
+					Authentication Information:
+				</h3>
 				<ul class="list-disc pl-5">
 					<li>Email address (if using email authentication)</li>
 					<li>Display name and profile photo (from OAuth providers)</li>
@@ -113,7 +125,7 @@
 				</ul>
 			</div>
 			<div>
-				<h3 class="font-semibold text-slate-800">Journey Data:</h3>
+				<h3 class="font-semibold text-slate-800 dark:text-slate-200">Journey Data:</h3>
 				<ul class="list-disc pl-5">
 					<li>Activity log entries (date, distance, optional notes)</li>
 					<li>Unit preference (kilometers or miles)</li>
@@ -127,17 +139,21 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">How We Use Your Data</h2>
-		<p class="text-slate-700">When you choose to log in, we use your data solely to:</p>
-		<ul class="list-disc space-y-2 pl-5 text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			How We Use Your Data
+		</h2>
+		<p class="text-slate-700 dark:text-slate-300">
+			When you choose to log in, we use your data solely to:
+		</p>
+		<ul class="list-disc space-y-2 pl-5 text-slate-700 dark:text-slate-300">
 			<li>Store and sync your journey progress across devices</li>
 			<li>Authenticate your identity when you sign in</li>
 			<li>Display your progress and statistics</li>
 		</ul>
-		<p class="text-slate-700">
+		<p class="text-slate-700 dark:text-slate-300">
 			We <strong>do not</strong> use your data for:
 		</p>
-		<ul class="list-disc space-y-2 pl-5 text-slate-700">
+		<ul class="list-disc space-y-2 pl-5 text-slate-700 dark:text-slate-300">
 			<li>Advertising or marketing purposes</li>
 			<li>Analytics or tracking</li>
 			<li>Profiling or automated decision-making</li>
@@ -146,8 +162,10 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Retention</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Data Retention
+		</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			We retain your data for as long as your account is active or as needed to provide you with our
 			services. You can request deletion of your data at any time by using the
 			<!-- eslint-disable svelte/no-navigation-without-resolve -->
@@ -162,12 +180,14 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Sharing and Transfers</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Data Sharing and Transfers
+		</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			We do not sell, trade, or rent your personal data to third parties. Your data is only shared
 			with:
 		</p>
-		<ul class="list-disc space-y-2 pl-5 text-slate-700">
+		<ul class="list-disc space-y-2 pl-5 text-slate-700 dark:text-slate-300">
 			<li>
 				<strong>Firebase (Google LLC):</strong> As our cloud infrastructure provider, Firebase processes
 				your data on our behalf as a data processor
@@ -177,7 +197,7 @@
 				data is shared with the provider
 			</li>
 		</ul>
-		<p class="text-slate-700">
+		<p class="text-slate-700 dark:text-slate-300">
 			Your data may be transferred to and processed in countries outside the European Economic Area
 			(EEA). Firebase is certified under the EU-U.S. Data Privacy Framework and employs appropriate
 			safeguards to ensure GDPR compliance.
@@ -185,10 +205,14 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Third-Party Services</h2>
-		<div class="space-y-4 text-slate-700">
-			<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
-				<h3 class="mb-2 font-semibold text-slate-800">Firebase (Google LLC)</h3>
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Third-Party Services
+		</h2>
+		<div class="space-y-4 text-slate-700 dark:text-slate-300">
+			<div
+				class="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-600 dark:bg-slate-600"
+			>
+				<h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-200">Firebase (Google LLC)</h3>
 				<p class="mb-2">
 					We use Firebase for authentication and cloud storage. Firebase is GDPR-compliant and acts
 					as a data processor. Key privacy features include:
@@ -213,8 +237,12 @@
 				</p>
 			</div>
 
-			<div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
-				<h3 class="mb-2 font-semibold text-slate-800">OAuth Authentication Providers</h3>
+			<div
+				class="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-600 dark:bg-slate-600"
+			>
+				<h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-200">
+					OAuth Authentication Providers
+				</h3>
 				<p class="mb-2">
 					When you sign in with Google, the provider handles the authentication process. In
 					practice, this means:
@@ -255,18 +283,20 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Data Security</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Data Security
+		</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			We implement appropriate technical and organizational measures to protect your personal data
 			against unauthorized access, alteration, disclosure, or destruction:
 		</p>
-		<ul class="list-disc space-y-2 pl-5 text-slate-700">
+		<ul class="list-disc space-y-2 pl-5 text-slate-700 dark:text-slate-300">
 			<li>Data encryption in transit using HTTPS</li>
 			<li>Data encryption at rest in Firebase Cloud Firestore</li>
 			<li>Secure authentication via Firebase Authentication</li>
 			<li>Regular security updates and monitoring</li>
 		</ul>
-		<p class="text-slate-700">
+		<p class="text-slate-700 dark:text-slate-300">
 			However, no method of transmission over the internet is 100% secure, and we cannot guarantee
 			absolute security. You are responsible for maintaining the confidentiality of your account
 			credentials.
@@ -274,12 +304,14 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Your Rights Under GDPR</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Your Rights Under GDPR
+		</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			If you are in the European Economic Area (EEA), you have the following rights regarding your
 			personal data:
 		</p>
-		<ul class="list-disc space-y-2 pl-5 text-slate-700">
+		<ul class="list-disc space-y-2 pl-5 text-slate-700 dark:text-slate-300">
 			<li>
 				<strong>Right of Access:</strong> You can view all your journey data within the application at
 				any time
@@ -308,12 +340,14 @@
 				local data protection authority
 			</li>
 		</ul>
-		<p class="text-slate-700">
+		<p class="text-slate-700 dark:text-slate-300">
 			To exercise these rights, you can use the in-app features or contact us through the channels
 			listed below.
 		</p>
-		<div class="mt-4 rounded-lg border border-ring-200 bg-ring-50 p-4">
-			<p class="text-sm text-ring-900">
+		<div
+			class="mt-4 rounded-lg border border-ring-200 bg-ring-50 p-4 dark:border-ring-800/30 dark:bg-ring-900/20"
+		>
+			<p class="text-sm text-ring-900 dark:text-ring-300">
 				<strong>💡 Tip:</strong> Visit our
 				<a
 					href={resolve('/my-data')}
@@ -325,8 +359,10 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Children's Privacy</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Children's Privacy
+		</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			This application is not directed to children under 16 (or the applicable age of digital
 			consent in your jurisdiction). We do not knowingly collect personal information from children.
 			If you are a parent or guardian and believe we have collected information from a child, please
@@ -335,8 +371,10 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Changes to This Policy</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">
+			Changes to This Policy
+		</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			We may update this privacy policy from time to time to reflect changes in our practices or for
 			legal, operational, or regulatory reasons. We will notify you of any material changes by
 			updating the "Last updated" date at the top of this policy. We encourage you to review this
@@ -346,12 +384,12 @@
 	</section>
 
 	<section class="space-y-4">
-		<h2 class="font-serif text-3xl font-normal text-slate-800">Contact</h2>
-		<p class="text-slate-700">
+		<h2 class="font-serif text-3xl font-normal text-slate-800 dark:text-slate-100">Contact</h2>
+		<p class="text-slate-700 dark:text-slate-300">
 			If you have any questions about this privacy policy, your data, or wish to exercise your GDPR
 			rights, please contact us through the GitHub repository for this project:
 		</p>
-		<ul class="mt-3 space-y-2 text-slate-700">
+		<ul class="mt-3 space-y-2 text-slate-700 dark:text-slate-300">
 			<li>
 				<strong>For general questions:</strong>
 				<a
@@ -375,7 +413,7 @@
 				</a>
 			</li>
 		</ul>
-		<p class="mt-3 text-sm text-slate-600">
+		<p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
 			Repository:
 			<a
 				href="https://github.com/hakkelt/JourneyToMordor"
@@ -388,7 +426,7 @@
 		</p>
 	</section>
 
-	<div class="mt-8 border-t border-slate-200 pt-6 text-center">
+	<div class="mt-8 border-t border-slate-200 pt-6 text-center dark:border-slate-600">
 		<a
 			href={resolve('/')}
 			class="inline-block rounded-lg bg-ring-600 px-6 py-3 font-semibold text-white transition hover:bg-ring-700"

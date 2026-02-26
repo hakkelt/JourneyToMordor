@@ -149,14 +149,14 @@
 
 {#if showDeleteConfirm}
 	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-slate-700">
 			<h3 class="mb-2 text-xl font-bold text-red-600">Warning: Data Loss</h3>
-			<p class="mb-6 text-slate-600">
+			<p class="mb-6 text-slate-600 dark:text-slate-300">
 				Are you sure you want to delete ALL log entries? This action cannot be undone.
 			</p>
 			<div class="flex justify-end gap-3">
 				<button
-					class="rounded-md border border-slate-300 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50"
+					class="rounded-md border border-slate-300 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-500 dark:text-slate-300 dark:hover:bg-slate-600"
 					onclick={() => (showDeleteConfirm = false)}
 				>
 					Cancel
@@ -174,16 +174,16 @@
 
 {#if showImportConfirm}
 	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+		<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-slate-700">
 			<h3 class="mb-2 text-xl font-bold text-ring-600">Confirm Import</h3>
-			<p class="mb-4 text-slate-600">
+			<p class="mb-4 text-slate-600 dark:text-slate-300">
 				Importing will <strong>replace</strong> your current history with
 				<strong>{pendingImportLogs.length}</strong> entries.
 			</p>
-			<p class="mb-6 text-sm text-slate-500">Current data will be lost.</p>
+			<p class="mb-6 text-sm text-slate-500 dark:text-slate-400">Current data will be lost.</p>
 			<div class="flex justify-end gap-3">
 				<button
-					class="rounded-md border border-slate-300 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50"
+					class="rounded-md border border-slate-300 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-500 dark:text-slate-300 dark:hover:bg-slate-600"
 					onclick={() => (showImportConfirm = false)}
 				>
 					Cancel
@@ -203,8 +203,8 @@
 	{#if $user && (!$isOnline || showSyncBanner)}
 		<div
 			class="mx-auto max-w-4xl rounded-md border p-4 {$isOnline
-				? 'border-amber-200 bg-amber-50 text-amber-800'
-				: 'border-slate-200 bg-slate-100 text-slate-700'}"
+				? 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800/50 dark:bg-amber-900/20 dark:text-amber-400'
+				: 'border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-600 dark:bg-slate-600/50 dark:text-slate-300'}"
 		>
 			<div class="flex items-center gap-3">
 				<svg
@@ -237,25 +237,32 @@
 			</div>
 		</div>
 	{/if}
-	<div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-		<h2 class="mb-4 font-serif text-3xl text-slate-800">Log Journey</h2>
+	<div
+		class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-600 dark:bg-slate-700"
+	>
+		<h2 class="mb-4 font-serif text-3xl text-slate-800 dark:text-slate-100">Log Journey</h2>
 
 		<form onsubmit={handleSubmit} class="space-y-4">
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 				<div>
-					<label for="date" class="mb-1 block text-sm font-medium text-slate-700">Date</label>
+					<label
+						for="date"
+						class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">Date</label
+					>
 					<input
 						type="date"
 						id="date"
 						bind:value={date}
 						max={new Date().toISOString().split('T')[0]}
 						required
-						class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-ring-500 focus:ring-ring-500"
+						class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-ring-500 focus:ring-ring-500 dark:border-slate-500 dark:bg-slate-600 dark:text-slate-100"
 					/>
 				</div>
 
 				<div>
-					<label for="distance" class="mb-1 block text-sm font-medium text-slate-700"
+					<label
+						for="distance"
+						class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
 						>Distance ({unit === 'miles' ? 'miles' : 'km'})</label
 					>
 					<input
@@ -266,13 +273,13 @@
 						min="0.01"
 						required
 						placeholder="0.00"
-						class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-ring-500 focus:ring-ring-500"
+						class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-ring-500 focus:ring-ring-500 dark:border-slate-500 dark:bg-slate-600 dark:text-slate-100"
 					/>
 				</div>
 			</div>
 
 			<div>
-				<label for="note" class="mb-1 block text-sm font-medium text-slate-700"
+				<label for="note" class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
 					>Note (Optional)</label
 				>
 				<input
@@ -280,7 +287,7 @@
 					id="note"
 					bind:value={note}
 					placeholder="Morning walk..."
-					class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-ring-500 focus:ring-ring-500"
+					class="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-ring-500 focus:ring-ring-500 dark:border-slate-500 dark:bg-slate-600 dark:text-slate-100"
 				/>
 			</div>
 
@@ -293,13 +300,15 @@
 		</form>
 	</div>
 
-	<div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+	<div
+		class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-600 dark:bg-slate-700"
+	>
 		<div class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-			<h2 class="font-serif text-3xl text-slate-800">History</h2>
-			<div class="flex flex-wrap gap-2 text-sm text-slate-700">
+			<h2 class="font-serif text-3xl text-slate-800 dark:text-slate-100">History</h2>
+			<div class="flex flex-wrap gap-2 text-sm text-slate-700 dark:text-slate-300">
 				<button
 					onclick={triggerImport}
-					class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-ring-600"
+					class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-ring-600 dark:border-slate-500 dark:bg-slate-600 dark:hover:bg-slate-500"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -321,7 +330,7 @@
 				{#if logs.length > 0}
 					<button
 						onclick={handleDownloadCSV}
-						class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-ring-600"
+						class="flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 font-medium transition-colors hover:bg-slate-50 hover:text-ring-600 dark:border-slate-500 dark:bg-slate-600 dark:hover:bg-slate-500"
 						aria-label="Download log entries as CSV"
 					>
 						<svg
@@ -343,7 +352,7 @@
 
 					<button
 						onclick={() => (showDeleteConfirm = true)}
-						class="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-1.5 font-medium text-red-700 transition-colors hover:bg-red-100"
+						class="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-1.5 font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -366,28 +375,30 @@
 		</div>
 
 		{#if logs.length === 0}
-			<p class="py-4 text-center text-slate-500 italic">No entries yet. Start your journey!</p>
+			<p class="py-4 text-center text-slate-500 italic dark:text-slate-400">
+				No entries yet. Start your journey!
+			</p>
 		{:else}
 			<div class="overflow-x-auto">
 				<table class="w-full text-left">
 					<thead>
-						<tr class="border-b border-slate-200">
-							<th class="pb-2 font-medium text-slate-600">Date</th>
-							<th class="pb-2 font-medium text-slate-600"
+						<tr class="border-b border-slate-200 dark:border-slate-600">
+							<th class="pb-2 font-medium text-slate-600 dark:text-slate-400">Date</th>
+							<th class="pb-2 font-medium text-slate-600 dark:text-slate-400"
 								>Distance ({unit === 'miles' ? 'miles' : 'km'})</th
 							>
-							<th class="pb-2 font-medium text-slate-600">Note</th>
-							<th class="w-10 pb-2 font-medium text-slate-600"></th>
+							<th class="pb-2 font-medium text-slate-600 dark:text-slate-400">Note</th>
+							<th class="w-10 pb-2 font-medium text-slate-600 dark:text-slate-400"></th>
 						</tr>
 					</thead>
-					<tbody class="divide-y divide-earth-100">
+					<tbody class="divide-y divide-earth-100 dark:divide-slate-600">
 						{#each logs as log (log.id)}
 							<tr>
-								<td class="py-3 text-slate-800">{log.date}</td>
-								<td class="py-3 text-slate-800"
+								<td class="py-3 text-slate-800 dark:text-slate-200">{log.date}</td>
+								<td class="py-3 text-slate-800 dark:text-slate-200"
 									>{formatDist(log.distance)} {unit === 'miles' ? 'miles' : 'km'}</td
 								>
-								<td class="py-3 text-slate-600">{log.note || '-'}</td>
+								<td class="py-3 text-slate-600 dark:text-slate-400">{log.note || '-'}</td>
 								<td class="py-3 text-right">
 									<button
 										onclick={() => onDelete(log.id)}

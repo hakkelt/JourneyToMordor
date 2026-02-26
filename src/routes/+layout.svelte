@@ -3,6 +3,8 @@
 	import Header from '$lib/components/Header.svelte';
 	import { loadData } from '$lib/storage';
 	import { isOnline } from '$lib/stores/network';
+	import { theme } from '$lib/stores/theme';
+	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { warmImageCache } from '$lib/image-cache';
@@ -15,6 +17,12 @@
 
 	let { children } = $props();
 	let installPrompt = $state<BeforeInstallPromptEvent | null>(null);
+
+	$effect(() => {
+		if (browser) {
+			document.documentElement.classList.toggle('dark', $theme === 'dark');
+		}
+	});
 
 	onMount(() => {
 		const handler = (e: Event) => {
@@ -41,7 +49,7 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-<div class="flex min-h-screen flex-col bg-earth-50">
+<div class="flex min-h-screen flex-col bg-earth-50 dark:bg-slate-800">
 	<Header />
 
 	<main class="flex-grow p-4 md:p-6">
