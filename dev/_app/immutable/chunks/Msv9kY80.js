@@ -1,0 +1,1 @@
+import{w as d}from"./YB37N7IY.js";const n=d([]);function r(t,i,o=3500){const e={id:Date.now()+Math.floor(Math.random()*1e3),type:t,message:i};n.update(a=>[...a,e]),setTimeout(()=>{n.update(a=>a.filter(s=>s.id!==e.id))},o)}function c(t){n.update(i=>i.filter(o=>o.id!==t))}export{n as a,c as d,r as n};
