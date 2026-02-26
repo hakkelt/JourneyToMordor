@@ -120,9 +120,9 @@
 				</div>
 			{:else}
 				<div
-					class="rounded-lg border border-shire-200 bg-shire-50 p-4 dark:border-shire-800/50 dark:bg-shire-900/20"
+					class="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-600 dark:bg-slate-600"
 				>
-					<p class="font-medium text-shire-900 dark:text-shire-300">
+					<p class="font-medium text-shire-900 dark:text-slate-300">
 						You are not signed in. Your data is stored locally in your browser only.
 					</p>
 				</div>

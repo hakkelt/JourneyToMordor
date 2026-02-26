@@ -140,15 +140,15 @@
 				</h3>
 				<div class="space-y-3 text-base text-slate-700 dark:text-slate-300">
 					<div class="rounded-lg border-l-4 border-shire-500 bg-white p-4 dark:bg-slate-700">
-						<p class="font-semibold text-shire-900">🔒 No Login Required</p>
-						<p class="mt-1 text-sm text-shire-800">
+						<p class="font-semibold text-shire-900 dark:text-shire-300">🔒 No Login Required</p>
+						<p class="mt-1 text-sm text-shire-800 dark:text-shire-300">
 							Start tracking immediately! Your journey data is stored locally in your browser. No
 							account needed, completely private.
 						</p>
 					</div>
 					<div class="rounded-lg border-l-4 border-ring-500 bg-white p-4 dark:bg-slate-700">
-						<p class="font-semibold text-ring-900">☁️ Optional Cloud Backup</p>
-						<p class="mt-1 text-sm text-ring-800">
+						<p class="font-semibold text-ring-900 dark:text-ring-300">☁️ Optional Cloud Backup</p>
+						<p class="mt-1 text-sm text-ring-800 dark:text-ring-300">
 							Want to sync across devices? Sign in to back up your progress to the cloud and access
 							it from anywhere. Your local data will be merged with your cloud data.
 						</p>
@@ -157,7 +157,9 @@
 				</div>
 				<p class="text-center text-sm text-slate-600 dark:text-slate-400">
 					Learn more in our
-					<a href={resolve('/privacy')} class="font-semibold text-ring-600 hover:underline"
+					<a
+						href={resolve('/privacy')}
+						class="font-semibold text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 						>Privacy Policy</a
 					>
 				</p>
@@ -172,7 +174,7 @@
 					<li>
 						Navigate to the <a
 							href={resolve('/logs')}
-							class="inline font-bold text-ring-600 hover:text-ring-700 hover:underline"
+							class="inline font-bold text-ring-600 hover:text-ring-700 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 							>Log Journey</a
 						> page.
 					</li>
@@ -181,7 +183,7 @@
 				</ol>
 			</div>
 
-			<p class="font-medium text-ring-700 italic">
+			<p class="font-medium text-ring-700 italic dark:text-ring-400">
 				"This is it. If I take one more step, it'll be the farthest away from home I've ever been."
 			</p>
 		</div>
