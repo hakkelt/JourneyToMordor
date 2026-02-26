@@ -1,0 +1,1 @@
+import{w as a}from"./C7-kx7IX.js";const t="theme";function o(){const e=localStorage.getItem(t);return e==="dark"||e==="light"?e:window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}const r=a(o());r.subscribe(e=>{localStorage.setItem(t,e)});function s(){r.update(e=>e==="dark"?"light":"dark")}export{s as a,r as t};
