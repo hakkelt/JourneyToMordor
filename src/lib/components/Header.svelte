@@ -2,14 +2,8 @@
 	import { page } from '$app/stores';
 	import { resolve } from '$app/paths';
 	import headerLogo from '$lib/assets/header-40.png?enhanced';
-	import { journeyStore, setUnit } from '$lib/storage';
-	import { user } from '$lib/stores/auth';
 	import Auth from './Auth.svelte';
 	import DarkModeToggle from './DarkModeToggle.svelte';
-
-	function handleSetUnit(unit: 'km' | 'miles') {
-		setUnit(unit, $user);
-	}
 </script>
 
 <header class="sticky top-0 z-50 bg-earth-900 text-slate-200 shadow-md">
@@ -67,34 +61,6 @@
 			<!-- For now just showing actions -->
 
 			<div class="flex items-center gap-3">
-				<!-- Unit Selector (MD3 Segmented Button style) -->
-				<div class="flex h-8 items-center rounded-lg border border-earth-700 bg-earth-800 p-0.5">
-					<button
-						class="flex h-full items-center rounded-md px-3 text-xs font-semibold transition-all {$journeyStore.unit ===
-						'km'
-							? 'bg-ring-600 text-white shadow-sm'
-							: 'text-slate-400 hover:text-slate-200'}"
-						onclick={() => handleSetUnit('km')}
-						aria-label="Set units to kilometers"
-						aria-pressed={$journeyStore.unit === 'km'}
-					>
-						km
-					</button>
-					<button
-						class="flex h-full items-center rounded-md px-3 text-xs font-semibold transition-all {$journeyStore.unit ===
-						'miles'
-							? 'bg-ring-600 text-white shadow-sm'
-							: 'text-slate-400 hover:text-slate-200'}"
-						onclick={() => handleSetUnit('miles')}
-						aria-label="Set units to miles"
-						aria-pressed={$journeyStore.unit === 'miles'}
-					>
-						miles
-					</button>
-				</div>
-
-				<div class="hidden h-6 w-px bg-earth-700 sm:block"></div>
-
 				<DarkModeToggle />
 
 				<div class="hidden h-6 w-px bg-earth-700 sm:block"></div>

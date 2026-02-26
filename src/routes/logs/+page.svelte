@@ -4,6 +4,7 @@
 		deleteLog,
 		deleteAllLogs,
 		importLogs,
+		setUnit,
 		journeyStore,
 		type LocalStorageSchema,
 		type LogEntry
@@ -26,6 +27,10 @@
 	function handleImport(logs: LogEntry[]) {
 		importLogs(logs, $user);
 	}
+
+	function handleSetUnit(unit: 'km' | 'miles') {
+		setUnit(unit, $user);
+	}
 </script>
 
 <svelte:head>
@@ -36,6 +41,7 @@
 	<ActivityLog
 		logs={$journeyStore.logs}
 		unit={$journeyStore.unit}
+		onSetUnit={handleSetUnit}
 		onAdd={handleAddLog}
 		onDelete={handleDeleteLog}
 		onDeleteAll={handleDeleteAll}

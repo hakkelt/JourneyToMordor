@@ -126,8 +126,7 @@
 				<p>
 					While Frodo's journey took roughly <strong>six months (185 days)</strong>—from leaving the
 					Shire on September 23rd to the destruction of the Ring on March 25th—you can complete this
-					challenge at your own pace. Every {unit === 'miles' ? 'mile' : 'kilometer'} you log tracks your
-					progress across Middle-earth.
+					challenge at your own pace. Every walk you log tracks your progress across Middle-earth.
 				</p>
 			</div>
 
@@ -178,7 +177,7 @@
 							>Log Journey</a
 						> page.
 					</li>
-					<li>Enter your daily distance (in {unitLabel}).</li>
+					<li>Enter your daily distance.</li>
 					<li>Watch your progress on the map and try to keep up with Frodo!</li>
 				</ol>
 			</div>
@@ -263,8 +262,8 @@
 					<p>
 						While Frodo's journey took roughly <strong>six months (185 days)</strong>—from leaving
 						the Shire on September 23rd to the destruction of the Ring on March 25th—you can
-						complete this challenge at your own pace. Every kilometer you log tracks your progress
-						across Middle-earth.
+						complete this challenge at your own pace. Every walk you log tracks your progress across
+						Middle-earth.
 					</p>
 				</div>
 			</details>

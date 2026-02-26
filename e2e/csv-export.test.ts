@@ -10,6 +10,7 @@ test.describe('CSV Export', () => {
 	test('should successfully download CSV file with log entries', async ({ page }) => {
 		// 1. Navigate to Log Journey and add an entry
 		await page.getByRole('link', { name: 'Logs' }).first().click();
+		await page.getByRole('button', { name: 'Use kilometers' }).click();
 		await page.getByLabel('Date').fill(new Date().toISOString().split('T')[0]);
 		await page.getByLabel('Distance (km)').fill('10');
 		await page.getByLabel('Note').fill('Test export');
@@ -56,6 +57,7 @@ test.describe('CSV Export', () => {
 		).not.toBeVisible();
 
 		// Add entry
+		await page.getByRole('button', { name: 'Use kilometers' }).click();
 		await page.getByLabel('Date').fill(new Date().toISOString().split('T')[0]);
 		await page.getByLabel('Distance (km)').fill('5');
 		await page.getByRole('button', { name: 'Add Entry' }).click();

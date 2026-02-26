@@ -4,6 +4,7 @@
 
 <button
 	onclick={toggleTheme}
+	title={$theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
 	aria-label={$theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
 	aria-pressed={$theme === 'dark'}
 	class="flex h-8 w-8 items-center justify-center rounded-lg border border-earth-700 bg-earth-800 text-slate-400 transition-all hover:text-slate-200"

@@ -7,13 +7,14 @@
 	interface Props {
 		logs: LogEntry[];
 		unit?: 'km' | 'miles';
+		onSetUnit: (unit: 'km' | 'miles') => void;
 		onAdd: (entry: Omit<LogEntry, 'id'>) => void;
 		onDelete: (id: number) => void;
 		onDeleteAll: () => void;
 		onImport: (logs: LogEntry[]) => void;
 	}
 
-	let { logs, unit = 'km', onAdd, onDelete, onDeleteAll, onImport }: Props = $props();
+	let { logs, unit = 'km', onSetUnit, onAdd, onDelete, onDeleteAll, onImport }: Props = $props();
 
 	let date = $state(new Date().toISOString().split('T')[0]);
 	let distance = $state<number | null>(null);
@@ -25,6 +26,10 @@
 	function handleSubmit(e: Event) {
 		e.preventDefault();
 		if (!distance || distance <= 0) return;
+
+		if (logs.length === 0 && !hasSelectedUnitForFirstEntry) {
+			hasSelectedUnitForFirstEntry = true;
+		}
 
 		let distanceInKm = distance;
 		if (unit === 'miles') {
@@ -42,6 +47,24 @@
 		distance = null;
 		note = '';
 	}
+
+	let hasSelectedUnitForFirstEntry = $state(false);
+	let previousLogCount = 0;
+
+	function handleSetUnitForFirstEntry(selectedUnit: 'km' | 'miles') {
+		onSetUnit(selectedUnit);
+		hasSelectedUnitForFirstEntry = true;
+	}
+
+	$effect(() => {
+		if (logs.length > 0) {
+			hasSelectedUnitForFirstEntry = true;
+		} else if (previousLogCount > 0) {
+			hasSelectedUnitForFirstEntry = false;
+		}
+
+		previousLogCount = logs.length;
+	});
 
 	function formatDist(km: number): string {
 		if (unit === 'miles') return (km * KM_TO_MILES).toFixed(2);
@@ -243,6 +266,49 @@
 		<h2 class="mb-4 font-serif text-3xl text-slate-800 dark:text-slate-100">Log Journey</h2>
 
 		<form onsubmit={handleSubmit} class="space-y-4">
+			{#if logs.length === 0}
+				<div
+					class="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-500 dark:bg-slate-600"
+				>
+					<p class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-200">
+						Choose your distance unit before creating your first entry.
+					</p>
+					<div
+						class="flex h-10 max-w-xs items-center rounded-lg border border-slate-300 bg-white p-1 dark:border-slate-500 dark:bg-slate-700"
+					>
+						<button
+							type="button"
+							class="flex h-full flex-1 items-center justify-center rounded-md text-sm font-semibold transition-all {unit ===
+							'km'
+								? 'bg-ring-600 text-white'
+								: 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'}"
+							onclick={() => handleSetUnitForFirstEntry('km')}
+							aria-label="Use kilometers"
+							aria-pressed={unit === 'km'}
+						>
+							Kilometers
+						</button>
+						<button
+							type="button"
+							class="flex h-full flex-1 items-center justify-center rounded-md text-sm font-semibold transition-all {unit ===
+							'miles'
+								? 'bg-ring-600 text-white'
+								: 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'}"
+							onclick={() => handleSetUnitForFirstEntry('miles')}
+							aria-label="Use miles"
+							aria-pressed={unit === 'miles'}
+						>
+							Miles
+						</button>
+					</div>
+					{#if !hasSelectedUnitForFirstEntry}
+						<p class="mt-2 text-xs text-slate-500 dark:text-slate-300">
+							Keeping kilometers and adding your first entry confirms the default unit.
+						</p>
+					{/if}
+				</div>
+			{/if}
+
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 				<div>
 					<label

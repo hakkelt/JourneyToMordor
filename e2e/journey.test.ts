@@ -16,6 +16,7 @@ test.describe('Journey to Mordor', () => {
 		await expect(page.getByRole('heading', { name: 'Log Journey' })).toBeVisible();
 
 		// 3. Add an entry
+		await page.getByRole('button', { name: 'Use kilometers' }).click();
 		await page.getByLabel('Date').fill(new Date().toISOString().split('T')[0]);
 		await page.getByLabel('Distance (km)').fill('10');
 		await page.getByLabel('Note').fill('First step');

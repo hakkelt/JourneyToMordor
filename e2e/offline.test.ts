@@ -43,6 +43,7 @@ test.describe('Offline Mode', () => {
 		// await expect(page.getByRole('button', { name: 'Offline' })).toBeVisible();
 
 		// Add log entry
+		await page.getByRole('button', { name: 'Use kilometers' }).click();
 		await page.getByLabel('Date').fill('2023-01-15');
 		await page.getByLabel('Distance').fill('10');
 		await page.getByRole('button', { name: 'Add Entry' }).click();

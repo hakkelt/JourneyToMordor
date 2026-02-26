@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { user } from '$lib/stores/auth';
-	import { journeyStore, resetData, deleteUserAccount } from '$lib/storage';
+	import { journeyStore, resetData, deleteUserAccount, setUnit } from '$lib/storage';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+
+	const KM_TO_MILES = 0.621371;
 
 	let showDeleteConfirm = $state(false);
 	let showLocalDataConfirm = $state(false);
@@ -72,6 +74,18 @@
 		a.click();
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
+	}
+
+	function handleSetUnit(unit: 'km' | 'miles') {
+		setUnit(unit, $user);
+	}
+
+	function formatDistanceForUnit(distanceInKm: number): string {
+		if ($journeyStore.unit === 'miles') {
+			return (distanceInKm * KM_TO_MILES).toFixed(1);
+		}
+
+		return distanceInKm.toFixed(1);
 	}
 </script>
 
@@ -146,14 +160,41 @@
 					</div>
 					<div>
 						<p class="text-sm font-medium text-slate-600 dark:text-slate-400">Unit Preference</p>
-						<p class="text-slate-800 dark:text-slate-200">
-							{$journeyStore.unit === 'km' ? 'Kilometers' : 'Miles'}
-						</p>
+						<div
+							class="mt-2 flex h-9 max-w-xs items-center rounded-lg border border-slate-300 bg-white p-1 dark:border-slate-500 dark:bg-slate-700"
+						>
+							<button
+								type="button"
+								class="flex h-full flex-1 items-center justify-center rounded-md text-sm font-semibold transition-all {$journeyStore.unit ===
+								'km'
+									? 'bg-ring-600 text-white'
+									: 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'}"
+								onclick={() => handleSetUnit('km')}
+								aria-label="Set unit to kilometers"
+								aria-pressed={$journeyStore.unit === 'km'}
+							>
+								Kilometers
+							</button>
+							<button
+								type="button"
+								class="flex h-full flex-1 items-center justify-center rounded-md text-sm font-semibold transition-all {$journeyStore.unit ===
+								'miles'
+									? 'bg-ring-600 text-white'
+									: 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'}"
+								onclick={() => handleSetUnit('miles')}
+								aria-label="Set unit to miles"
+								aria-pressed={$journeyStore.unit === 'miles'}
+							>
+								Miles
+							</button>
+						</div>
 					</div>
 					<div>
 						<p class="text-sm font-medium text-slate-600 dark:text-slate-400">Total Distance</p>
 						<p class="text-slate-800 dark:text-slate-200">
-							{$journeyStore.logs.reduce((sum, log) => sum + log.distance, 0).toFixed(1)}
+							{formatDistanceForUnit(
+								$journeyStore.logs.reduce((sum, log) => sum + log.distance, 0)
+							)}
 							{$journeyStore.unit}
 						</p>
 					</div>
@@ -222,7 +263,9 @@
 					<strong>Manual Backups & device transfer:</strong> For manually editing logs or moving
 					data between devices, we recommend using the <strong>CSV Export</strong> feature found on
 					the
-					<a href={resolve('/logs')} class="font-semibold text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
+					<a
+						href={resolve('/logs')}
+						class="font-semibold text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 						>Journey Logs</a
 					> page.
 				</p>
@@ -370,15 +413,5 @@
 				</div>
 			{/if}
 		</section>
-
-		<!-- Back Link -->
-		<div class="mt-8 border-t border-slate-200 pt-6 dark:border-slate-600">
-			<a
-				href={resolve('/')}
-				class="inline-block rounded-lg bg-ring-600 px-6 py-3 font-semibold text-white transition hover:bg-ring-700"
-			>
-				← Back to Journey
-			</a>
-		</div>
 	</div>
 </div>

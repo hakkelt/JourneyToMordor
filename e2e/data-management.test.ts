@@ -12,6 +12,7 @@ test.describe('Data Management', () => {
 	test('should delete all logs', async ({ page }) => {
 		// 1. Add some logs
 		await page.getByRole('link', { name: 'Logs' }).first().click();
+		await page.getByRole('button', { name: 'Use kilometers' }).click();
 
 		await page.getByLabel('Date').fill('2024-01-01');
 		await page.getByLabel('Distance (km)').fill('10');
@@ -43,6 +44,7 @@ test.describe('Data Management', () => {
 	test('should warn when overwriting existing logs with import', async ({ page }) => {
 		// 1. Add a dummy log first
 		await page.getByRole('link', { name: 'Logs' }).first().click();
+		await page.getByRole('button', { name: 'Use kilometers' }).click();
 		await page.getByLabel('Date').fill('2024-01-01');
 		await page.getByLabel('Distance (km)').fill('1');
 		await page.getByRole('button', { name: 'Add Entry' }).click();
