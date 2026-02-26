@@ -171,7 +171,7 @@
 			<!-- eslint-disable svelte/no-navigation-without-resolve -->
 			<a
 				href={resolve('/my-data') + '#delete-account'}
-				class="font-semibold text-ring-600 hover:underline"
+				class="font-semibold text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 			>
 				"Delete Account"
 			</a>
@@ -230,7 +230,7 @@
 						href="https://firebase.google.com/support/privacy"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-ring-600 hover:underline"
+						class="text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 					>
 						firebase.google.com/support/privacy
 					</a>
@@ -274,7 +274,8 @@
 							href="https://policies.google.com/privacy"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-ring-600 hover:underline">policies.google.com/privacy</a
+							class="text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
+							>policies.google.com/privacy</a
 						>
 					</li>
 				</ul>
@@ -351,7 +352,8 @@
 				<strong>💡 Tip:</strong> Visit our
 				<a
 					href={resolve('/my-data')}
-					class="font-semibold text-ring-700 underline hover:text-ring-800">My Data</a
+					class="font-semibold text-ring-700 underline hover:text-ring-800 dark:text-ring-400 dark:hover:text-ring-300"
+					>My Data</a
 				>
 				page to view all your stored data, export it, or delete your account.
 			</p>
@@ -396,7 +398,7 @@
 					href="https://github.com/hakkelt/JourneyToMordor/discussions"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="text-ring-600 hover:underline"
+					class="text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 				>
 					GitHub Discussions
 				</a>
@@ -407,7 +409,7 @@
 					href="https://github.com/hakkelt/JourneyToMordor/issues"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="text-ring-600 hover:underline"
+					class="text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 				>
 					GitHub Issues
 				</a>
@@ -419,7 +421,7 @@
 				href="https://github.com/hakkelt/JourneyToMordor"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="text-ring-600 hover:underline"
+				class="text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 			>
 				github.com/hakkelt/JourneyToMordor
 			</a>

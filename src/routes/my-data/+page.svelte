@@ -222,7 +222,7 @@
 					<strong>Manual Backups & device transfer:</strong> For manually editing logs or moving
 					data between devices, we recommend using the <strong>CSV Export</strong> feature found on
 					the
-					<a href={resolve('/logs')} class="font-semibold text-ring-600 hover:underline"
+					<a href={resolve('/logs')} class="font-semibold text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 						>Journey Logs</a
 					> page.
 				</p>
@@ -244,7 +244,7 @@
 		<section class="mb-8">
 			<a
 				href={resolve('/privacy')}
-				class="text-sm font-medium text-slate-500 hover:text-ring-600 hover:underline dark:text-slate-400"
+				class="text-sm font-medium text-slate-500 hover:text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 			>
 				View Privacy Policy
 			</a>

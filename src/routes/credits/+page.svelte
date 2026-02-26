@@ -74,7 +74,7 @@
 					href="https://under1000skies.org/eowyn/"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="mt-4 inline-block font-medium text-ring-600 hover:underline"
+					class="mt-4 inline-block font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 				>
 					https://under1000skies.org/eowyn/
 				</a>
@@ -94,7 +94,7 @@
 					href="https://en.wikipedia.org/wiki/The_Atlas_of_Middle-earth"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="mt-4 inline-block font-medium text-ring-600 hover:underline"
+					class="mt-4 inline-block font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 				>
 					Wikipedia Reference
 				</a>
@@ -116,7 +116,7 @@
 							href="https://docs.google.com/spreadsheets/d/1XxPtIuZ77z4tYFLbTAkg9yXxvPgTjFZdBoruv5ptBwI/copy?usp=sharing"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="font-medium text-ring-600 hover:underline"
+							class="font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 						>
 							Walk to Mordor Tracker
 						</a>
@@ -125,7 +125,7 @@
 							href="https://www.reddit.com/r/lotr/comments/1ly40nj/free_walk_to_mordor_tracker_google_sheets/"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="font-medium text-ring-600 hover:underline"
+							class="font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 						>
 							Reddit Announcement
 						</a>)</span
@@ -134,7 +134,7 @@
 						href="https://docs.google.com/spreadsheets/d/1pXWU9XhDPpOtT5Ed8roqRFAfQ1pFm76zcSlxnCNAuK4/edit?gid=0#gid=0"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="font-medium text-ring-600 hover:underline"
+						class="font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 					>
 						Mordor Walk Challenge - 2025
 					</a>
@@ -142,7 +142,7 @@
 						href="https://docs.google.com/spreadsheets/d/1wl-ae9nFdPMyQ8uMbpwIYGbXEJirOq4P3EDHiy94iXc/edit?gid=0#gid=0"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="font-medium text-ring-600 hover:underline"
+						class="font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 					>
 						Walking to Mordor and Back — The Nerd Fitness 'Walking to Mordor' Challenge
 					</a>
@@ -163,7 +163,7 @@
 					href="https://tolkiengateway.net/"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="mt-4 inline-block font-medium text-ring-600 hover:underline"
+					class="mt-4 inline-block font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 				>
 					tolkiengateway.net
 				</a>
@@ -197,7 +197,7 @@
 							href={loc.originalUrl}
 							target="_blank"
 							rel="noopener noreferrer external"
-							class="mt-1 block truncate text-sm font-medium text-ring-600 hover:underline"
+							class="mt-1 block truncate text-sm font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 						>
 							{loc.displayText}
 						</a>
