@@ -3,6 +3,7 @@
 	import { convertToCSV, downloadCSV, parseCSV } from '$lib/csv';
 	import { user } from '$lib/stores/auth';
 	import { isOnline, hasPendingSync } from '$lib/stores/network';
+	import { notify } from '$lib/stores/notifications';
 
 	interface Props {
 		logs: LogEntry[];
@@ -106,7 +107,7 @@
 		} catch (err) {
 			console.error(err);
 			importError = (err as Error).message || 'Failed to parse CSV';
-			alert(`Error importing CSV: ${importError}`);
+			notify('error', `Error importing CSV: ${importError}`);
 		} finally {
 			// Reset input so same file can be selected again if needed
 			target.value = '';

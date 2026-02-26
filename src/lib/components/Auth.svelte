@@ -2,14 +2,23 @@
 	import { user } from '$lib/stores/auth';
 	import { auth } from '$lib/firebase';
 	import { signOut } from 'firebase/auth';
-	import { syncWithFirestore } from '$lib/storage';
+	import {
+		resetData,
+		resetStorageMode,
+		setStorageMode,
+		storageMode,
+		syncWithFirestore
+	} from '$lib/storage';
 	import { isOnline } from '$lib/stores/network';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import AuthModal from './AuthModal.svelte';
 
 	let showModal = $state(false);
 
 	function openModal() {
 		if (!$isOnline) return;
+		setStorageMode('cloud');
 		showModal = true;
 	}
 
@@ -19,15 +28,25 @@
 
 	async function logout() {
 		if (!$isOnline) return;
+		const wasCloudMode = $storageMode === 'cloud';
 		await signOut(auth);
+		if (wasCloudMode) {
+			resetData();
+			resetStorageMode();
+			goto(resolve('/'));
+		}
 	}
 
 	// Track the last synced user ID to avoid re-syncing unnecessarily
 	let lastUid = $state('');
 
 	$effect(() => {
+		if ($storageMode === 'local') return;
 		if ($user && $user.uid !== lastUid) {
 			lastUid = $user.uid;
+			if ($storageMode === 'cloud') {
+				goto(resolve('/'));
+			}
 			// Trigger sync when user changes (logs in)
 			if ($isOnline) {
 				syncWithFirestore($user);
@@ -39,6 +58,7 @@
 
 	// Trigger sync when coming back online
 	$effect(() => {
+		if ($storageMode === 'local') return;
 		if ($isOnline && $user) {
 			syncWithFirestore($user);
 		}
@@ -77,7 +97,7 @@
 				>
 			</div>
 		</div>
-	{:else}
+	{:else if $storageMode !== 'local'}
 		<button
 			onclick={openModal}
 			disabled={!$isOnline}

@@ -9,9 +9,10 @@
 
 	interface Props {
 		onClose: () => void;
+		onAuthSuccess?: () => void;
 	}
 
-	let { onClose }: Props = $props();
+	let { onClose, onAuthSuccess }: Props = $props();
 
 	let mode = $state<'select' | 'email-signin' | 'email-signup'>('select');
 	let email = $state('');
@@ -25,7 +26,11 @@
 		error = '';
 		try {
 			await signInWithPopup(auth, provider);
-			onClose();
+			if (onAuthSuccess) {
+				onAuthSuccess();
+			} else {
+				onClose();
+			}
 		} catch (e: unknown) {
 			const err = e as { code?: string; message?: string };
 			console.error(`${providerName} sign-in failed:`, e);
@@ -45,7 +50,11 @@
 		error = '';
 		try {
 			await signInWithEmailAndPassword(auth, email, password);
-			onClose();
+			if (onAuthSuccess) {
+				onAuthSuccess();
+			} else {
+				onClose();
+			}
 		} catch (e: unknown) {
 			const err = e as { code?: string; message?: string };
 			console.error('Email sign-in failed:', e);
@@ -79,7 +88,11 @@
 		error = '';
 		try {
 			await createUserWithEmailAndPassword(auth, email, password);
-			onClose();
+			if (onAuthSuccess) {
+				onAuthSuccess();
+			} else {
+				onClose();
+			}
 		} catch (e: unknown) {
 			const err = e as { code?: string; message?: string };
 			console.error('Email sign-up failed:', e);
@@ -112,7 +125,7 @@
 
 <button
 	type="button"
-	class="bg-opacity-50 fixed inset-0 z-50 h-full w-full cursor-default border-none bg-black p-0"
+	class="fixed inset-0 z-50 h-full w-full cursor-default border-none bg-black/50 p-0"
 	aria-label="Close modal"
 	onclick={onClose}
 ></button>

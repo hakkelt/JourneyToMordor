@@ -1,10 +1,15 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+async function chooseLocalOnlyMode(page: Page) {
+	await page.getByRole('button', { name: 'Choose local mode' }).click();
+}
 
 test.describe('CSV Export', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
 		await page.evaluate(() => localStorage.clear());
 		await page.reload();
+		await chooseLocalOnlyMode(page);
 	});
 
 	test('should successfully download CSV file with log entries', async ({ page }) => {

@@ -21,7 +21,7 @@
 		<h1 class="font-serif text-5xl font-normal text-slate-800 dark:text-slate-100">
 			Privacy Policy
 		</h1>
-		<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Last updated: January 26, 2026</p>
+		<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Last updated: February 26, 2026</p>
 	</div>
 
 	<section class="space-y-4">
@@ -52,27 +52,28 @@
 
 		<div class="space-y-6">
 			<div class="rounded-lg border-l-4 border-shire-500 bg-shire-50 p-4 dark:bg-shire-900/20">
-				<h3 class="mb-2 font-semibold text-shire-900 dark:text-shire-300">
-					Without Login (Default)
-				</h3>
+				<h3 class="mb-2 font-semibold text-shire-900 dark:text-shire-300">Local Mode</h3>
 				<ul class="list-disc space-y-2 pl-5 text-shire-800 dark:text-shire-300">
 					<li>All your journey data is stored locally in your browser's local storage</li>
 					<li>No data is sent to our servers or any third-party services</li>
-					<li>Your data remains on your device only</li>
+					<li>Your data remains on your device only and sign-in is hidden</li>
+					<li>Offline usage is available</li>
 					<li>
-						If you clear your browser data or use a different device, your progress will not be
-						available
+						If you clear browser data or use another device, progress is not available there unless
+						you manually transfer it
 					</li>
 					<li>No account creation or personal information required</li>
 				</ul>
 			</div>
 
 			<div class="rounded-lg border-l-4 border-ring-500 bg-ring-50 p-4 dark:bg-ring-900/20">
-				<h3 class="mb-2 font-semibold text-ring-900 dark:text-ring-300">With Login (Optional)</h3>
+				<h3 class="mb-2 font-semibold text-ring-900 dark:text-ring-300">Cloud Mode</h3>
 				<ul class="list-disc space-y-2 pl-5 text-ring-800 dark:text-ring-300">
-					<li>Your journey data is backed up to Firebase Cloud Firestore</li>
+					<li>Your journey data is stored in Firebase Cloud Firestore</li>
+					<li>Journey data is not stored on your device in this mode</li>
 					<li>You can access your progress from any device by logging in</li>
 					<li>Your data automatically syncs between devices</li>
+					<li>Offline usage is not available for journey edits in this mode</li>
 					<li>
 						We store: your journey logs (date, distance, optional notes), and your unit preference
 						(km/miles)
@@ -84,6 +85,15 @@
 				</ul>
 			</div>
 		</div>
+		<p class="text-sm text-slate-700 dark:text-slate-300">
+			You choose your storage mode during onboarding and can change it later at any time on the
+			<a
+				href={resolve('/my-data')}
+				class="font-semibold text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
+				>My Data</a
+			>
+			page.
+		</p>
 	</section>
 
 	<section class="space-y-4">
@@ -143,7 +153,7 @@
 			How We Use Your Data
 		</h2>
 		<p class="text-slate-700 dark:text-slate-300">
-			When you choose to log in, we use your data solely to:
+			When you use Cloud mode, we use your data solely to:
 		</p>
 		<ul class="list-disc space-y-2 pl-5 text-slate-700 dark:text-slate-300">
 			<li>Store and sync your journey progress across devices</li>
@@ -166,8 +176,8 @@
 			Data Retention
 		</h2>
 		<p class="text-slate-700 dark:text-slate-300">
-			We retain your data for as long as your account is active or as needed to provide you with our
-			services. You can request deletion of your data at any time by using the
+			Cloud data is retained for as long as your account is active or as needed to provide services.
+			You can request deletion at any time by using the
 			<!-- eslint-disable svelte/no-navigation-without-resolve -->
 			<a
 				href={resolve('/my-data') + '#delete-account'}
@@ -175,7 +185,8 @@
 			>
 				"Delete Account"
 			</a>
-			feature, which will permanently remove all your data from our systems within 30 days.
+			feature, which permanently removes cloud data from our systems within 30 days. In Local mode, data
+			kept on your devices remains under your control.
 		</p>
 	</section>
 

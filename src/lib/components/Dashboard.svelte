@@ -1,15 +1,18 @@
 <script lang="ts">
-	import type { LogEntry } from '$lib/storage';
+	import type { LogEntry, StorageMode } from '$lib/storage';
 	import { LOCATIONS } from '$lib/data';
 	import ProgressChart from './ProgressChart.svelte';
 	import InstallPrompt from './InstallPrompt.svelte';
 	import { resolve } from '$app/paths';
+	import { user } from '$lib/stores/auth';
 
 	interface Props {
 		logs: LogEntry[];
 		unit?: 'km' | 'miles';
+		storageMode: StorageMode | null;
+		onSelectStorageMode: (mode: StorageMode) => void;
 	}
-	let { logs, unit = 'km' }: Props = $props();
+	let { logs, unit = 'km', storageMode, onSelectStorageMode }: Props = $props();
 
 	// Derived state
 	let totalDistance = $derived(logs.reduce((sum, log) => sum + log.distance, 0));
@@ -42,6 +45,12 @@
 	);
 	// Background image
 	let bgImage = $derived(currentLocation.image);
+
+	function preventWhenModeMissing(event: MouseEvent) {
+		if (!storageMode || (storageMode === 'cloud' && !$user)) {
+			event.preventDefault();
+		}
+	}
 </script>
 
 <div class="space-y-6">
@@ -135,24 +144,60 @@
 				class="mx-auto mb-8 max-w-2xl space-y-4 rounded-xl border border-slate-200 bg-gradient-to-br from-earth-50 to-slate-50 p-6 text-left shadow-sm dark:border-slate-600 dark:from-slate-600 dark:to-slate-600"
 			>
 				<h3 class="font-serif text-xl font-bold text-slate-800 dark:text-slate-100">
-					📊 Your Data, Your Choice
+					📊 Choose Your Data Storage Mode
 				</h3>
 				<div class="space-y-3 text-base text-slate-700 dark:text-slate-300">
-					<div class="rounded-lg border-l-4 border-shire-500 bg-white p-4 dark:bg-slate-700">
-						<p class="font-semibold text-shire-900 dark:text-shire-300">🔒 No Login Required</p>
-						<p class="mt-1 text-sm text-shire-800 dark:text-shire-300">
-							Start tracking immediately! Your journey data is stored locally in your browser. No
-							account needed, completely private.
+					{#if !storageMode}
+						<p class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+							Please choose one mode to continue. Logs and My Data are locked until you select a
+							mode.
 						</p>
-					</div>
-					<div class="rounded-lg border-l-4 border-ring-500 bg-white p-4 dark:bg-slate-700">
-						<p class="font-semibold text-ring-900 dark:text-ring-300">☁️ Optional Cloud Backup</p>
-						<p class="mt-1 text-sm text-ring-800 dark:text-ring-300">
-							Want to sync across devices? Sign in to back up your progress to the cloud and access
-							it from anywhere. Your local data will be merged with your cloud data.
-						</p>
-					</div>
-					<InstallPrompt />
+						<div class="grid gap-3">
+							<button
+								type="button"
+								onclick={() => onSelectStorageMode('local')}
+								aria-label="Choose local mode"
+								class="cursor-pointer rounded-lg border-l-4 border-shire-500 bg-white p-4 text-left shadow-sm ring-2 ring-transparent transition hover:-translate-y-0.5 hover:bg-shire-50 hover:ring-shire-400 dark:bg-slate-700 dark:hover:bg-slate-600"
+							>
+								<p class="font-semibold text-shire-900 dark:text-shire-300">Local mode</p>
+								<p class="mt-1 text-sm text-shire-800 dark:text-shire-300">
+									No sign-in, all data stored locally on this device. Data will not sync between
+									devices and can be lost if browser data is cleared.
+								</p>
+								<p class="mt-1 text-sm text-shire-800 dark:text-shire-300">
+									Recommended for users who want to keep their data private and only use one device.
+								</p>
+							</button>
+							<button
+								type="button"
+								onclick={() => onSelectStorageMode('cloud')}
+								aria-label="Choose cloud mode"
+								class="cursor-pointer rounded-lg border-l-4 border-ring-500 bg-white p-4 text-left shadow-sm ring-2 ring-transparent transition hover:-translate-y-0.5 hover:bg-ring-50 hover:ring-ring-400 dark:bg-slate-700 dark:hover:bg-slate-600"
+							>
+								<p class="font-semibold text-ring-900 dark:text-ring-300">Cloud mode</p>
+								<p class="mt-1 text-sm text-ring-800 dark:text-ring-300">
+									All data kept in cloud, except when the device goes offline. It allows
+									synchronization betwen devices, and requires Sign-in.
+								</p>
+								<p class="mt-1 text-sm text-ring-800 dark:text-ring-300">
+									Recommended for users who want to access their data across multiple devices and
+									don't mind signing in.
+								</p>
+							</button>
+						</div>
+					{:else}
+						<div class="rounded-lg border-l-4 border-ring-500 bg-white p-4 dark:bg-slate-700">
+							<p class="font-semibold text-ring-900 dark:text-ring-300">
+								Selected mode: {storageMode}
+							</p>
+							<p class="mt-1 text-sm text-ring-800 dark:text-ring-300">
+								You can now use Logs and My Data.
+							</p>
+						</div>
+					{/if}
+					<p class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+						You can change this setting later on the My Data page.
+					</p>
 				</div>
 				<p class="text-center text-sm text-slate-600 dark:text-slate-400">
 					Learn more in our
@@ -163,6 +208,13 @@
 					>
 				</p>
 			</div>
+
+			<div
+				class="mx-auto mb-8 max-w-2xl rounded-xl border border-slate-200 bg-white p-4 text-left shadow-sm dark:border-slate-600 dark:bg-slate-700"
+			>
+				<InstallPrompt />
+			</div>
+
 			<div
 				class="mx-auto mb-10 max-w-2xl rounded-xl border border-slate-200 bg-slate-50 p-8 text-left shadow-sm dark:border-slate-600 dark:bg-slate-600"
 			>
@@ -173,8 +225,12 @@
 					<li>
 						Navigate to the <a
 							href={resolve('/logs')}
-							class="inline font-bold text-ring-600 hover:text-ring-700 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
-							>Log Journey</a
+							onclick={preventWhenModeMissing}
+							aria-disabled={!storageMode || (storageMode === 'cloud' && !$user)}
+							class="inline font-bold text-ring-600 hover:text-ring-700 hover:underline dark:text-ring-400 dark:hover:text-ring-300 {!storageMode ||
+							(storageMode === 'cloud' && !$user)
+								? 'pointer-events-none no-underline opacity-50'
+								: ''}">Log Journey</a
 						> page.
 					</li>
 					<li>Enter your daily distance.</li>

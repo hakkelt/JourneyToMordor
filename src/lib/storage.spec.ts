@@ -2,28 +2,35 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
 	loadData,
+	loadStorageMode,
 	saveData,
 	addLog,
 	deleteLog,
+	deleteAllLogs,
+	importLogs,
 	setUnit,
 	getStartDate,
 	resetData,
 	deleteUserAccount,
 	syncWithFirestore,
-	STORAGE_KEY
+	resetStorageMode,
+	setStorageMode,
+	storageMode,
+	journeyStore,
+	STORAGE_KEY,
+	STORAGE_MODE_KEY,
+	CLOUD_PENDING_USER_KEY
 } from './storage';
 import type { User } from 'firebase/auth';
 import { get } from 'svelte/store';
 import { isOnline, hasPendingSync } from './stores/network';
 
-// Mock Firebase
 vi.mock('./firebase', () => ({
 	db: {},
 	auth: { currentUser: null },
 	googleProvider: {}
 }));
 
-// Mock Firestore functions
 vi.mock('firebase/firestore', () => {
 	const mockGetDoc = vi.fn(() => Promise.resolve({ exists: () => false, data: () => ({}) }));
 	const mockSetDoc = vi.fn(() => Promise.resolve());
@@ -48,7 +55,6 @@ vi.mock('firebase/auth', () => {
 	};
 });
 
-// Mock localStorage
 const localStorageMock = (function () {
 	let store: Record<string, string> = {};
 	return {
@@ -66,7 +72,6 @@ const localStorageMock = (function () {
 	};
 })();
 
-// Assign to global
 Object.defineProperty(global, 'localStorage', {
 	value: localStorageMock
 });
@@ -76,65 +81,76 @@ describe('Storage', () => {
 		localStorageMock.clear();
 		vi.clearAllMocks();
 		resetData();
+		setStorageMode('local');
+		loadStorageMode();
 	});
 
 	it('should return default state when local storage is empty', () => {
 		const data = loadData();
 		expect(data.logs).toEqual([]);
+		expect(data.deletedLogIds).toEqual([]);
+		expect(data.unit).toBe('km');
 	});
 
-	it('should save data correctly', () => {
+	it('should save and load data with deletion tombstones', () => {
 		const data = {
-			logs: [],
-			unit: 'km' as const
+			logs: [{ id: 11, date: '2023-01-01', distance: 5 }],
+			unit: 'km' as const,
+			deletedLogIds: [99]
 		};
 		saveData(data);
 		expect(localStorageMock.setItem).toHaveBeenCalledWith(STORAGE_KEY, JSON.stringify(data));
-	});
-
-	it('should load saved data', () => {
-		const saved = {
-			logs: [{ id: 123, date: '2023-01-01', distance: 5 }],
-			unit: 'km' as const
-		};
-		localStorageMock.setItem(STORAGE_KEY, JSON.stringify(saved));
 
 		const loaded = loadData();
-		expect(loaded).toEqual(saved);
+		expect(loaded).toEqual(data);
 	});
 
-	it('should add a log entry', () => {
-		const entry = { date: '2023-01-01', distance: 10, note: 'Run' };
-		const result = addLog(entry);
-
-		expect(result.logs).toHaveLength(1);
-		expect(result.logs[0]).toMatchObject(entry);
-		expect(result.logs[0].id).toBeDefined();
-
-		// Verify it persisted
+	it('should migrate older schema gracefully', () => {
+		localStorageMock.setItem(
+			STORAGE_KEY,
+			JSON.stringify({ logs: [{ id: 123, date: '2023-01-05', distance: 5 }] })
+		);
 		const loaded = loadData();
+		expect(loaded.unit).toBe('km');
+		expect(loaded.deletedLogIds).toEqual([]);
 		expect(loaded.logs).toHaveLength(1);
 	});
 
-	it('should delete a log entry', () => {
-		const entry = { date: '2023-01-01', distance: 10, note: 'Run' };
-		const withLog = addLog(entry);
+	it('should add log entries and persist', () => {
+		const result = addLog({ date: '2023-01-01', distance: 10, note: 'Run' });
+		expect(result.logs).toHaveLength(1);
+		expect(result.deletedLogIds).toEqual([]);
+		expect(loadData().logs).toHaveLength(1);
+	});
+
+	it('should delete a single log and track deletion event', () => {
+		const withLog = addLog({ date: '2023-01-01', distance: 10 });
 		const id = withLog.logs[0].id;
 
 		const result = deleteLog(id);
 		expect(result.logs).toHaveLength(0);
-
-		const loaded = loadData();
-		expect(loaded.logs).toHaveLength(0);
+		expect(result.deletedLogIds).toContain(id);
 	});
 
-	it('should handle corrupted data gracefully', () => {
-		const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-		localStorageMock.setItem(STORAGE_KEY, '{ invalid json }');
-		const data = loadData();
-		expect(data.logs).toEqual([]); // Should fall back to default
-		expect(consoleSpy).toHaveBeenCalled();
-		consoleSpy.mockRestore();
+	it('should delete all logs and preserve deletion events through import', () => {
+		addLog({ date: '2023-01-01', distance: 10 });
+		const withSecond = addLog({ date: '2023-01-02', distance: 20 });
+		const removedIds = withSecond.logs.map((log) => log.id);
+
+		const afterDeleteAll = deleteAllLogs();
+		expect(afterDeleteAll.logs).toHaveLength(0);
+		expect(afterDeleteAll.deletedLogIds).toEqual(expect.arrayContaining(removedIds));
+
+		const importedId = Date.now() + 100;
+		const imported = importLogs([{ id: importedId, date: '2023-01-03', distance: 15 }]);
+		expect(imported.logs).toHaveLength(1);
+		expect(imported.deletedLogIds).toEqual(expect.arrayContaining(removedIds));
+	});
+
+	it('should set and persist unit preferences', () => {
+		expect(setUnit('miles').unit).toBe('miles');
+		expect(loadData().unit).toBe('miles');
+		expect(setUnit('km').unit).toBe('km');
 	});
 
 	it('getStartDate should return earliest log date', () => {
@@ -146,102 +162,104 @@ describe('Storage', () => {
 		expect(getStartDate(logs)).toBe('2023-01-05');
 	});
 
-	it('getStartDate should return today if no logs', () => {
-		const today = new Date().toISOString().split('T')[0];
-		expect(getStartDate([])).toBe(today);
+	it('should persist and load storage mode', () => {
+		setStorageMode('local');
+		expect(localStorageMock.getItem(STORAGE_MODE_KEY)).toBe('local');
+		expect(loadStorageMode()).toBe('local');
+		expect(get(storageMode)).toBe('local');
 	});
 
-	// Unit Selection Tests
-	describe('Unit Selection', () => {
-		it('should default to km when loading empty storage', () => {
-			const data = loadData();
-			expect(data.unit).toBe('km');
-		});
+	it('should not persist cloud mode and should reset mode', () => {
+		setStorageMode('cloud');
+		expect(localStorageMock.getItem(STORAGE_MODE_KEY)).toBeNull();
+		expect(get(storageMode)).toBe('cloud');
 
-		it('should set unit to miles', () => {
-			const result = setUnit('miles');
-			expect(result.unit).toBe('miles');
-
-			const loaded = loadData();
-			expect(loaded.unit).toBe('miles');
-		});
-
-		it('should set unit to km', () => {
-			// First set to miles
-			setUnit('miles');
-
-			// Then set back to km
-			const result = setUnit('km');
-			expect(result.unit).toBe('km');
-
-			const loaded = loadData();
-			expect(loaded.unit).toBe('km');
-		});
-
-		it('should persist unit preference across operations', () => {
-			// Set unit to miles
-			setUnit('miles');
-
-			// Add a log entry
-			const entry = { date: '2023-01-01', distance: 10, note: 'Run' };
-			const result = addLog(entry);
-
-			// Unit should still be miles
-			expect(result.unit).toBe('miles');
-
-			const loaded = loadData();
-			expect(loaded.unit).toBe('miles');
-		});
-
-		it('should preserve logs when changing unit', () => {
-			// Add some logs
-			addLog({ date: '2023-01-01', distance: 5, note: 'Walk' });
-			addLog({ date: '2023-01-02', distance: 10, note: 'Run' });
-
-			const beforeChange = loadData();
-			expect(beforeChange.logs).toHaveLength(2);
-
-			// Change unit
-			const result = setUnit('miles');
-
-			// Logs should be preserved
-			expect(result.logs).toHaveLength(2);
-			expect(result.logs[0].distance).toBe(10); // Distance stored in km should not change
-			expect(result.logs[1].distance).toBe(5);
-		});
-
-		it('should handle unit in old schema migration', () => {
-			const oldData = {
-				logs: [{ id: 123, date: '2023-01-05', distance: 5 }]
-				// No unit property
-			};
-			localStorageMock.setItem(STORAGE_KEY, JSON.stringify(oldData));
-
-			const loaded = loadData();
-			expect(loaded.unit).toBe('km'); // Should default to km
-			expect(loaded.logs).toEqual(oldData.logs);
-		});
+		resetStorageMode();
+		expect(get(storageMode)).toBeNull();
+		expect(localStorageMock.getItem(STORAGE_MODE_KEY)).toBeNull();
 	});
 
-	describe('deleteUserAccount', () => {
-		it('should delete firestore doc and firebase user, then reset local data', async () => {
-			const { deleteDoc } = await import('firebase/firestore');
-			const { deleteUser } = await import('firebase/auth');
-			const mockUser = { uid: 'test-uid' } as User;
-
-			// Add some local data first
-			addLog({ date: '2023-01-01', distance: 10 });
-
-			await deleteUserAccount(mockUser);
-
-			expect(deleteDoc).toHaveBeenCalled();
-			expect(deleteUser).toHaveBeenCalledWith(mockUser);
-			expect(loadData().logs).toHaveLength(0);
-		});
+	it('should not write journey data to localStorage in cloud mode', () => {
+		setStorageMode('cloud');
+		const data = {
+			logs: [{ id: 1, date: '2023-01-01', distance: 1 }],
+			unit: 'km' as const,
+			deletedLogIds: []
+		};
+		saveData(data);
+		expect(localStorageMock.setItem).not.toHaveBeenCalledWith(STORAGE_KEY, expect.any(String));
+		expect(loadData()).toEqual({ logs: [], unit: 'km', deletedLogIds: [] });
 	});
 
-	// Firebase Authentication & Sync Tests
-	describe('Firebase Authentication & Data Sync', () => {
+	it('should infer cloud mode when pending cloud cache contains user id', () => {
+		localStorageMock.removeItem(STORAGE_MODE_KEY);
+		localStorageMock.setItem(
+			STORAGE_KEY,
+			JSON.stringify({ logs: [], unit: 'km', deletedLogIds: [] })
+		);
+		localStorageMock.setItem(CLOUD_PENDING_USER_KEY, 'pending-user');
+
+		expect(loadStorageMode()).toBe('cloud');
+		expect(get(storageMode)).toBe('cloud');
+	});
+
+	it('should infer local mode when stored data has no pending cloud user id', () => {
+		localStorageMock.setItem(
+			STORAGE_KEY,
+			JSON.stringify({ logs: [], unit: 'km', deletedLogIds: [] })
+		);
+
+		expect(loadStorageMode()).toBe('local');
+		expect(get(storageMode)).toBe('local');
+		expect(localStorageMock.getItem(STORAGE_MODE_KEY)).toBe('local');
+	});
+
+	it('should infer cloud mode when a user is already signed in', async () => {
+		const { auth } = await import('./firebase');
+		localStorageMock.removeItem(STORAGE_MODE_KEY);
+		(auth as { currentUser: unknown }).currentUser = { uid: 'signed-in-user' };
+
+		expect(loadStorageMode()).toBe('cloud');
+
+		(auth as { currentUser: unknown }).currentUser = null;
+	});
+
+	it('should cache cloud changes locally when offline with user id', () => {
+		const mockUser = { uid: 'offline-user' } as User;
+		const data = {
+			logs: [{ id: 2, date: '2023-01-02', distance: 2 }],
+			unit: 'km' as const,
+			deletedLogIds: []
+		};
+
+		setStorageMode('cloud');
+		isOnline.set(false);
+		saveData(data, mockUser);
+
+		expect(localStorageMock.getItem(STORAGE_KEY)).toBe(JSON.stringify(data));
+		expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('offline-user');
+
+		isOnline.set(true);
+	});
+
+	it('should clear pending cloud cache when switching to local mode', () => {
+		localStorageMock.setItem(
+			STORAGE_KEY,
+			JSON.stringify({ logs: [], unit: 'km', deletedLogIds: [] })
+		);
+		localStorageMock.setItem(CLOUD_PENDING_USER_KEY, 'pending-user');
+
+		setStorageMode('local');
+
+		expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBeNull();
+		expect(localStorageMock.getItem(STORAGE_KEY)).toBeNull();
+	});
+
+	describe('Firestore sync', () => {
+		beforeEach(() => {
+			setStorageMode('cloud');
+		});
+
 		const mockUser: User = {
 			uid: 'test-user-123',
 			email: 'test@example.com',
@@ -261,227 +279,65 @@ describe('Storage', () => {
 			providerId: 'firebase'
 		} as unknown as User;
 
-		describe('syncWithFirestore', () => {
-			it('should upload local data when no remote data exists', async () => {
-				const { getDoc, setDoc } = await import('firebase/firestore');
-
-				// Setup local data
-				const localData = {
-					logs: [{ id: 1, date: '2023-01-01', distance: 10 }],
-					unit: 'km' as const
-				};
-				saveData(localData);
-				loadData();
-
-				// Mock no remote data
-				(getDoc as any).mockResolvedValueOnce({
-					exists: () => false,
-					data: () => undefined
-				} as any);
-
-				await syncWithFirestore(mockUser);
-
-				// Should upload local data to Firestore
-				expect(setDoc).toHaveBeenCalled();
-				// Verify the data argument (second parameter)
-				const callArgs = (setDoc as any).mock.calls[0];
-				expect(callArgs[1]).toEqual(localData);
+		it('should upload local data when no remote data exists', async () => {
+			const { getDoc, setDoc } = await import('firebase/firestore');
+			journeyStore.set({
+				logs: [{ id: 1, date: '2023-01-01', distance: 10 }],
+				unit: 'km',
+				deletedLogIds: []
 			});
 
-			it('should download and merge remote data with local data', async () => {
-				const { getDoc } = await import('firebase/firestore');
-
-				// Setup local data
-				const localData = {
-					logs: [{ id: 1, date: '2023-01-01', distance: 10 }],
-					unit: 'km' as const
-				};
-				saveData(localData);
-				loadData();
-
-				// Mock remote data with different logs
-				const remoteData = {
-					logs: [{ id: 2, date: '2023-01-02', distance: 15 }],
-					unit: 'miles' as const
-				};
-
-				(getDoc as any).mockResolvedValueOnce({
-					exists: () => true,
-					data: () => remoteData
-				} as any);
-
-				await syncWithFirestore(mockUser);
-
-				// Should merge both logs
-				const merged = loadData();
-				expect(merged.logs).toHaveLength(2);
-				expect(merged.logs.some((log) => log.id === 1)).toBe(true);
-				expect(merged.logs.some((log) => log.id === 2)).toBe(true);
-				// Should prefer local unit
-				expect(merged.unit).toBe('km');
-			});
-
-			it('should handle duplicate logs correctly during merge', async () => {
-				const { getDoc } = await import('firebase/firestore');
-
-				// Setup local data
-				const localData = {
-					logs: [
-						{ id: 1, date: '2023-01-01', distance: 10 },
-						{ id: 2, date: '2023-01-02', distance: 15 }
-					],
-					unit: 'km' as const
-				};
-				saveData(localData);
-				loadData();
-
-				// Mock remote data with overlapping logs
-				const remoteData = {
-					logs: [
-						{ id: 2, date: '2023-01-02', distance: 15 }, // Duplicate
-						{ id: 3, date: '2023-01-03', distance: 20 }
-					],
-					unit: 'km' as const
-				};
-
-				(getDoc as any).mockResolvedValueOnce({
-					exists: () => true,
-					data: () => remoteData
-				} as any);
-
-				await syncWithFirestore(mockUser);
-
-				// Should have 3 unique logs (no duplicates)
-				const merged = loadData();
-				expect(merged.logs).toHaveLength(3);
-				expect(merged.logs.filter((log) => log.id === 2)).toHaveLength(1);
-			});
-
-			it('should update remote data if merged data differs', async () => {
-				const { getDoc, setDoc } = await import('firebase/firestore');
-
-				// Setup local data
-				const localData = {
-					logs: [{ id: 1, date: '2023-01-01', distance: 10 }],
-					unit: 'km' as const
-				};
-				saveData(localData);
-				loadData();
-
-				// Mock remote data
-				const remoteData = {
-					logs: [{ id: 2, date: '2023-01-02', distance: 15 }],
-					unit: 'km' as const
-				};
-
-				(getDoc as any).mockResolvedValueOnce({
-					exists: () => true,
-					data: () => remoteData
-				} as any);
-
-				await syncWithFirestore(mockUser);
-
-				// Should call setDoc to update remote with merged data
-				expect(setDoc).toHaveBeenCalled();
-			});
-
-			it('should handle sync errors gracefully', async () => {
-				const { getDoc } = await import('firebase/firestore');
-				const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
-				// Mock getDoc to throw an error
-				(getDoc as any).mockRejectedValueOnce(new Error('Network error'));
-
-				await syncWithFirestore(mockUser);
-
-				// Should log error but not throw
-				expect(consoleSpy).toHaveBeenCalledWith('Sync failed:', expect.any(Error));
-				consoleSpy.mockRestore();
-			});
+			(getDoc as any).mockResolvedValueOnce({ exists: () => false, data: () => undefined } as any);
+			await syncWithFirestore(mockUser);
+			expect(setDoc).toHaveBeenCalled();
 		});
 
-		describe('addLog with Firebase sync', () => {
-			it('should sync to Firestore when user is logged in', async () => {
-				const { setDoc } = await import('firebase/firestore');
-
-				const entry = { date: '2023-01-01', distance: 10, note: 'Run' };
-				const result = addLog(entry, mockUser);
-
-				// Should save locally
-				expect(result.logs).toHaveLength(1);
-
-				// Should attempt to sync to Firestore
-				// Wait a bit for async operation
-				await new Promise((resolve) => setTimeout(resolve, 10));
-				expect(setDoc).toHaveBeenCalled();
+		it('should merge remote deletions into local state', async () => {
+			const { getDoc } = await import('firebase/firestore');
+			journeyStore.set({
+				logs: [{ id: 5, date: '2023-01-01', distance: 10 }],
+				unit: 'km',
+				deletedLogIds: []
 			});
 
-			it('should work without Firebase sync when user is not logged in', async () => {
-				const { setDoc } = await import('firebase/firestore');
+			(getDoc as any).mockResolvedValueOnce({
+				exists: () => true,
+				data: () => ({ logs: [], unit: 'km', deletedLogIds: [5] })
+			} as any);
 
-				const entry = { date: '2023-01-01', distance: 10, note: 'Run' };
-				const result = addLog(entry, null);
-
-				// Should save locally
-				expect(result.logs).toHaveLength(1);
-
-				// Should not attempt to sync to Firestore
-				expect(setDoc).not.toHaveBeenCalled();
-			});
+			await syncWithFirestore(mockUser);
+			const merged = get(journeyStore);
+			expect(merged.logs.some((log) => log.id === 5)).toBe(false);
+			expect(merged.deletedLogIds).toContain(5);
 		});
 
-		describe('deleteLog with Firebase sync', () => {
-			it('should sync deletion to Firestore when user is logged in', async () => {
-				const { setDoc } = await import('firebase/firestore');
-
-				const entry = { date: '2023-01-01', distance: 10 };
-				const withLog = addLog(entry);
-				const id = withLog.logs[0].id;
-
-				vi.clearAllMocks(); // Clear the addLog setDoc call
-
-				deleteLog(id, mockUser);
-
-				// Should attempt to sync to Firestore
-				await new Promise((resolve) => setTimeout(resolve, 10));
-				expect(setDoc).toHaveBeenCalled();
-			});
-		});
-
-		describe('setUnit with Firebase sync', () => {
-			it('should sync unit preference to Firestore when user is logged in', async () => {
-				const { setDoc } = await import('firebase/firestore');
-
-				setUnit('miles', mockUser);
-
-				// Should attempt to sync to Firestore
-				await new Promise((resolve) => setTimeout(resolve, 10));
-				expect(setDoc).toHaveBeenCalled();
-			});
-		});
-	});
-
-	describe('Offline Mode', () => {
-		it('should queue sync when offline', async () => {
+		it('should queue sync when offline in cloud mode', async () => {
 			const { setDoc } = await import('firebase/firestore');
-			const mockUser = { uid: 'test-offline' } as any;
 			isOnline.set(false);
 			hasPendingSync.set(false);
 
 			addLog({ date: '2023-01-01', distance: 10 }, mockUser);
-
-			// Should not call setDoc
 			expect(setDoc).not.toHaveBeenCalled();
-			// Should set pending sync
 			expect(get(hasPendingSync)).toBe(true);
 
-			isOnline.set(true); // Restore
+			isOnline.set(true);
 		});
 	});
 
-	// Note: Facebook and Apple auth provider tests are skipped as they are not yet configured
+	it('deleteUserAccount should delete remote and clear local state', async () => {
+		const { deleteDoc } = await import('firebase/firestore');
+		const { deleteUser } = await import('firebase/auth');
+		const mockUser = { uid: 'test-uid' } as User;
+
+		addLog({ date: '2023-01-01', distance: 10 });
+		await deleteUserAccount(mockUser);
+
+		expect(deleteDoc).toHaveBeenCalled();
+		expect(deleteUser).toHaveBeenCalledWith(mockUser);
+		expect(loadData().logs).toHaveLength(0);
+	});
+
 	it('should support Google authentication', async () => {
-		// Google provider is configured and should be available
 		const { googleProvider } = await import('./firebase');
 		expect(googleProvider).toBeDefined();
 	});

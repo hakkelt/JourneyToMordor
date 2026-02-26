@@ -1,12 +1,16 @@
 <script lang="ts">
 	import './layout.css';
 	import Header from '$lib/components/Header.svelte';
-	import { loadData } from '$lib/storage';
+	import NotificationCenter from '$lib/components/NotificationCenter.svelte';
+	import { loadData, loadStorageMode, storageMode } from '$lib/storage';
 	import { isOnline } from '$lib/stores/network';
 	import { theme } from '$lib/stores/theme';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { user } from '$lib/stores/auth';
 	import { warmImageCache } from '$lib/image-cache';
 	import favicon from '$lib/assets/favicon-32.png';
 
@@ -17,10 +21,29 @@
 
 	let { children } = $props();
 	let installPrompt = $state<BeforeInstallPromptEvent | null>(null);
+	let storageModeReady = $state(false);
 
 	$effect(() => {
 		if (browser) {
 			document.documentElement.classList.toggle('dark', $theme === 'dark');
+		}
+	});
+
+	$effect(() => {
+		if (!browser || !storageModeReady) return;
+
+		const isProtectedPath =
+			$page.url.pathname.startsWith(resolve('/logs')) ||
+			$page.url.pathname.startsWith(resolve('/my-data'));
+
+		if (!$storageMode && isProtectedPath) {
+			goto(resolve('/'));
+			return;
+		}
+
+		if ($storageMode === 'cloud' && !$user && isProtectedPath) {
+			goto(resolve('/'));
+			return;
 		}
 	});
 
@@ -31,6 +54,8 @@
 		};
 		window.addEventListener('beforeinstallprompt', handler);
 
+		loadStorageMode();
+		storageModeReady = true;
 		loadData();
 		warmImageCache();
 
@@ -118,3 +143,5 @@
 		</p>
 	</footer>
 </div>
+
+<NotificationCenter />

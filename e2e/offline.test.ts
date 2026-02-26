@@ -1,9 +1,18 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+async function chooseLocalOnlyMode(page: Page) {
+	await page.getByRole('button', { name: 'Choose local mode' }).click();
+}
 
 test.describe('Offline Mode', () => {
-	test('should disable footer links and show banner when offline', async ({ page }) => {
+	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
+		await page.evaluate(() => localStorage.clear());
+		await page.reload();
+		await chooseLocalOnlyMode(page);
+	});
 
+	test('should disable footer links and show banner when offline', async ({ page }) => {
 		// Wait for initial load
 		await expect(page.getByRole('heading', { name: 'Welcome, Ringbearer' })).toBeVisible();
 
@@ -28,7 +37,7 @@ test.describe('Offline Mode', () => {
 		await page.goto('/logs');
 
 		// Ensure page is loaded
-		await expect(page.getByRole('heading', { name: 'Log Journey' })).toBeVisible();
+		await expect(page.getByLabel('Date')).toBeVisible();
 
 		// Monitor for banner
 		const offlineBanner = page.getByText('You are currently offline');
@@ -42,10 +51,9 @@ test.describe('Offline Mode', () => {
 		// Verify Auth button shows Offline status
 		// await expect(page.getByRole('button', { name: 'Offline' })).toBeVisible();
 
-		// Add log entry
-		await page.getByRole('button', { name: 'Use kilometers' }).click();
+		// Add log entry using default kilometer mode
 		await page.getByLabel('Date').fill('2023-01-15');
-		await page.getByLabel('Distance').fill('10');
+		await page.getByLabel('Distance (km)').fill('10');
 		await page.getByRole('button', { name: 'Add Entry' }).click();
 
 		// Verify log added to table (Note: distance is fixed to 2 decimals, date is YYYY-MM-DD)

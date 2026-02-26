@@ -1,12 +1,17 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+
+async function chooseLocalOnlyMode(page: Page) {
+	await page.getByRole('button', { name: 'Choose local mode' }).click();
+}
 
 test.describe('Data Management', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
 		await page.evaluate(() => localStorage.clear());
 		await page.reload();
+		await chooseLocalOnlyMode(page);
 	});
 
 	test('should delete all logs', async ({ page }) => {

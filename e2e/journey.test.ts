@@ -1,10 +1,32 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+async function chooseLocalOnlyMode(page: Page) {
+	await page.getByRole('button', { name: 'Choose local mode' }).click();
+}
 
 test.describe('Journey to Mordor', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
 		await page.evaluate(() => localStorage.clear());
 		await page.reload();
+		await chooseLocalOnlyMode(page);
+	});
+
+	test('should disable welcome Log Journey link until storage mode is selected', async ({
+		page
+	}) => {
+		await page.evaluate(() => {
+			localStorage.clear();
+			localStorage.removeItem('mordor_storage_mode_v1');
+		});
+		await page.reload();
+
+		const welcomeLogLink = page.getByRole('link', { name: 'Log Journey' });
+		await expect(welcomeLogLink).toHaveClass(/opacity-50/);
+		await expect(page).toHaveURL(/\/$/);
+
+		await chooseLocalOnlyMode(page);
+		await expect(page.getByRole('link', { name: 'Logs' }).first()).toBeVisible();
 	});
 
 	test('visitor can log a journey and see progress', async ({ page }) => {

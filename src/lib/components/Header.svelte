@@ -1,9 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { resolve } from '$app/paths';
+	import { storageMode } from '$lib/storage';
+	import { user } from '$lib/stores/auth';
 	import headerLogo from '$lib/assets/header-40.png?enhanced';
 	import Auth from './Auth.svelte';
 	import DarkModeToggle from './DarkModeToggle.svelte';
+
+	function preventWhenModeMissing(event: MouseEvent) {
+		if (!$storageMode || ($storageMode === 'cloud' && !$user)) {
+			event.preventDefault();
+		}
+	}
 </script>
 
 <header class="sticky top-0 z-50 bg-earth-900 text-slate-200 shadow-md">
@@ -35,21 +43,31 @@
 				</a>
 				<a
 					href={resolve('/logs')}
+					onclick={preventWhenModeMissing}
+					aria-disabled={!$storageMode || ($storageMode === 'cloud' && !$user)}
 					class="rounded-full px-4 py-1.5 text-sm font-medium transition-all {$page.url.pathname.startsWith(
 						resolve('/logs')
 					)
 						? 'bg-ring-600/20 text-ring-400'
-						: 'text-slate-400 hover:bg-earth-800 hover:text-slate-200'}"
+						: 'text-slate-400 hover:bg-earth-800 hover:text-slate-200'} {!$storageMode ||
+					($storageMode === 'cloud' && !$user)
+						? 'pointer-events-none opacity-50'
+						: ''}"
 				>
 					Logs
 				</a>
 				<a
 					href={resolve('/my-data')}
+					onclick={preventWhenModeMissing}
+					aria-disabled={!$storageMode || ($storageMode === 'cloud' && !$user)}
 					class="rounded-full px-4 py-1.5 text-sm font-medium transition-all {$page.url.pathname.startsWith(
 						resolve('/my-data')
 					)
 						? 'bg-ring-600/20 text-ring-400'
-						: 'text-slate-400 hover:bg-earth-800 hover:text-slate-200'}"
+						: 'text-slate-400 hover:bg-earth-800 hover:text-slate-200'} {!$storageMode ||
+					($storageMode === 'cloud' && !$user)
+						? 'pointer-events-none opacity-50'
+						: ''}"
 				>
 					My Data
 				</a>
@@ -63,7 +81,9 @@
 			<div class="flex items-center gap-3">
 				<DarkModeToggle />
 
-				<div class="hidden h-6 w-px bg-earth-700 sm:block"></div>
+				{#if $storageMode !== 'local'}
+					<div class="hidden h-6 w-px bg-earth-700 sm:block"></div>
+				{/if}
 
 				<Auth />
 			</div>
@@ -90,11 +110,15 @@
 		</a>
 		<a
 			href={resolve('/logs')}
+			onclick={preventWhenModeMissing}
+			aria-disabled={!$storageMode || ($storageMode === 'cloud' && !$user)}
 			class="flex flex-1 items-center justify-center text-xs font-medium transition-all {$page.url.pathname.startsWith(
 				resolve('/logs')
 			)
 				? 'text-ring-400'
-				: 'text-slate-400'}"
+				: 'text-slate-400'} {!$storageMode || ($storageMode === 'cloud' && !$user)
+				? 'pointer-events-none opacity-50'
+				: ''}"
 		>
 			<span class="flex flex-col items-center">
 				<span
@@ -107,11 +131,15 @@
 		</a>
 		<a
 			href={resolve('/my-data')}
+			onclick={preventWhenModeMissing}
+			aria-disabled={!$storageMode || ($storageMode === 'cloud' && !$user)}
 			class="flex flex-1 items-center justify-center text-xs font-medium transition-all {$page.url.pathname.startsWith(
 				resolve('/my-data')
 			)
 				? 'text-ring-400'
-				: 'text-slate-400'}"
+				: 'text-slate-400'} {!$storageMode || ($storageMode === 'cloud' && !$user)
+				? 'pointer-events-none opacity-50'
+				: ''}"
 		>
 			<span class="flex flex-col items-center">
 				<span

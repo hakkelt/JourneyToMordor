@@ -1,5 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
 
+async function chooseLocalOnlyMode(page: Page) {
+	await page.getByRole('button', { name: 'Choose local mode' }).click();
+}
+
 async function chooseFirstEntryUnit(page: Page, unit: 'km' | 'miles') {
 	await page.getByRole('button', { name: unit === 'km' ? 'Use kilometers' : 'Use miles' }).click();
 }
@@ -18,6 +22,11 @@ test.describe('Unit Selection', () => {
 		await page.goto('/');
 		await page.evaluate(() => localStorage.clear());
 		await page.reload();
+		await chooseLocalOnlyMode(page);
+	});
+
+	test('should hide sign in button in local mode', async ({ page }) => {
+		await expect(page.getByRole('button', { name: 'Sign In' })).not.toBeVisible();
 	});
 
 	test('should display all distances in km by default', async ({ page }) => {
