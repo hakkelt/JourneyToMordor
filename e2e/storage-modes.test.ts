@@ -72,7 +72,7 @@ test.describe('Storage Modes', () => {
 		await page.getByRole('button', { name: 'Close', exact: true }).click();
 
 		await expect(page.getByRole('heading', { name: 'Sign In' })).not.toBeVisible();
-		await expect(page.getByText('Please choose one mode to continue.')).toBeVisible();
+		await expect(page.getByText(/choose one mode to continue/i)).toBeVisible();
 
 		const keys = await page.evaluate(
 			({ storageKey, modeKey, pendingKey }) => {
@@ -128,7 +128,7 @@ test.describe('Storage Modes', () => {
 		await expect(page.getByRole('link', { name: 'My Data' }).first()).toHaveClass(/opacity-50/);
 
 		await page.getByRole('button', { name: 'Close', exact: true }).click();
-		await expect(page.getByText('Please choose one mode to continue.')).toBeVisible();
+		await expect(page.getByText(/choose one mode to continue/i)).toBeVisible();
 	});
 
 	test('should hide account information and signed-out delete-account helper in local mode', async ({
@@ -156,11 +156,11 @@ test.describe('Storage Modes', () => {
 
 		await expect(page.getByRole('heading', { name: 'Sign In' })).toBeVisible();
 		await page.getByRole('button', { name: 'Close', exact: true }).click();
-		await expect(page.getByText('Please choose one mode to continue.')).toBeVisible();
+		await expect(page.getByText(/choose one mode to continue/i)).toBeVisible();
 
 		await page.reload();
 
-		await expect(page.getByText('Please choose one mode to continue.')).toBeVisible();
+		await expect(page.getByText(/choose one mode to continue/i)).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Sign In' })).not.toBeVisible();
 
 		const keys = await page.evaluate(

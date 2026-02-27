@@ -11,17 +11,13 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { user } from '$lib/stores/auth';
+	import { installPromptEvent, type BeforeInstallPromptEvent } from '$lib/stores/installPrompt';
 	import { warmImageCache } from '$lib/image-cache';
 	import favicon from '$lib/assets/favicon-32.png';
 
-	interface BeforeInstallPromptEvent extends Event {
-		prompt: () => void;
-		userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
-	}
-
 	let { children } = $props();
-	let installPrompt = $state<BeforeInstallPromptEvent | null>(null);
 	let storageModeReady = $state(false);
+	let isStandalone = $state(false);
 
 	$effect(() => {
 		if (browser) {
@@ -48,9 +44,14 @@
 	});
 
 	onMount(() => {
+		isStandalone =
+			window.matchMedia('(display-mode: standalone)').matches ||
+			window.matchMedia('(display-mode: fullscreen)').matches ||
+			(window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+
 		const handler = (e: Event) => {
 			e.preventDefault();
-			installPrompt = e as BeforeInstallPromptEvent;
+			installPromptEvent.set(e as BeforeInstallPromptEvent);
 		};
 		window.addEventListener('beforeinstallprompt', handler);
 
@@ -63,12 +64,10 @@
 	});
 
 	async function installApp() {
-		if (!installPrompt) return;
-		installPrompt.prompt();
-		const { outcome } = await installPrompt.userChoice;
-		if (outcome === 'accepted') {
-			installPrompt = null;
-		}
+		if (!$installPromptEvent) return;
+		await $installPromptEvent.prompt();
+		await $installPromptEvent.userChoice;
+		installPromptEvent.set(null);
 	}
 </script>
 
@@ -105,13 +104,13 @@
 			</a>
 		</div>
 		<p class="mt-2 space-x-4">
-			{#if installPrompt}
+			{#if !isStandalone}
 				<button
 					onclick={installApp}
 					class="text-ring-400 hover:text-ring-300 hover:underline disabled:pointer-events-none disabled:opacity-50"
-					disabled={!$isOnline}
+					disabled={!$isOnline || !$installPromptEvent}
 				>
-					Install App
+					{$installPromptEvent ? 'Install App' : 'Install via Browser Menu'}
 				</button>
 				<span class="text-slate-600">|</span>
 			{/if}

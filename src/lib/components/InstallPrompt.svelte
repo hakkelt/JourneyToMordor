@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import { installPromptEvent } from '$lib/stores/installPrompt';
 
-	let deferredPrompt: BeforeInstallPromptEvent | null = $state(null);
 	let isStandalone = $state(false);
 
 	onMount(() => {
@@ -12,52 +12,39 @@
 				window.matchMedia('(display-mode: fullscreen)').matches ||
 				(window.navigator as Navigator & { standalone?: boolean }).standalone === true;
 		}
-
-		const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
-			// Prevent Chrome 67 and earlier from automatically showing the prompt
-			e.preventDefault();
-			// Stash the event so it can be triggered later.
-			deferredPrompt = e;
-		};
-
-		window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-		return () => {
-			window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-		};
 	});
 
 	async function handleInstall() {
-		if (!deferredPrompt) return;
+		if (!$installPromptEvent) return;
 
 		// Show the install prompt
-		deferredPrompt.prompt();
+		await $installPromptEvent.prompt();
 		// Wait for the user to respond to the prompt
-		const { outcome } = await deferredPrompt.userChoice;
+		await $installPromptEvent.userChoice;
 		// We've used the prompt, and can't use it again, throw it away
-		if (outcome === 'accepted') {
-			deferredPrompt = null;
-		}
+		installPromptEvent.set(null);
 	}
 </script>
 
 {#if !isStandalone}
 	<div
-		class="rounded-lg border-l-4 border-sky-500 bg-white p-4 transition-all hover:shadow-md dark:bg-slate-700"
+		class="space-y-4 rounded-xl border border-slate-200 bg-gradient-to-br from-earth-50 to-slate-50 p-6 text-left shadow-sm dark:border-slate-600 dark:from-slate-600 dark:to-slate-600"
 	>
 		<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 			<div>
-				<p class="font-semibold text-sky-900 dark:text-sky-300">📲 Install App</p>
-				<p class="mt-1 text-sm text-sky-800 dark:text-sky-300">
+				<h3 class="font-serif text-xl font-bold text-slate-800 dark:text-slate-100">
+					📲 Install App
+				</h3>
+				<p class="mt-1 text-base text-slate-700 dark:text-slate-300">
 					Add to your home screen for the best experience. Works offline!
 				</p>
 			</div>
 			<button
 				onclick={handleInstall}
-				disabled={!deferredPrompt}
-				class="shrink-0 rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sky-700 focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:outline-none"
+				disabled={!$installPromptEvent}
+				class="shrink-0 rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sky-700 focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-sky-600"
 			>
-				{deferredPrompt ? 'Install Now' : 'Install via Browser Menu'}
+				{$installPromptEvent ? 'Install Now' : 'Install via Browser Menu'}
 			</button>
 		</div>
 	</div>
