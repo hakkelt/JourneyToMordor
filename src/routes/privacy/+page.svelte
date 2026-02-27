@@ -56,8 +56,7 @@
 				<ul class="list-disc space-y-2 pl-5 text-shire-800 dark:text-shire-300">
 					<li>All your journey data is stored locally in your browser's local storage</li>
 					<li>No data is sent to our servers or any third-party services</li>
-					<li>Your data remains on your device only and sign-in is hidden</li>
-					<li>Offline usage is available</li>
+					<li>Your data remains on your device only and sign-in is disabled</li>
 					<li>
 						If you clear browser data or use another device, progress is not available there unless
 						you manually transfer it
@@ -70,10 +69,12 @@
 				<h3 class="mb-2 font-semibold text-ring-900 dark:text-ring-300">Cloud Mode</h3>
 				<ul class="list-disc space-y-2 pl-5 text-ring-800 dark:text-ring-300">
 					<li>Your journey data is stored in Firebase Cloud Firestore</li>
-					<li>Journey data is not stored on your device in this mode</li>
+					<li>
+						Journey data is temporarily saved on your device for offline access and automatically
+						deleted when you're back online
+					</li>
 					<li>You can access your progress from any device by logging in</li>
 					<li>Your data automatically syncs between devices</li>
-					<li>Offline usage is not available for journey edits in this mode</li>
 					<li>
 						We store: your journey logs (date, distance, optional notes), and your unit preference
 						(km/miles)

@@ -7,7 +7,8 @@
 		resetStorageMode,
 		setStorageMode,
 		storageMode,
-		syncWithFirestore
+		syncWithFirestore,
+		startPeriodicSync
 	} from '$lib/storage';
 	import { isOnline } from '$lib/stores/network';
 	import { goto } from '$app/navigation';
@@ -18,12 +19,19 @@
 
 	function openModal() {
 		if (!$isOnline) return;
-		setStorageMode('cloud');
 		showModal = true;
 	}
 
 	function closeModal() {
 		showModal = false;
+	}
+
+	function handleAuthSuccess() {
+		// Set storage mode to cloud after successful authentication
+		if ($storageMode !== 'cloud') {
+			setStorageMode('cloud');
+		}
+		closeModal();
 	}
 
 	async function logout() {
@@ -62,6 +70,18 @@
 		if ($isOnline && $user) {
 			syncWithFirestore($user);
 		}
+	});
+
+	// Start periodic sync in cloud mode
+	$effect(() => {
+		if ($storageMode !== 'cloud' || !$user) return;
+
+		const stopPeriodicSync = startPeriodicSync($user);
+
+		// Cleanup on effect re-run or component unmount
+		return () => {
+			stopPeriodicSync();
+		};
 	});
 </script>
 
@@ -109,5 +129,5 @@
 </div>
 
 {#if showModal}
-	<AuthModal onClose={closeModal} />
+	<AuthModal onClose={closeModal} onAuthSuccess={handleAuthSuccess} />
 {/if}

@@ -60,7 +60,9 @@ export function loadData(): LocalStorageSchema {
 		}
 	}
 
-	if (mode === 'cloud' && !getPendingCloudUserId()) {
+	// In cloud mode without internet, load cached data if available
+	// This allows the app to start offline
+	if (mode === 'cloud' && !getPendingCloudUserId() && !raw) {
 		journeyStore.set(DEFAULT_STATE);
 		return DEFAULT_STATE;
 	}
@@ -193,6 +195,35 @@ export async function syncWithFirestore(user: User): Promise<void> {
 	}
 }
 
+// Periodic sync interval in milliseconds (5 minutes)
+const SYNC_INTERVAL = 5 * 60 * 1000;
+
+/**
+ * Start periodic syncing with Firestore when in cloud mode and online.
+ * Returns a cleanup function to stop the periodic sync.
+ */
+export function startPeriodicSync(user: User): () => void {
+	let intervalId: ReturnType<typeof setInterval> | null = null;
+
+	const doSync = () => {
+		const mode = get(storageMode);
+		if (mode === 'cloud' && get(isOnline)) {
+			syncWithFirestore(user);
+		}
+	};
+
+	// Start periodic sync
+	intervalId = setInterval(doSync, SYNC_INTERVAL);
+
+	// Return cleanup function
+	return () => {
+		if (intervalId) {
+			clearInterval(intervalId);
+			intervalId = null;
+		}
+	};
+}
+
 function mergeData(local: LocalStorageSchema, remote: LocalStorageSchema): LocalStorageSchema {
 	const deletedSet = new Set<number>([...local.deletedLogIds, ...remote.deletedLogIds]);
 	const uniqueLogsMap = new Map<number, LogEntry>();
@@ -242,8 +273,12 @@ export function saveData(data: LocalStorageSchema, currentUser?: User | null): v
 	if (!isBrowser()) return;
 
 	if (get(storageMode) === 'cloud') {
-		if (!get(isOnline) && currentUser) {
+		// Always cache data locally in cloud mode for offline access
+		if (currentUser) {
 			cachePendingCloudData(data, currentUser.uid);
+		}
+		if (!get(isOnline)) {
+			return;
 		}
 		return;
 	}
