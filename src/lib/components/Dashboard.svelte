@@ -243,8 +243,13 @@
 							>
 								<p class="font-semibold text-ring-900 dark:text-ring-300">Cloud mode</p>
 								<p class="mt-1 text-sm text-ring-800 dark:text-ring-300">
-									All data kept in cloud, except when the device goes offline. It allows
-									synchronization betwen devices, and requires Sign-in.
+									{#if isStandalone}
+										Data kept in cloud and on this device (tied to your account). Allows
+										synchronization between devices, requires Sign-in.
+									{:else}
+										All data kept in cloud, except when the device goes offline. It allows
+										synchronization between devices, and requires Sign-in.
+									{/if}
 								</p>
 								<p class="mt-1 text-sm text-ring-800 dark:text-ring-300">
 									Recommended for users who want to access their data across multiple devices and

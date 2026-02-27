@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
 	loadData,
 	loadStorageMode,
@@ -328,6 +328,101 @@ describe('Storage', () => {
 			expect(get(hasPendingSync)).toBe(true);
 
 			isOnline.set(true);
+		});
+	});
+
+	describe('Installed PWA behavior in cloud mode', () => {
+		const mockInstalledUser: User = {
+			uid: 'installed-user-123',
+			email: 'installed@example.com',
+			displayName: 'Installed User',
+			photoURL: null,
+			emailVerified: true,
+			isAnonymous: false,
+			metadata: {},
+			providerData: [],
+			refreshToken: '',
+			tenantId: null,
+			delete: vi.fn(),
+			getIdToken: vi.fn(),
+			getIdTokenResult: vi.fn(),
+			reload: vi.fn(),
+			toJSON: vi.fn(),
+			providerId: 'firebase'
+		} as unknown as User;
+
+		beforeEach(() => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: vi.fn().mockImplementation((query: string) => ({
+					matches: query === '(display-mode: standalone)',
+					media: query,
+					onchange: null,
+					addListener: vi.fn(),
+					removeListener: vi.fn(),
+					addEventListener: vi.fn(),
+					removeEventListener: vi.fn(),
+					dispatchEvent: vi.fn()
+				}))
+			});
+			setStorageMode('cloud');
+			isOnline.set(true);
+		});
+
+		afterEach(() => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+			isOnline.set(true);
+		});
+
+		it('should preserve local cache after successful sync when installed', async () => {
+			const { getDoc } = await import('firebase/firestore');
+			journeyStore.set({
+				logs: [{ id: 10, date: '2023-02-01', distance: 5 }],
+				unit: 'km',
+				deletedLogIds: []
+			});
+
+			(getDoc as any).mockResolvedValueOnce({ exists: () => false, data: () => undefined } as any);
+			await syncWithFirestore(mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+		});
+
+		it('should preserve local cache after merging remote data when installed', async () => {
+			const { getDoc } = await import('firebase/firestore');
+			journeyStore.set({ logs: [], unit: 'km', deletedLogIds: [] });
+
+			(getDoc as any).mockResolvedValueOnce({
+				exists: () => true,
+				data: () => ({
+					logs: [{ id: 20, date: '2023-02-02', distance: 8 }],
+					unit: 'km',
+					deletedLogIds: []
+				})
+			} as any);
+
+			await syncWithFirestore(mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+			const cached = JSON.parse(localStorageMock.getItem(STORAGE_KEY)!);
+			expect(cached.logs.some((l: { id: number }) => l.id === 20)).toBe(true);
+		});
+
+		it('should preserve local cache after addLog when online and installed', async () => {
+			const { setDoc } = await import('firebase/firestore');
+			(setDoc as any).mockResolvedValue(undefined);
+
+			addLog({ date: '2023-02-03', distance: 3 }, mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
 		});
 	});
 

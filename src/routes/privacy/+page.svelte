@@ -21,7 +21,7 @@
 		<h1 class="font-serif text-5xl font-normal text-slate-800 dark:text-slate-100">
 			Privacy Policy
 		</h1>
-		<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Last updated: February 26, 2026</p>
+		<p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Last updated: February 27, 2026</p>
 	</div>
 
 	<section class="space-y-4">
@@ -70,8 +70,13 @@
 				<ul class="list-disc space-y-2 pl-5 text-ring-800 dark:text-ring-300">
 					<li>Your journey data is stored in Firebase Cloud Firestore</li>
 					<li>
-						Journey data is temporarily saved on your device for offline access and automatically
-						deleted when you're back online
+						Journey data is saved on your device for offline access, and automatically deleted when
+						you're back online
+					</li>
+					<li>
+						If the app is installed on your device, journey data is also persistently stored on this
+						device (associated with your user account, and discarded on sign-out or when a different
+						user signs in)
 					</li>
 					<li>You can access your progress from any device by logging in</li>
 					<li>Your data automatically syncs between devices</li>

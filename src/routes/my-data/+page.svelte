@@ -29,9 +29,14 @@
 	let discardDataOnLocalSwitch = $state(false);
 	let deleteConfirmText = $state('');
 	let localDataConfirmText = $state('');
+	let isInstalled = $state(false);
 
 	onMount(() => {
 		window.scrollTo(0, 0);
+		isInstalled =
+			window.matchMedia('(display-mode: standalone)').matches ||
+			window.matchMedia('(display-mode: fullscreen)').matches ||
+			(window.navigator as Navigator & { standalone?: boolean }).standalone === true;
 	});
 
 	async function handleDeleteAccount() {
@@ -399,8 +404,13 @@
 					>
 						<p class="font-semibold text-ring-900 dark:text-ring-300">Cloud mode</p>
 						<p class="text-xs text-ring-800 dark:text-ring-300">
-							All data kept in cloud, except when the device goes offline. It allows synchronization
-							betwen devices, and requires Sign-in.
+							{#if isInstalled}
+								Data kept in cloud and on this device (tied to your account; discarded on sign-out).
+								Allows synchronization between devices, requires Sign-in.
+							{:else}
+								All data kept in cloud, except when the device goes offline. It allows
+								synchronization between devices, and requires Sign-in.
+							{/if}
 						</p>
 						<p class="text-xs text-ring-800 dark:text-ring-300">
 							Recommended for users who want to access their data across multiple devices and don't
