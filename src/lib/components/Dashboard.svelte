@@ -3,8 +3,11 @@
 	import { LOCATIONS } from '$lib/data';
 	import ProgressChart from './ProgressChart.svelte';
 	import InstallPrompt from './InstallPrompt.svelte';
+	import whereAreWeGoing from '$lib/assets/where-are-we-going.jpg?enhanced';
 	import { resolve } from '$app/paths';
 	import { user } from '$lib/stores/auth';
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		logs: LogEntry[];
@@ -51,6 +54,16 @@
 			event.preventDefault();
 		}
 	}
+
+	let isStandalone = $state(false);
+
+	onMount(() => {
+		if (!browser) return;
+		isStandalone =
+			window.matchMedia('(display-mode: standalone)').matches ||
+			window.matchMedia('(display-mode: fullscreen)').matches ||
+			(window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+	});
 </script>
 
 <div class="space-y-6">
@@ -139,8 +152,62 @@
 				</p>
 			</div>
 
+			<div
+				class="mx-auto mb-10 max-w-2xl rounded-xl border border-slate-200 bg-slate-50 p-8 text-left shadow-sm dark:border-slate-600 dark:bg-slate-600"
+			>
+				<h3 class="mb-6 font-serif text-2xl font-bold text-slate-800 dark:text-slate-100">
+					How to Join the Fellowship:
+				</h3>
+				<ol class="list-decimal space-y-4 pl-6 text-lg text-slate-700 dark:text-slate-300">
+					{#if !isStandalone}
+						<li>
+							Install the app from the <a
+								href="#install-app"
+								class="font-bold text-ring-600 hover:text-ring-700 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
+								>Install App</a
+							> prompt below. (Optional)
+						</li>
+					{/if}
+					<li>
+						<a
+							href="#storage-mode"
+							class="font-bold text-ring-600 hover:text-ring-700 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
+							>Choose</a
+						> whether your data is stored locally or in the cloud from the box below.
+					</li>
+					<li>
+						Navigate to the <a
+							href={resolve('/logs')}
+							onclick={preventWhenModeMissing}
+							aria-disabled={!storageMode || (storageMode === 'cloud' && !$user)}
+							class="inline font-bold text-ring-600 hover:text-ring-700 hover:underline dark:text-ring-400 dark:hover:text-ring-300 {!storageMode ||
+							(storageMode === 'cloud' && !$user)
+								? 'pointer-events-none no-underline opacity-50'
+								: ''}">Logs</a
+						> page.
+					</li>
+					<li>Enter your daily distance.</li>
+					<li>Watch your progress on the map and try to keep up with Frodo!</li>
+				</ol>
+
+				<div class="mt-8 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-500">
+					<enhanced:img
+						src={whereAreWeGoing}
+						alt="Merry and Pippin asking where they are going"
+						class="h-full w-full object-cover"
+					/>
+				</div>
+			</div>
+
+			{#if !isStandalone}
+				<div id="install-app" class="mx-auto mb-8 max-w-2xl">
+					<InstallPrompt />
+				</div>
+			{/if}
+
 			<!-- Data Storage Info -->
 			<div
+				id="storage-mode"
 				class="mx-auto mb-8 max-w-2xl space-y-4 rounded-xl border border-slate-200 bg-gradient-to-br from-earth-50 to-slate-50 p-6 text-left shadow-sm dark:border-slate-600 dark:from-slate-600 dark:to-slate-600"
 			>
 				<h3 class="font-serif text-xl font-bold text-slate-800 dark:text-slate-100">
@@ -148,8 +215,8 @@
 				</h3>
 				<div class="space-y-3 text-base text-slate-700 dark:text-slate-300">
 					{#if !storageMode}
-						<p class="text-sm font-semibold text-slate-700 dark:text-slate-200">
-							Please choose one mode to continue. Logs and My Data are locked until you select a
+						<p class="text-lg font-semibold text-slate-700 dark:text-slate-200">
+							You must choose one mode to continue. Logs and My Data are locked until you select a
 							mode.
 						</p>
 						<div class="grid gap-3">
@@ -207,35 +274,6 @@
 						>Privacy Policy</a
 					>
 				</p>
-			</div>
-
-			<div
-				class="mx-auto mb-8 max-w-2xl rounded-xl border border-slate-200 bg-white p-4 text-left shadow-sm dark:border-slate-600 dark:bg-slate-700"
-			>
-				<InstallPrompt />
-			</div>
-
-			<div
-				class="mx-auto mb-10 max-w-2xl rounded-xl border border-slate-200 bg-slate-50 p-8 text-left shadow-sm dark:border-slate-600 dark:bg-slate-600"
-			>
-				<h3 class="mb-6 font-serif text-2xl font-bold text-slate-800 dark:text-slate-100">
-					How to Join the Fellowship:
-				</h3>
-				<ol class="list-decimal space-y-4 pl-6 text-lg text-slate-700 dark:text-slate-300">
-					<li>
-						Navigate to the <a
-							href={resolve('/logs')}
-							onclick={preventWhenModeMissing}
-							aria-disabled={!storageMode || (storageMode === 'cloud' && !$user)}
-							class="inline font-bold text-ring-600 hover:text-ring-700 hover:underline dark:text-ring-400 dark:hover:text-ring-300 {!storageMode ||
-							(storageMode === 'cloud' && !$user)
-								? 'pointer-events-none no-underline opacity-50'
-								: ''}">Log Journey</a
-						> page.
-					</li>
-					<li>Enter your daily distance.</li>
-					<li>Watch your progress on the map and try to keep up with Frodo!</li>
-				</ol>
 			</div>
 
 			<p class="font-medium text-ring-700 italic dark:text-ring-400">

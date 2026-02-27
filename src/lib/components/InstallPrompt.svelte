@@ -1,9 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 
 	let deferredPrompt: BeforeInstallPromptEvent | null = $state(null);
+	let isStandalone = $state(false);
 
 	onMount(() => {
+		if (browser) {
+			isStandalone =
+				window.matchMedia('(display-mode: standalone)').matches ||
+				window.matchMedia('(display-mode: fullscreen)').matches ||
+				(window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+		}
+
 		const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
 			// Prevent Chrome 67 and earlier from automatically showing the prompt
 			e.preventDefault();
@@ -32,7 +41,7 @@
 	}
 </script>
 
-{#if deferredPrompt}
+{#if !isStandalone}
 	<div
 		class="rounded-lg border-l-4 border-sky-500 bg-white p-4 transition-all hover:shadow-md dark:bg-slate-700"
 	>
@@ -45,9 +54,10 @@
 			</div>
 			<button
 				onclick={handleInstall}
+				disabled={!deferredPrompt}
 				class="shrink-0 rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sky-700 focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:outline-none"
 			>
-				Install Now
+				{deferredPrompt ? 'Install Now' : 'Install via Browser Menu'}
 			</button>
 		</div>
 	</div>

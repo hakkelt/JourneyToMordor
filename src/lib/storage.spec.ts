@@ -255,6 +255,13 @@ describe('Storage', () => {
 		expect(localStorageMock.getItem(STORAGE_KEY)).toBeNull();
 	});
 
+	it('should clear persisted storage mode when resetting data', () => {
+		setStorageMode('local');
+		resetData();
+
+		expect(localStorageMock.getItem(STORAGE_MODE_KEY)).toBeNull();
+	});
+
 	describe('Firestore sync', () => {
 		beforeEach(() => {
 			setStorageMode('cloud');

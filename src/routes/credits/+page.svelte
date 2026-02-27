@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { LOCATIONS } from '$lib/data';
 	import headerLogo from '$lib/assets/header.png?enhanced';
+	import whereAreWeGoing from '$lib/assets/where-are-we-going.jpg?enhanced';
 
 	function getDomain(url: string) {
 		try {
@@ -204,6 +205,32 @@
 						class="mt-1 block truncate text-sm font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
 					>
 						Wikimedia Commons — File:Unico_Anello.png (Xander)
+					</a>
+				</div>
+			</div>
+
+			<div
+				class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-600 dark:bg-slate-700"
+			>
+				<div class="aspect-video w-full overflow-hidden bg-slate-100 dark:bg-slate-600">
+					<enhanced:img
+						src={whereAreWeGoing}
+						alt="Where are we going scene"
+						class="h-full w-full object-cover"
+					/>
+				</div>
+				<div class="p-4">
+					<h3 class="font-serif text-xl font-bold text-slate-800 dark:text-slate-100">
+						Where are we going?
+					</h3>
+					<p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Source:</p>
+					<a
+						href="https://www.imdb.com/title/tt0120737/"
+						target="_blank"
+						rel="noopener noreferrer external"
+						class="mt-1 block truncate text-sm font-medium text-ring-600 hover:underline dark:text-ring-400 dark:hover:text-ring-300"
+					>
+						The Lord of the Rings: The Fellowship of the Ring
 					</a>
 				</div>
 			</div>

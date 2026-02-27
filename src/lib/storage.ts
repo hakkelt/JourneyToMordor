@@ -336,6 +336,7 @@ export function setUnit(unit: 'km' | 'miles', currentUser?: User | null): LocalS
 export function resetData(): LocalStorageSchema {
 	if (isBrowser()) {
 		localStorage.removeItem(STORAGE_KEY);
+		localStorage.removeItem(STORAGE_MODE_KEY);
 	}
 	clearPendingCloudCache(false);
 	journeyStore.set(DEFAULT_STATE);

@@ -4,6 +4,7 @@
 	import {
 		journeyStore,
 		resetData,
+		resetStorageMode,
 		saveData,
 		deleteUserAccount,
 		setUnit,
@@ -67,8 +68,11 @@
 		}
 
 		resetData();
+		resetStorageMode();
 		notify('success', 'Data on this device was cleared.');
 		showLocalDataConfirm = false;
+		localDataConfirmText = '';
+		goto(resolve('/'));
 	}
 
 	function downloadData() {
