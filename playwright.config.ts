@@ -5,8 +5,9 @@ export default defineConfig({
 		command: 'bun run build && bun run preview -- --host',
 		port: 4173,
 		reuseExistingServer: false,
-		timeout: 600000
+		timeout: 900000
 	},
+	timeout: 60000,
 	use: {
 		baseURL: 'http://localhost:4173'
 	},

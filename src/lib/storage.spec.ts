@@ -376,6 +376,7 @@ describe('Storage', () => {
 				configurable: true,
 				value: undefined
 			});
+			localStorageMock.clear();
 			isOnline.set(true);
 		});
 
@@ -423,6 +424,100 @@ describe('Storage', () => {
 
 			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
 			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+		});
+
+		it('should preserve local cache after deleteLog when online and installed', async () => {
+			const { setDoc } = await import('firebase/firestore');
+			(setDoc as any).mockResolvedValue(undefined);
+
+			const withLog = addLog({ date: '2023-02-04', distance: 4 }, mockInstalledUser);
+			const id = withLog.logs[0].id;
+			deleteLog(id, mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+			const cached = JSON.parse(localStorageMock.getItem(STORAGE_KEY)!);
+			expect(cached.deletedLogIds).toContain(id);
+		});
+
+		it('should preserve local cache after setUnit when online and installed', async () => {
+			const { setDoc } = await import('firebase/firestore');
+			(setDoc as any).mockResolvedValue(undefined);
+
+			setUnit('miles', mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+			const cached = JSON.parse(localStorageMock.getItem(STORAGE_KEY)!);
+			expect(cached.unit).toBe('miles');
+		});
+	});
+
+	describe('Non-installed browser cloud mode', () => {
+		const mockUser: User = {
+			uid: 'browser-user-456',
+			email: 'browser@example.com',
+			displayName: 'Browser User',
+			photoURL: null,
+			emailVerified: true,
+			isAnonymous: false,
+			metadata: {},
+			providerData: [],
+			refreshToken: '',
+			tenantId: null,
+			delete: vi.fn(),
+			getIdToken: vi.fn(),
+			getIdTokenResult: vi.fn(),
+			reload: vi.fn(),
+			toJSON: vi.fn(),
+			providerId: 'firebase'
+		} as unknown as User;
+
+		beforeEach(() => {
+			// Ensure matchMedia is NOT available (non-installed browser mode)
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+			setStorageMode('cloud');
+			isOnline.set(true);
+		});
+
+		afterEach(() => {
+			localStorageMock.clear();
+			isOnline.set(true);
+		});
+
+		it('should clear local cache after successful sync when not installed', async () => {
+			const { getDoc } = await import('firebase/firestore');
+			localStorageMock.setItem(
+				STORAGE_KEY,
+				JSON.stringify({ logs: [], unit: 'km', deletedLogIds: [] })
+			);
+			localStorageMock.setItem(CLOUD_PENDING_USER_KEY, 'browser-user-456');
+			journeyStore.set({ logs: [], unit: 'km', deletedLogIds: [] });
+
+			(getDoc as any).mockResolvedValueOnce({ exists: () => false, data: () => undefined } as any);
+			await syncWithFirestore(mockUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBeNull();
+		});
+
+		it('should clear local cache after addLog when online and not installed', async () => {
+			const { setDoc } = await import('firebase/firestore');
+			(setDoc as any).mockResolvedValue(undefined);
+
+			// Pre-seed a pending cache entry
+			localStorageMock.setItem(
+				STORAGE_KEY,
+				JSON.stringify({ logs: [], unit: 'km', deletedLogIds: [] })
+			);
+			localStorageMock.setItem(CLOUD_PENDING_USER_KEY, 'browser-user-456');
+
+			addLog({ date: '2023-03-01', distance: 5 }, mockUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBeNull();
 		});
 	});
 
