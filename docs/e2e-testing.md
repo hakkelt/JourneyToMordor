@@ -25,9 +25,7 @@ The `playwright.config.ts` is configured to reuse an existing server when runnin
 
 - `reuseExistingServer: !process.env.CI` - Reuses server locally, but always rebuilds in CI
 
-### 3. Two Ways to Run E2E Tests
-
-#### Option A: Standard (Slower First Run, Faster Subsequent Runs)
+### Running E2E Tests
 
 ```bash
 bun run test:e2e
@@ -37,30 +35,17 @@ bun run test:e2e
 - Subsequent runs: Uses Vite cache (~1-2 minutes)
 - Playwright will build and start server automatically
 
-#### Option B: Pre-build Server (Fastest for Repeated Testing)
+**Running specific tests:**
 
-```bash
-# Terminal 1: Start the preview server (build once)
-bun run test:e2e:server
-
-# Terminal 2: Run tests (reuses the server, no rebuild)
-bun run test:e2e
-```
-
-**Benefits of Option B:**
-
-- Build happens once
-- All subsequent test runs skip the build entirely
-- Tests start immediately
-- Perfect for iterative development
+- To run a specific test file: `bun run test:e2e e2e/unit-selection.test.ts`
+- To run a specific test by title: `bun run test:e2e -g "should display distances in km"`
 
 ## Performance Comparison
 
-| Method              | First Run       | Subsequent Runs |
-| ------------------- | --------------- | --------------- |
-| Before optimization | ~3-5 min        | ~3-5 min        |
-| After (Option A)    | ~3-5 min        | ~1-2 min        |
-| After (Option B)    | ~3-5 min (once) | ~10-30 sec      |
+| Method              | First Run | Subsequent Runs |
+| ------------------- | --------- | --------------- |
+| Before optimization | ~3-5 min  | ~3-5 min        |
+| With Vite cache     | ~3-5 min  | ~1-2 min        |
 
 ## Cache Location
 

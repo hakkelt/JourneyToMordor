@@ -4,7 +4,7 @@ export default defineConfig({
 	webServer: {
 		command: 'bun run build && bun run preview -- --host',
 		port: 4173,
-		reuseExistingServer: !process.env.CI,
+		reuseExistingServer: false,
 		timeout: 600000
 	},
 	use: {
