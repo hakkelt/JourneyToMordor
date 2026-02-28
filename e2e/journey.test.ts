@@ -21,7 +21,7 @@ test.describe('Journey to Mordor', () => {
 		});
 		await page.reload();
 
-		const welcomeLogLink = page.getByRole('link', { name: 'Log Journey' });
+		const welcomeLogLink = page.getByRole('link', { name: 'Logs' }).first();
 		await expect(welcomeLogLink).toHaveClass(/opacity-50/);
 		await expect(page).toHaveURL(/\/$/);
 
@@ -34,7 +34,7 @@ test.describe('Journey to Mordor', () => {
 		await expect(page.getByRole('heading', { name: 'Welcome, Ringbearer' })).toBeVisible();
 
 		// 2. Switch to Log page
-		await page.getByRole('link', { name: 'Log Journey' }).click();
+		await page.getByRole('link', { name: 'Logs' }).first().click();
 		await expect(page.getByRole('heading', { name: 'Log Journey' })).toBeVisible();
 
 		// 3. Add an entry
