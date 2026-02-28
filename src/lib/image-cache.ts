@@ -1,5 +1,7 @@
 import { LOCATIONS } from './data';
 import type { Picture } from 'vite-imagetools';
+import headerLogo from '$lib/assets/header.png?enhanced';
+import whereAreWeGoing from '$lib/assets/where-are-we-going.jpg?enhanced';
 
 const AVIF_TEST =
 	'data:image/avif;base64,AAAAHGZ0eXBhdmlmAAAAAG1pZjFhdmlmbWlhZgAAANZtZXRhAAA' +
@@ -21,6 +23,10 @@ interface ExtendedRequestInit extends RequestInit {
 }
 
 type ImageSource = string | { src: string; w?: string | number };
+type CacheImageInput = string | Picture;
+
+const GOOGLE_FONTS_STYLESHEET_URL =
+	'https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap';
 
 async function checkSupport(dataUri: string): Promise<boolean> {
 	if (typeof Image === 'undefined') return false;
@@ -60,6 +66,106 @@ export async function warmImageCache() {
 	}
 }
 
+export async function warmFontCaches() {
+	if (typeof window === 'undefined' || !('caches' in window)) return;
+
+	try {
+		const stylesheetResponse = await fetch(GOOGLE_FONTS_STYLESHEET_URL, {
+			priority: 'low'
+		} as ExtendedRequestInit);
+
+		if (!stylesheetResponse.ok) return;
+
+		const stylesheetText = await stylesheetResponse.clone().text();
+		const stylesheetCache = await caches.open('google-fonts-cache');
+		await stylesheetCache.put(GOOGLE_FONTS_STYLESHEET_URL, stylesheetResponse.clone());
+
+		const fontUrlMatches = [...stylesheetText.matchAll(/url\(([^)]+)\)/g)];
+		const fontUrls = fontUrlMatches
+			.map((match) => match[1]?.trim().replace(/^['"]|['"]$/g, ''))
+			.filter((url): url is string => Boolean(url));
+
+		const fontCache = await caches.open('gstatic-fonts-cache');
+
+		for (const fontUrl of fontUrls) {
+			try {
+				const fontResponse = await fetch(fontUrl, { priority: 'low' } as ExtendedRequestInit);
+				if (fontResponse.ok) {
+					await fontCache.put(fontUrl, fontResponse.clone());
+				}
+			} catch {
+				// Ignore errors
+			}
+		}
+	} catch {
+		// Ignore errors
+	}
+}
+
+function chooseSourcesForBrowser(pic: Picture, avif: boolean, webp: boolean): ImageSource[] {
+	if (avif && pic.sources?.avif) {
+		return Array.isArray(pic.sources.avif) ? pic.sources.avif : [pic.sources.avif];
+	}
+
+	if (webp && pic.sources?.webp) {
+		return Array.isArray(pic.sources.webp) ? pic.sources.webp : [pic.sources.webp];
+	}
+
+	if (pic.img) {
+		return [pic.img];
+	}
+
+	return [];
+}
+
+function selectMinimalSrcsetUrls(candidates: { url: string; w: number }[]): string[] {
+	if (candidates.length === 0) return [];
+
+	const finiteCandidates = candidates.filter((candidate) => Number.isFinite(candidate.w));
+	if (finiteCandidates.length === 0) {
+		return [candidates[0].url];
+	}
+
+	const sorted = [...finiteCandidates].sort((a, b) => a.w - b.w);
+	const targetWidths = [480, 960, 1600];
+	const selected = new Set<string>();
+
+	for (const targetWidth of targetWidths) {
+		const best =
+			sorted.find((candidate) => candidate.w >= targetWidth) ?? sorted[sorted.length - 1];
+		if (best) {
+			selected.add(best.url);
+		}
+	}
+
+	return [...selected];
+}
+
+function getUrlsToWarm(image: CacheImageInput, avif: boolean, webp: boolean): string[] {
+	if (typeof image === 'string') {
+		return [image];
+	}
+
+	const pic = image as Picture;
+	const chosenSources = chooseSourcesForBrowser(pic, avif, webp);
+	const urls = new Set<string>();
+
+	for (const entry of chosenSources) {
+		const rawSrc = typeof entry === 'string' ? entry : entry.src;
+		if (!rawSrc) continue;
+
+		if (rawSrc.includes(',')) {
+			for (const url of selectMinimalSrcsetUrls(parseSrcset(rawSrc))) {
+				urls.add(url);
+			}
+		} else {
+			urls.add(rawSrc);
+		}
+	}
+
+	return [...urls];
+}
+
 async function process() {
 	const avif = await checkSupport(AVIF_TEST);
 	const webp = await checkSupport(WEBP_TEST);
@@ -70,60 +176,28 @@ async function process() {
 		const img = loc.image;
 		if (!img) continue;
 
-		if (typeof img === 'string') {
-			urls.add(img);
-			continue;
+		for (const url of getUrlsToWarm(img, avif, webp)) {
+			urls.add(url);
 		}
+	}
 
-		// Handle enhanced-img Picture object
-		const pic = img as Picture;
-		let chosenSources: ImageSource[] = [];
+	for (const url of getUrlsToWarm(headerLogo as Picture, avif, webp)) {
+		urls.add(url);
+	}
 
-		if (avif && pic.sources?.avif) {
-			chosenSources = Array.isArray(pic.sources.avif) ? pic.sources.avif : [pic.sources.avif];
-		} else if (webp && pic.sources?.webp) {
-			chosenSources = Array.isArray(pic.sources.webp) ? pic.sources.webp : [pic.sources.webp];
-		} else if (pic.img) {
-			chosenSources = [pic.img];
-		}
-
-		// Normalize candidates
-		const candidates: { url: string; w: number }[] = [];
-
-		for (const entry of chosenSources) {
-			const rawSrc = typeof entry === 'string' ? entry : entry.src;
-			const w =
-				typeof entry === 'object' && 'w' in entry ? parseInt(String(entry.w), 10) : Infinity;
-
-			if (rawSrc) {
-				// Check if it's a srcset string
-				if (rawSrc.includes(',')) {
-					candidates.push(...parseSrcset(rawSrc));
-				} else {
-					// Single URL
-					candidates.push({ url: rawSrc, w: isNaN(w) ? Infinity : w });
-				}
-			}
-		}
-
-		// Select the largest candidate
-		if (candidates.length > 0) {
-			// Sort by width ascending
-			candidates.sort((a, b) => a.w - b.w);
-
-			// Always pick the largest (last one) - Safer for offline quality
-			const best = candidates[candidates.length - 1];
-
-			if (best) {
-				urls.add(best.url);
-			}
-		}
+	for (const url of getUrlsToWarm(whereAreWeGoing as Picture, avif, webp)) {
+		urls.add(url);
 	}
 
 	// Fetch assets to populate the runtime cache
 	for (const url of urls) {
 		try {
-			await fetch(url, { priority: 'low' } as ExtendedRequestInit);
+			const response = await fetch(url, { priority: 'low' } as ExtendedRequestInit);
+
+			if ('caches' in window && response.ok) {
+				const imageCache = await caches.open('images');
+				await imageCache.put(url, response.clone());
+			}
 		} catch {
 			// Ignore errors
 		}

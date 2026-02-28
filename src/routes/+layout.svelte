@@ -2,7 +2,7 @@
 	import './layout.css';
 	import Header from '$lib/components/Header.svelte';
 	import NotificationCenter from '$lib/components/NotificationCenter.svelte';
-	import { loadData, loadStorageMode, storageMode } from '$lib/storage';
+	import { isInstalledPWA, loadData, loadStorageMode, storageMode } from '$lib/storage';
 	import { isOnline } from '$lib/stores/network';
 	import { theme } from '$lib/stores/theme';
 	import { browser } from '$app/environment';
@@ -12,12 +12,30 @@
 	import { page } from '$app/stores';
 	import { user } from '$lib/stores/auth';
 	import { installPromptEvent, type BeforeInstallPromptEvent } from '$lib/stores/installPrompt';
-	import { warmImageCache } from '$lib/image-cache';
+	import { warmFontCaches, warmImageCache } from '$lib/image-cache';
 	import favicon from '$lib/assets/favicon-32.png';
 
 	let { children } = $props();
 	let storageModeReady = $state(false);
 	let isStandalone = $state(false);
+	let installedCachingStarted = false;
+
+	async function startInstalledCachingNow() {
+		if (installedCachingStarted) return;
+		installedCachingStarted = true;
+
+		if ('serviceWorker' in navigator) {
+			const swUrl = `${resolve('/sw.js')}?installed=1`;
+			try {
+				await navigator.serviceWorker.register(swUrl);
+			} catch (error) {
+				console.error('Service worker registration failed', error);
+			}
+		}
+
+		warmImageCache();
+		void warmFontCaches();
+	}
 
 	$effect(() => {
 		if (browser) {
@@ -44,29 +62,42 @@
 	});
 
 	onMount(() => {
-		isStandalone =
-			window.matchMedia('(display-mode: standalone)').matches ||
-			window.matchMedia('(display-mode: fullscreen)').matches ||
-			(window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+		isStandalone = isInstalledPWA();
+
+		if (isStandalone) {
+			void startInstalledCachingNow();
+		}
 
 		const handler = (e: Event) => {
 			e.preventDefault();
 			installPromptEvent.set(e as BeforeInstallPromptEvent);
 		};
+		const appInstalledHandler = () => {
+			isStandalone = true;
+			installPromptEvent.set(null);
+			void startInstalledCachingNow();
+		};
 		window.addEventListener('beforeinstallprompt', handler);
+		window.addEventListener('appinstalled', appInstalledHandler);
 
 		loadStorageMode();
 		storageModeReady = true;
 		loadData();
-		warmImageCache();
 
-		return () => window.removeEventListener('beforeinstallprompt', handler);
+		return () => {
+			window.removeEventListener('beforeinstallprompt', handler);
+			window.removeEventListener('appinstalled', appInstalledHandler);
+		};
 	});
 
 	async function installApp() {
 		if (!$installPromptEvent) return;
 		await $installPromptEvent.prompt();
-		await $installPromptEvent.userChoice;
+		const userChoice = await $installPromptEvent.userChoice;
+		if (userChoice.outcome === 'accepted') {
+			isStandalone = true;
+			await startInstalledCachingNow();
+		}
 		installPromptEvent.set(null);
 	}
 </script>

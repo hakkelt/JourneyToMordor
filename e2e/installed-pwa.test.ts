@@ -40,6 +40,53 @@ async function clearStorage(page: Page) {
 	await page.evaluate(() => localStorage.clear());
 }
 
+async function mockServiceWorkerRegistration(page: Page) {
+	await page.addInitScript(() => {
+		(window as Window & { __swRegisterUrl?: string }).__swRegisterUrl = undefined;
+
+		if (!('serviceWorker' in navigator)) {
+			return;
+		}
+
+		const serviceWorkerContainer = navigator.serviceWorker as ServiceWorkerContainer & {
+			register: (scriptURL: string | URL, options?: RegistrationOptions) => Promise<unknown>;
+		};
+
+		serviceWorkerContainer.register = (scriptURL: string | URL) => {
+			(window as Window & { __swRegisterUrl?: string }).__swRegisterUrl = String(scriptURL);
+			return Promise.resolve({} as ServiceWorkerRegistration);
+		};
+	});
+}
+
+async function mockWarmImageLoadingProbe(page: Page) {
+	await page.addInitScript(() => {
+		const win = window as Window & { __warmImageFetchCount?: number };
+		win.__warmImageFetchCount = 0;
+
+		Object.defineProperty(window, 'requestIdleCallback', {
+			writable: true,
+			configurable: true,
+			value: (
+				callback: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void
+			) => {
+				callback({ didTimeout: false, timeRemaining: () => 50 });
+				return 1;
+			}
+		});
+
+		const originalFetch = window.fetch.bind(window);
+		window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+			const requestPriority = (init as (RequestInit & { priority?: string }) | undefined)?.priority;
+			if (requestPriority === 'low') {
+				win.__warmImageFetchCount = (win.__warmImageFetchCount ?? 0) + 1;
+			}
+
+			return originalFetch(input, init);
+		};
+	});
+}
+
 test.describe('Installed PWA – UI descriptions', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
@@ -107,6 +154,193 @@ test.describe('Installed PWA – UI descriptions', () => {
 	}) => {
 		// No mockStandaloneMode – install prompt is rendered in browser mode
 		await expect(page.getByRole('heading', { name: /Install App/ })).toBeVisible();
+	});
+
+	test('should register service worker with installed=1 in standalone mode', async ({ page }) => {
+		await mockStandaloneMode(page);
+		await mockServiceWorkerRegistration(page);
+		await page.goto('/');
+
+		await page.waitForFunction(() => {
+			const swUrl = (window as Window & { __swRegisterUrl?: string }).__swRegisterUrl;
+			return Boolean(swUrl);
+		});
+
+		const swUrl = await page.evaluate(
+			() => (window as Window & { __swRegisterUrl?: string }).__swRegisterUrl
+		);
+		expect(swUrl).toContain('installed=1');
+	});
+
+	test('should not register service worker in browser mode', async ({ page }) => {
+		await mockServiceWorkerRegistration(page);
+		await page.goto('/');
+		const swUrl = await page.evaluate(
+			() => (window as Window & { __swRegisterUrl?: string }).__swRegisterUrl
+		);
+		expect(swUrl).toBeUndefined();
+	});
+
+	test('should warm-load milestone images in standalone mode', async ({ page }) => {
+		await mockStandaloneMode(page);
+		await mockWarmImageLoadingProbe(page);
+		await page.goto('/');
+
+		await page.waitForFunction(() => {
+			const warmFetchCount = (window as Window & { __warmImageFetchCount?: number })
+				.__warmImageFetchCount;
+			return (warmFetchCount ?? 0) > 0;
+		});
+
+		const warmFetchCount = await page.evaluate(
+			() => (window as Window & { __warmImageFetchCount?: number }).__warmImageFetchCount ?? 0
+		);
+		expect(warmFetchCount).toBeGreaterThan(0);
+	});
+
+	test('should not warm-load milestone images in browser mode', async ({ page }) => {
+		await mockWarmImageLoadingProbe(page);
+		await page.goto('/');
+		await page.waitForTimeout(600);
+
+		const warmFetchCount = await page.evaluate(
+			() => (window as Window & { __warmImageFetchCount?: number }).__warmImageFetchCount ?? 0
+		);
+		expect(warmFetchCount).toBe(0);
+	});
+
+	test('should immediately start SW and warm image cache when appinstalled fires', async ({
+		page
+	}) => {
+		await mockServiceWorkerRegistration(page);
+		await mockWarmImageLoadingProbe(page);
+		await page.goto('/');
+		await expect(page.getByRole('heading', { name: 'Welcome, Ringbearer' })).toBeVisible();
+
+		await page.evaluate(() => {
+			window.dispatchEvent(new Event('appinstalled'));
+		});
+
+		await page.waitForFunction(() => {
+			const swUrl = (window as Window & { __swRegisterUrl?: string }).__swRegisterUrl;
+			return Boolean(swUrl);
+		});
+
+		const swUrl = await page.evaluate(
+			() => (window as Window & { __swRegisterUrl?: string }).__swRegisterUrl
+		);
+		expect(swUrl).toContain('installed=1');
+
+		await page.waitForFunction(() => {
+			const warmFetchCount = (window as Window & { __warmImageFetchCount?: number })
+				.__warmImageFetchCount;
+			return (warmFetchCount ?? 0) > 0;
+		});
+
+		const warmFetchCount = await page.evaluate(
+			() => (window as Window & { __warmImageFetchCount?: number }).__warmImageFetchCount ?? 0
+		);
+		expect(warmFetchCount).toBeGreaterThan(0);
+
+		const cachedImageCount = await page.evaluate(async () => {
+			const imageCache = await caches.open('images');
+			const requests = await imageCache.keys();
+			return requests.length;
+		});
+		expect(cachedImageCount).toBeGreaterThan(0);
+	});
+
+	test('should render credits images offline across multiple screen sizes after warm cache', async ({
+		page
+	}) => {
+		await mockStandaloneMode(page);
+		await page.addInitScript(() => {
+			Object.defineProperty(window, 'requestIdleCallback', {
+				writable: true,
+				configurable: true,
+				value: (
+					callback: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void
+				) => {
+					callback({ didTimeout: false, timeRemaining: () => 50 });
+					return 1;
+				}
+			});
+		});
+
+		const viewports = [
+			{ width: 390, height: 844 },
+			{ width: 768, height: 1024 },
+			{ width: 1366, height: 900 }
+		];
+		const expectedImageUrls = new Set<string>();
+
+		await page.goto('/');
+		await page.getByRole('button', { name: 'Choose local mode' }).click();
+
+		for (const viewport of viewports) {
+			await page.setViewportSize(viewport);
+			await page.goto('/credits');
+			await expect(page.getByRole('heading', { name: 'Credits' })).toBeVisible();
+
+			await page.waitForFunction(() => {
+				const images = Array.from(document.querySelectorAll('img')) as HTMLImageElement[];
+				return images.length > 0 && images.every((img) => img.complete && img.naturalWidth > 0);
+			});
+
+			const viewportUrls = await page.evaluate(() => {
+				const images = Array.from(document.querySelectorAll('img')) as HTMLImageElement[];
+				const sameOriginUrls = images
+					.map((img) => img.currentSrc || img.src)
+					.filter((url) => url.startsWith(window.location.origin));
+				return [...new Set(sameOriginUrls)];
+			});
+
+			for (const url of viewportUrls) {
+				expectedImageUrls.add(url);
+			}
+		}
+
+		await page.waitForFunction(
+			async (urls) => {
+				const imageCache = await caches.open('images');
+				for (const url of urls) {
+					const match = await imageCache.match(url);
+					if (!match) return false;
+				}
+				return true;
+			},
+			[...expectedImageUrls]
+		);
+
+		await page.context().setOffline(true);
+
+		for (const viewport of viewports) {
+			await page.setViewportSize(viewport);
+			await expect(page.getByRole('heading', { name: 'Credits' })).toBeVisible();
+
+			const offlineImageStats = await page.evaluate(async () => {
+				const images = Array.from(document.querySelectorAll('img')) as HTMLImageElement[];
+				const targetUrls = images.map((img) => img.currentSrc || img.src);
+
+				const loadedStates = await Promise.all(
+					targetUrls.map(
+						(url) =>
+							new Promise<boolean>((resolve) => {
+								const probe = new Image();
+								probe.onload = () => resolve(true);
+								probe.onerror = () => resolve(false);
+								probe.src = url;
+							})
+					)
+				);
+
+				const loaded = loadedStates.filter(Boolean).length;
+				return { total: loadedStates.length, loaded };
+			});
+
+			expect(offlineImageStats.total).toBeGreaterThan(0);
+			expect(offlineImageStats.loaded).toBe(offlineImageStats.total);
+		}
 	});
 });
 
