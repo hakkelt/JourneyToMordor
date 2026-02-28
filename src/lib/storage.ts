@@ -36,7 +36,7 @@ export const storageMode = writable<StorageMode | null>(null);
 const isBrowser = () => typeof localStorage !== 'undefined';
 
 // Helper to detect if the app is running as an installed PWA (standalone mode)
-function isInstalledPWA(): boolean {
+export function isInstalledPWA(): boolean {
 	if (!isBrowser() || typeof globalThis.matchMedia !== 'function') return false;
 	return (
 		globalThis.matchMedia('(display-mode: standalone)').matches ||
@@ -44,6 +44,16 @@ function isInstalledPWA(): boolean {
 		(globalThis.navigator as Navigator & { standalone?: boolean })?.standalone === true
 	);
 }
+
+// Storage mode description texts (shared between UI components and e2e tests)
+export {
+	LOCAL_MODE_DESC_LINE1,
+	LOCAL_MODE_DESC_LINE2,
+	CLOUD_MODE_DESC_BROWSER,
+	CLOUD_MODE_DESC_INSTALLED,
+	CLOUD_MODE_DESC_INSTALLED_DETAILED,
+	CLOUD_MODE_DESC_LINE2
+} from './storage.descriptions';
 
 // Helper to calculate start date from logs
 export function getStartDate(logs: LogEntry[]): string {

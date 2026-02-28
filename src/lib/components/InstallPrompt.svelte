@@ -1,17 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
 	import { installPromptEvent } from '$lib/stores/installPrompt';
+	import { isInstalledPWA } from '$lib/storage';
 
 	let isStandalone = $state(false);
 
 	onMount(() => {
-		if (browser) {
-			isStandalone =
-				window.matchMedia('(display-mode: standalone)').matches ||
-				window.matchMedia('(display-mode: fullscreen)').matches ||
-				(window.navigator as Navigator & { standalone?: boolean }).standalone === true;
-		}
+		isStandalone = isInstalledPWA();
 	});
 
 	async function handleInstall() {

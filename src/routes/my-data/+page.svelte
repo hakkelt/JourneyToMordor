@@ -10,6 +10,12 @@
 		setUnit,
 		storageMode,
 		changeStorageMode,
+		isInstalledPWA,
+		CLOUD_MODE_DESC_BROWSER,
+		CLOUD_MODE_DESC_INSTALLED_DETAILED,
+		CLOUD_MODE_DESC_LINE2,
+		LOCAL_MODE_DESC_LINE1,
+		LOCAL_MODE_DESC_LINE2,
 		type StorageMode
 	} from '$lib/storage';
 	import { goto } from '$app/navigation';
@@ -33,10 +39,7 @@
 
 	onMount(() => {
 		window.scrollTo(0, 0);
-		isInstalled =
-			window.matchMedia('(display-mode: standalone)').matches ||
-			window.matchMedia('(display-mode: fullscreen)').matches ||
-			(window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+		isInstalled = isInstalledPWA();
 	});
 
 	async function handleDeleteAccount() {
@@ -389,11 +392,10 @@
 					>
 						<p class="font-semibold text-shire-900 dark:text-shire-300">Local mode</p>
 						<p class="text-xs text-shire-800 dark:text-shire-300">
-							No sign-in, all data stored locally on this device. Data will not sync between devices
-							and can be lost if browser data is cleared.
+							{LOCAL_MODE_DESC_LINE1}
 						</p>
 						<p class="text-xs text-shire-800 dark:text-shire-300">
-							Recommended for users who want to keep their data private and only use one device.
+							{LOCAL_MODE_DESC_LINE2}
 						</p>
 					</button>
 					<button
@@ -404,17 +406,10 @@
 					>
 						<p class="font-semibold text-ring-900 dark:text-ring-300">Cloud mode</p>
 						<p class="text-xs text-ring-800 dark:text-ring-300">
-							{#if isInstalled}
-								Data kept in cloud and on this device (tied to your account; discarded on sign-out).
-								Allows synchronization between devices, requires Sign-in.
-							{:else}
-								All data kept in cloud, except when the device goes offline. It allows
-								synchronization between devices, and requires Sign-in.
-							{/if}
+							{isInstalled ? CLOUD_MODE_DESC_INSTALLED_DETAILED : CLOUD_MODE_DESC_BROWSER}
 						</p>
 						<p class="text-xs text-ring-800 dark:text-ring-300">
-							Recommended for users who want to access their data across multiple devices and don't
-							mind signing in.
+							{CLOUD_MODE_DESC_LINE2}
 						</p>
 					</button>
 				</div>

@@ -17,9 +17,16 @@ import {
 	setStorageMode,
 	storageMode,
 	journeyStore,
+	isInstalledPWA,
 	STORAGE_KEY,
 	STORAGE_MODE_KEY,
-	CLOUD_PENDING_USER_KEY
+	CLOUD_PENDING_USER_KEY,
+	CLOUD_MODE_DESC_BROWSER,
+	CLOUD_MODE_DESC_INSTALLED,
+	CLOUD_MODE_DESC_INSTALLED_DETAILED,
+	LOCAL_MODE_DESC_LINE1,
+	LOCAL_MODE_DESC_LINE2,
+	CLOUD_MODE_DESC_LINE2
 } from './storage';
 import type { User } from 'firebase/auth';
 import { get } from 'svelte/store';
@@ -518,6 +525,93 @@ describe('Storage', () => {
 			addLog({ date: '2023-03-01', distance: 5 }, mockUser);
 
 			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBeNull();
+		});
+	});
+
+	describe('isInstalledPWA', () => {
+		afterEach(() => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+			Object.defineProperty(globalThis, 'navigator', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+		});
+
+		it('should return false when matchMedia is not available (SSR/Node)', () => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+			expect(isInstalledPWA()).toBe(false);
+		});
+
+		it('should return true when display-mode is standalone', () => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: (query: string) => ({
+					matches: query === '(display-mode: standalone)',
+					media: query
+				})
+			});
+			expect(isInstalledPWA()).toBe(true);
+		});
+
+		it('should return true when display-mode is fullscreen', () => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: (query: string) => ({
+					matches: query === '(display-mode: fullscreen)',
+					media: query
+				})
+			});
+			expect(isInstalledPWA()).toBe(true);
+		});
+
+		it('should return false when display-mode is browser', () => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: (_query: string) => ({ matches: false, media: _query })
+			});
+			expect(isInstalledPWA()).toBe(false);
+		});
+	});
+
+	describe('storage mode description constants', () => {
+		it('should export non-empty LOCAL_MODE_DESC_LINE1', () => {
+			expect(LOCAL_MODE_DESC_LINE1.length).toBeGreaterThan(0);
+			expect(LOCAL_MODE_DESC_LINE1).toContain('locally on this device');
+		});
+
+		it('should export non-empty LOCAL_MODE_DESC_LINE2', () => {
+			expect(LOCAL_MODE_DESC_LINE2.length).toBeGreaterThan(0);
+			expect(LOCAL_MODE_DESC_LINE2).toContain('private');
+		});
+
+		it('should export CLOUD_MODE_DESC_BROWSER mentioning offline', () => {
+			expect(CLOUD_MODE_DESC_BROWSER).toContain('offline');
+		});
+
+		it('should export CLOUD_MODE_DESC_INSTALLED mentioning account', () => {
+			expect(CLOUD_MODE_DESC_INSTALLED).toContain('tied to your account');
+			expect(CLOUD_MODE_DESC_INSTALLED).not.toContain('discarded on sign-out');
+		});
+
+		it('should export CLOUD_MODE_DESC_INSTALLED_DETAILED with sign-out note', () => {
+			expect(CLOUD_MODE_DESC_INSTALLED_DETAILED).toContain('tied to your account');
+			expect(CLOUD_MODE_DESC_INSTALLED_DETAILED).toContain('discarded on sign-out');
+		});
+
+		it('should export CLOUD_MODE_DESC_LINE2 mentioning multiple devices', () => {
+			expect(CLOUD_MODE_DESC_LINE2).toContain('multiple devices');
 		});
 	});
 

@@ -1,4 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
+import {
+	CLOUD_MODE_DESC_BROWSER,
+	CLOUD_MODE_DESC_INSTALLED,
+	CLOUD_MODE_DESC_INSTALLED_DETAILED
+} from '../src/lib/storage.descriptions';
 
 const STORAGE_KEY = 'mordor_tracker_v1';
 const STORAGE_MODE_KEY = 'mordor_storage_mode_v1';
@@ -32,30 +37,35 @@ async function mockStandaloneMode(page: Page) {
 	});
 }
 
+async function clearStorage(page: Page) {
+	await page.evaluate(() => localStorage.clear());
+}
+
 test.describe('Installed PWA – UI descriptions', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/');
+		await clearStorage(page);
+		await page.reload();
+	});
+
 	test('should show installed-specific cloud mode description on welcome page', async ({
 		page
 	}) => {
 		await mockStandaloneMode(page);
 		await page.goto('/');
-		await page.evaluate(() => localStorage.clear());
+		await clearStorage(page);
 		await page.reload();
 
-		await expect(
-			page.getByText(/Data kept in cloud and on this device \(tied to your account\)/)
-		).toBeVisible();
+		await expect(page.getByText(CLOUD_MODE_DESC_INSTALLED, { exact: false })).toBeVisible();
+		await expect(page.getByText(CLOUD_MODE_DESC_BROWSER, { exact: false })).not.toBeVisible();
 	});
 
 	test('should show standard cloud mode description on welcome page when not installed', async ({
 		page
 	}) => {
-		await page.goto('/');
-		await page.evaluate(() => localStorage.clear());
-		await page.reload();
-
-		await expect(
-			page.getByText(/All data kept in cloud, except when the device goes offline/)
-		).toBeVisible();
+		// No mockStandaloneMode – default Playwright browser is not standalone
+		await expect(page.getByText(CLOUD_MODE_DESC_BROWSER, { exact: false })).toBeVisible();
+		await expect(page.getByText(CLOUD_MODE_DESC_INSTALLED, { exact: false })).not.toBeVisible();
 	});
 
 	test('should show installed-specific cloud mode description on My Data page', async ({
@@ -63,50 +73,59 @@ test.describe('Installed PWA – UI descriptions', () => {
 	}) => {
 		await mockStandaloneMode(page);
 		await page.goto('/');
-		await page.evaluate(() => localStorage.clear());
+		await clearStorage(page);
 		await page.reload();
 
-		// Choose local mode to unlock My Data navigation
 		await page.getByRole('button', { name: 'Choose local mode' }).click();
 		await page.getByRole('link', { name: 'My Data' }).first().click();
 
 		await expect(
-			page.getByText(/Data kept in cloud and on this device \(tied to your account/)
+			page.getByText(CLOUD_MODE_DESC_INSTALLED_DETAILED, { exact: false })
 		).toBeVisible();
+		await expect(page.getByText(CLOUD_MODE_DESC_BROWSER, { exact: false })).not.toBeVisible();
 	});
 
 	test('should show standard cloud mode description on My Data page when not installed', async ({
 		page
 	}) => {
-		await page.goto('/');
-		await page.evaluate(() => localStorage.clear());
-		await page.reload();
-
+		// No mockStandaloneMode – default Playwright browser is not standalone
 		await page.getByRole('button', { name: 'Choose local mode' }).click();
 		await page.getByRole('link', { name: 'My Data' }).first().click();
 
+		await expect(page.getByText(CLOUD_MODE_DESC_BROWSER, { exact: false })).toBeVisible();
 		await expect(
-			page.getByText(/All data kept in cloud, except when the device goes offline/)
-		).toBeVisible();
+			page.getByText(CLOUD_MODE_DESC_INSTALLED_DETAILED, { exact: false })
+		).not.toBeVisible();
 	});
 
-	test('should not show Install App prompt in footer when in standalone mode', async ({ page }) => {
+	test('should not render install prompt heading in standalone mode', async ({ page }) => {
 		await mockStandaloneMode(page);
 		await page.goto('/');
+		await clearStorage(page);
+		await page.reload();
 
-		await expect(
-			page.getByRole('button', { name: /Install App|Install via Browser Menu/ })
-		).not.toBeVisible();
+		await expect(page.getByRole('heading', { name: /Install App/ })).not.toBeVisible();
+	});
+
+	test('should render install prompt heading in browser (non-standalone) mode', async ({
+		page
+	}) => {
+		// No mockStandaloneMode – install prompt is rendered in browser mode
+		await expect(page.getByRole('heading', { name: /Install App/ })).toBeVisible();
 	});
 });
 
 test.describe('Installed PWA – localStorage persistence', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/');
+		await clearStorage(page);
+		await page.reload();
+	});
+
 	test('should preserve pending cloud cache across reload when in standalone mode', async ({
 		page
 	}) => {
 		await mockStandaloneMode(page);
-		await page.goto('/');
-
 		// Simulate pre-existing installed-user cache (as would be set by syncWithFirestore)
 		await page.evaluate(
 			({ storageKey, pendingKey, data, userId }) => {
@@ -134,12 +153,8 @@ test.describe('Installed PWA – localStorage persistence', () => {
 		expect(storedData).not.toBeNull();
 	});
 
-	test('should infer cloud mode from pending cache in standalone mode and show sign-in modal', async ({
-		page
-	}) => {
+	test('should infer cloud mode from pending cache and show sign-in modal', async ({ page }) => {
 		await mockStandaloneMode(page);
-
-		await page.goto('/');
 		await page.evaluate(
 			({ storageKey, modeKey, pendingKey, data, userId }) => {
 				localStorage.removeItem(modeKey);
@@ -160,12 +175,8 @@ test.describe('Installed PWA – localStorage persistence', () => {
 		await expect(page.getByRole('heading', { name: 'Sign In' })).toBeVisible();
 	});
 
-	test('should clear pending cache when discarding pending changes in standalone mode', async ({
-		page
-	}) => {
+	test('should clear pending cache when discarding pending changes', async ({ page }) => {
 		await mockStandaloneMode(page);
-
-		await page.goto('/');
 		await page.evaluate(
 			({ storageKey, modeKey, pendingKey, data, userId }) => {
 				localStorage.removeItem(modeKey);

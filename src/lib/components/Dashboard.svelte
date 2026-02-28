@@ -1,12 +1,19 @@
 <script lang="ts">
 	import type { LogEntry, StorageMode } from '$lib/storage';
+	import {
+		CLOUD_MODE_DESC_BROWSER,
+		CLOUD_MODE_DESC_INSTALLED,
+		CLOUD_MODE_DESC_LINE2,
+		LOCAL_MODE_DESC_LINE1,
+		LOCAL_MODE_DESC_LINE2,
+		isInstalledPWA
+	} from '$lib/storage';
 	import { LOCATIONS } from '$lib/data';
 	import ProgressChart from './ProgressChart.svelte';
 	import InstallPrompt from './InstallPrompt.svelte';
 	import whereAreWeGoing from '$lib/assets/where-are-we-going.jpg?enhanced';
 	import { resolve } from '$app/paths';
 	import { user } from '$lib/stores/auth';
-	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 
 	interface Props {
@@ -58,11 +65,7 @@
 	let isStandalone = $state(false);
 
 	onMount(() => {
-		if (!browser) return;
-		isStandalone =
-			window.matchMedia('(display-mode: standalone)').matches ||
-			window.matchMedia('(display-mode: fullscreen)').matches ||
-			(window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+		isStandalone = isInstalledPWA();
 	});
 </script>
 
@@ -228,11 +231,10 @@
 							>
 								<p class="font-semibold text-shire-900 dark:text-shire-300">Local mode</p>
 								<p class="mt-1 text-sm text-shire-800 dark:text-shire-300">
-									No sign-in, all data stored locally on this device. Data will not sync between
-									devices and can be lost if browser data is cleared.
+									{LOCAL_MODE_DESC_LINE1}
 								</p>
 								<p class="mt-1 text-sm text-shire-800 dark:text-shire-300">
-									Recommended for users who want to keep their data private and only use one device.
+									{LOCAL_MODE_DESC_LINE2}
 								</p>
 							</button>
 							<button
@@ -243,17 +245,10 @@
 							>
 								<p class="font-semibold text-ring-900 dark:text-ring-300">Cloud mode</p>
 								<p class="mt-1 text-sm text-ring-800 dark:text-ring-300">
-									{#if isStandalone}
-										Data kept in cloud and on this device (tied to your account). Allows
-										synchronization between devices, requires Sign-in.
-									{:else}
-										All data kept in cloud, except when the device goes offline. It allows
-										synchronization between devices, and requires Sign-in.
-									{/if}
+									{isStandalone ? CLOUD_MODE_DESC_INSTALLED : CLOUD_MODE_DESC_BROWSER}
 								</p>
 								<p class="mt-1 text-sm text-ring-800 dark:text-ring-300">
-									Recommended for users who want to access their data across multiple devices and
-									don't mind signing in.
+									{CLOUD_MODE_DESC_LINE2}
 								</p>
 							</button>
 						</div>
