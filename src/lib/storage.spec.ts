@@ -175,10 +175,11 @@ describe('Storage', () => {
 		expect(get(storageMode)).toBe('local');
 	});
 
-	it('should not persist cloud mode and should reset mode', () => {
+	it('should persist cloud mode and should reset mode', () => {
 		setStorageMode('cloud');
-		expect(localStorageMock.getItem(STORAGE_MODE_KEY)).toBeNull();
+		expect(localStorageMock.getItem(STORAGE_MODE_KEY)).toBe('cloud');
 		expect(get(storageMode)).toBe('cloud');
+		expect(loadStorageMode()).toBe('cloud');
 
 		resetStorageMode();
 		expect(get(storageMode)).toBeNull();

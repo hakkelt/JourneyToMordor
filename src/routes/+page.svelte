@@ -6,7 +6,7 @@
 		storageMode,
 		type StorageMode
 	} from '$lib/storage';
-	import { user } from '$lib/stores/auth';
+	import { authStateReady, user } from '$lib/stores/auth';
 	import Dashboard from '$lib/components/Dashboard.svelte';
 	import AuthModal from '$lib/components/AuthModal.svelte';
 
@@ -14,7 +14,7 @@
 		setStorageMode(mode);
 	}
 
-	let showForcedAuthModal = $derived($storageMode === 'cloud' && !$user);
+	let showForcedAuthModal = $derived($storageMode === 'cloud' && $authStateReady && !$user);
 </script>
 
 <svelte:head>

@@ -10,7 +10,7 @@
 	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { user } from '$lib/stores/auth';
+	import { authStateReady, user } from '$lib/stores/auth';
 	import { installPromptEvent, type BeforeInstallPromptEvent } from '$lib/stores/installPrompt';
 	import { warmFontCaches, warmImageCache } from '$lib/image-cache';
 	import favicon from '$lib/assets/favicon-32.png';
@@ -52,6 +52,10 @@
 
 		if (!$storageMode && isProtectedPath) {
 			goto(resolve('/'));
+			return;
+		}
+
+		if ($storageMode === 'cloud' && !$authStateReady) {
 			return;
 		}
 

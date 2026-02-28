@@ -137,12 +137,9 @@ export function setStorageMode(mode: StorageMode): void {
 	storageMode.set(mode);
 	if (!isBrowser()) return;
 
-	if (mode === 'cloud') {
-		localStorage.removeItem(STORAGE_MODE_KEY);
-		return;
+	if (mode === 'local') {
+		clearPendingCloudCache(false);
 	}
-
-	clearPendingCloudCache(false);
 
 	localStorage.setItem(STORAGE_MODE_KEY, mode);
 }
@@ -217,8 +214,8 @@ export async function syncWithFirestore(user: User): Promise<void> {
 	}
 }
 
-// Periodic sync interval in milliseconds (5 minutes)
-const SYNC_INTERVAL = 5 * 60 * 1000;
+// Periodic sync interval in milliseconds (5 seconds)
+const SYNC_INTERVAL = 5 * 1000;
 
 /**
  * Start periodic syncing with Firestore when in cloud mode and online.

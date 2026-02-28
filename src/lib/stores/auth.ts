@@ -10,7 +10,8 @@ import {
 } from '../storage';
 import { get } from 'svelte/store';
 
-export const user = writable<User | null>(null);
+export const user = writable<User | null>(auth.currentUser);
+export const authStateReady = writable<boolean>(false);
 
 let previousUid: string | null = null;
 let hasReceivedInitialAuthState = false;
@@ -41,4 +42,5 @@ onAuthStateChanged(auth, (currentUser) => {
 
 	previousUid = currentUid;
 	hasReceivedInitialAuthState = true;
+	authStateReady.set(true);
 });
