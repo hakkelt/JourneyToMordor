@@ -35,6 +35,25 @@ export const storageMode = writable<StorageMode | null>(null);
 // Helper to ensure we're in the browser
 const isBrowser = () => typeof localStorage !== 'undefined';
 
+// Helper to detect if the app is running as an installed PWA (standalone mode)
+export function isInstalledPWA(): boolean {
+	if (!isBrowser() || typeof globalThis.matchMedia !== 'function') return false;
+	return (
+		globalThis.matchMedia('(display-mode: standalone)').matches ||
+		globalThis.matchMedia('(display-mode: fullscreen)').matches ||
+		(globalThis.navigator as Navigator & { standalone?: boolean })?.standalone === true
+	);
+}
+
+// Storage mode description texts (shared between UI components and e2e tests)
+export {
+	LOCAL_MODE_DESC_LINE1,
+	LOCAL_MODE_DESC_LINE2,
+	CLOUD_MODE_DESC_BROWSER,
+	CLOUD_MODE_DESC_INSTALLED,
+	CLOUD_MODE_DESC_LINE2
+} from './storage.descriptions';
+
 // Helper to calculate start date from logs
 export function getStartDate(logs: LogEntry[]): string {
 	if (logs.length === 0) {
@@ -174,7 +193,7 @@ export async function syncWithFirestore(user: User): Promise<void> {
 
 			// Update local
 			journeyStore.set(merged);
-			saveData(merged);
+			saveData(merged, user);
 
 			// Update remote if different
 			if (JSON.stringify(merged) !== JSON.stringify(remoteData)) {
@@ -183,11 +202,14 @@ export async function syncWithFirestore(user: User): Promise<void> {
 		} else {
 			// No remote data, upload local
 			await setDoc(userDocRef, normalizeData(localData));
+			saveData(localData, user);
 		}
 
 		// Clear pending sync flag on successful sync
 		hasPendingSync.set(false);
-		clearPendingCloudCache(false);
+		if (!isInstalledPWA()) {
+			clearPendingCloudCache(false);
+		}
 	} catch (e) {
 		console.error('Sync failed:', e);
 		// Mark as pending sync if it failed
@@ -261,7 +283,9 @@ async function syncOrQueue(user: User | null | undefined, data: LocalStorageSche
 		if (get(isOnline)) {
 			const userDocRef = doc(db, 'users', user.uid);
 			setDoc(userDocRef, data).catch((e) => console.error('Failed to save to firestore', e));
-			clearPendingCloudCache(false);
+			if (!isInstalledPWA()) {
+				clearPendingCloudCache(false);
+			}
 		} else {
 			cachePendingCloudData(data, user.uid);
 			hasPendingSync.set(true);

@@ -137,7 +137,7 @@ test.describe('Data Management', () => {
 		await page.getByRole('button', { name: 'Confirm Clear' }).click();
 
 		await expect(page).toHaveURL(/\/$/);
-		await expect(page.getByText('Please choose one mode to continue.')).toBeVisible();
+		await expect(page.getByText('You must choose one mode to continue.')).toBeVisible();
 
 		const modeValue = await page.evaluate(() => localStorage.getItem('mordor_storage_mode_v1'));
 		expect(modeValue).toBeNull();

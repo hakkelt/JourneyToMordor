@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
 	loadData,
 	loadStorageMode,
@@ -17,9 +17,15 @@ import {
 	setStorageMode,
 	storageMode,
 	journeyStore,
+	isInstalledPWA,
 	STORAGE_KEY,
 	STORAGE_MODE_KEY,
-	CLOUD_PENDING_USER_KEY
+	CLOUD_PENDING_USER_KEY,
+	CLOUD_MODE_DESC_BROWSER,
+	CLOUD_MODE_DESC_INSTALLED,
+	LOCAL_MODE_DESC_LINE1,
+	LOCAL_MODE_DESC_LINE2,
+	CLOUD_MODE_DESC_LINE2
 } from './storage';
 import type { User } from 'firebase/auth';
 import { get } from 'svelte/store';
@@ -328,6 +334,277 @@ describe('Storage', () => {
 			expect(get(hasPendingSync)).toBe(true);
 
 			isOnline.set(true);
+		});
+	});
+
+	describe('Installed PWA behavior in cloud mode', () => {
+		const mockInstalledUser: User = {
+			uid: 'installed-user-123',
+			email: 'installed@example.com',
+			displayName: 'Installed User',
+			photoURL: null,
+			emailVerified: true,
+			isAnonymous: false,
+			metadata: {},
+			providerData: [],
+			refreshToken: '',
+			tenantId: null,
+			delete: vi.fn(),
+			getIdToken: vi.fn(),
+			getIdTokenResult: vi.fn(),
+			reload: vi.fn(),
+			toJSON: vi.fn(),
+			providerId: 'firebase'
+		} as unknown as User;
+
+		beforeEach(() => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: vi.fn().mockImplementation((query: string) => ({
+					matches: query === '(display-mode: standalone)',
+					media: query,
+					onchange: null,
+					addListener: vi.fn(),
+					removeListener: vi.fn(),
+					addEventListener: vi.fn(),
+					removeEventListener: vi.fn(),
+					dispatchEvent: vi.fn()
+				}))
+			});
+			setStorageMode('cloud');
+			isOnline.set(true);
+		});
+
+		afterEach(() => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+			localStorageMock.clear();
+			isOnline.set(true);
+		});
+
+		it('should preserve local cache after successful sync when installed', async () => {
+			const { getDoc } = await import('firebase/firestore');
+			journeyStore.set({
+				logs: [{ id: 10, date: '2023-02-01', distance: 5 }],
+				unit: 'km',
+				deletedLogIds: []
+			});
+
+			(getDoc as any).mockResolvedValueOnce({ exists: () => false, data: () => undefined } as any);
+			await syncWithFirestore(mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+		});
+
+		it('should preserve local cache after merging remote data when installed', async () => {
+			const { getDoc } = await import('firebase/firestore');
+			journeyStore.set({ logs: [], unit: 'km', deletedLogIds: [] });
+
+			(getDoc as any).mockResolvedValueOnce({
+				exists: () => true,
+				data: () => ({
+					logs: [{ id: 20, date: '2023-02-02', distance: 8 }],
+					unit: 'km',
+					deletedLogIds: []
+				})
+			} as any);
+
+			await syncWithFirestore(mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+			const cached = JSON.parse(localStorageMock.getItem(STORAGE_KEY)!);
+			expect(cached.logs.some((l: { id: number }) => l.id === 20)).toBe(true);
+		});
+
+		it('should preserve local cache after addLog when online and installed', async () => {
+			const { setDoc } = await import('firebase/firestore');
+			(setDoc as any).mockResolvedValue(undefined);
+
+			addLog({ date: '2023-02-03', distance: 3 }, mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+		});
+
+		it('should preserve local cache after deleteLog when online and installed', async () => {
+			const { setDoc } = await import('firebase/firestore');
+			(setDoc as any).mockResolvedValue(undefined);
+
+			const withLog = addLog({ date: '2023-02-04', distance: 4 }, mockInstalledUser);
+			const id = withLog.logs[0].id;
+			deleteLog(id, mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+			const cached = JSON.parse(localStorageMock.getItem(STORAGE_KEY)!);
+			expect(cached.deletedLogIds).toContain(id);
+		});
+
+		it('should preserve local cache after setUnit when online and installed', async () => {
+			const { setDoc } = await import('firebase/firestore');
+			(setDoc as any).mockResolvedValue(undefined);
+
+			setUnit('miles', mockInstalledUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBe('installed-user-123');
+			expect(localStorageMock.getItem(STORAGE_KEY)).not.toBeNull();
+			const cached = JSON.parse(localStorageMock.getItem(STORAGE_KEY)!);
+			expect(cached.unit).toBe('miles');
+		});
+	});
+
+	describe('Non-installed browser cloud mode', () => {
+		const mockUser: User = {
+			uid: 'browser-user-456',
+			email: 'browser@example.com',
+			displayName: 'Browser User',
+			photoURL: null,
+			emailVerified: true,
+			isAnonymous: false,
+			metadata: {},
+			providerData: [],
+			refreshToken: '',
+			tenantId: null,
+			delete: vi.fn(),
+			getIdToken: vi.fn(),
+			getIdTokenResult: vi.fn(),
+			reload: vi.fn(),
+			toJSON: vi.fn(),
+			providerId: 'firebase'
+		} as unknown as User;
+
+		beforeEach(() => {
+			// Ensure matchMedia is NOT available (non-installed browser mode)
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+			setStorageMode('cloud');
+			isOnline.set(true);
+		});
+
+		afterEach(() => {
+			localStorageMock.clear();
+			isOnline.set(true);
+		});
+
+		it('should clear local cache after successful sync when not installed', async () => {
+			const { getDoc } = await import('firebase/firestore');
+			localStorageMock.setItem(
+				STORAGE_KEY,
+				JSON.stringify({ logs: [], unit: 'km', deletedLogIds: [] })
+			);
+			localStorageMock.setItem(CLOUD_PENDING_USER_KEY, 'browser-user-456');
+			journeyStore.set({ logs: [], unit: 'km', deletedLogIds: [] });
+
+			(getDoc as any).mockResolvedValueOnce({ exists: () => false, data: () => undefined } as any);
+			await syncWithFirestore(mockUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBeNull();
+		});
+
+		it('should clear local cache after addLog when online and not installed', async () => {
+			const { setDoc } = await import('firebase/firestore');
+			(setDoc as any).mockResolvedValue(undefined);
+
+			// Pre-seed a pending cache entry
+			localStorageMock.setItem(
+				STORAGE_KEY,
+				JSON.stringify({ logs: [], unit: 'km', deletedLogIds: [] })
+			);
+			localStorageMock.setItem(CLOUD_PENDING_USER_KEY, 'browser-user-456');
+
+			addLog({ date: '2023-03-01', distance: 5 }, mockUser);
+
+			expect(localStorageMock.getItem(CLOUD_PENDING_USER_KEY)).toBeNull();
+		});
+	});
+
+	describe('isInstalledPWA', () => {
+		afterEach(() => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+			Object.defineProperty(globalThis, 'navigator', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+		});
+
+		it('should return false when matchMedia is not available (SSR/Node)', () => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: undefined
+			});
+			expect(isInstalledPWA()).toBe(false);
+		});
+
+		it('should return true when display-mode is standalone', () => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: (query: string) => ({
+					matches: query === '(display-mode: standalone)',
+					media: query
+				})
+			});
+			expect(isInstalledPWA()).toBe(true);
+		});
+
+		it('should return true when display-mode is fullscreen', () => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: (query: string) => ({
+					matches: query === '(display-mode: fullscreen)',
+					media: query
+				})
+			});
+			expect(isInstalledPWA()).toBe(true);
+		});
+
+		it('should return false when display-mode is browser', () => {
+			Object.defineProperty(globalThis, 'matchMedia', {
+				writable: true,
+				configurable: true,
+				value: (_query: string) => ({ matches: false, media: _query })
+			});
+			expect(isInstalledPWA()).toBe(false);
+		});
+	});
+
+	describe('storage mode description constants', () => {
+		it('should export non-empty LOCAL_MODE_DESC_LINE1', () => {
+			expect(LOCAL_MODE_DESC_LINE1.length).toBeGreaterThan(0);
+			expect(LOCAL_MODE_DESC_LINE1).toContain('locally on this device');
+		});
+
+		it('should export non-empty LOCAL_MODE_DESC_LINE2', () => {
+			expect(LOCAL_MODE_DESC_LINE2.length).toBeGreaterThan(0);
+			expect(LOCAL_MODE_DESC_LINE2).toContain('private');
+		});
+
+		it('should export CLOUD_MODE_DESC_BROWSER mentioning offline', () => {
+			expect(CLOUD_MODE_DESC_BROWSER).toContain('offline');
+		});
+
+		it('should export CLOUD_MODE_DESC_INSTALLED mentioning offline use', () => {
+			expect(CLOUD_MODE_DESC_INSTALLED).toContain('offline use');
+		});
+
+		it('should export CLOUD_MODE_DESC_LINE2 mentioning multiple devices', () => {
+			expect(CLOUD_MODE_DESC_LINE2).toContain('multiple devices');
 		});
 	});
 
