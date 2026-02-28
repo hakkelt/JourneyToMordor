@@ -10,8 +10,6 @@ export const LOCAL_MODE_DESC_LINE2 =
 export const CLOUD_MODE_DESC_BROWSER =
 	'All data kept in cloud, except when the device goes offline. It allows synchronization between devices, and requires Sign-in.';
 export const CLOUD_MODE_DESC_INSTALLED =
-	'Data kept in cloud and on this device (tied to your account). Allows synchronization between devices, requires Sign-in.';
-export const CLOUD_MODE_DESC_INSTALLED_DETAILED =
-	'Data kept in cloud and on this device (tied to your account; discarded on sign-out). Allows synchronization between devices, requires Sign-in.';
+	'Data kept in cloud and also on this device (to allow offline use). Allows synchronization between devices, requires Sign-in.';
 export const CLOUD_MODE_DESC_LINE2 =
 	"Recommended for users who want to access their data across multiple devices and don't mind signing in.";

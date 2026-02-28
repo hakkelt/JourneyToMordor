@@ -23,7 +23,6 @@ import {
 	CLOUD_PENDING_USER_KEY,
 	CLOUD_MODE_DESC_BROWSER,
 	CLOUD_MODE_DESC_INSTALLED,
-	CLOUD_MODE_DESC_INSTALLED_DETAILED,
 	LOCAL_MODE_DESC_LINE1,
 	LOCAL_MODE_DESC_LINE2,
 	CLOUD_MODE_DESC_LINE2
@@ -600,14 +599,8 @@ describe('Storage', () => {
 			expect(CLOUD_MODE_DESC_BROWSER).toContain('offline');
 		});
 
-		it('should export CLOUD_MODE_DESC_INSTALLED mentioning account', () => {
-			expect(CLOUD_MODE_DESC_INSTALLED).toContain('tied to your account');
-			expect(CLOUD_MODE_DESC_INSTALLED).not.toContain('discarded on sign-out');
-		});
-
-		it('should export CLOUD_MODE_DESC_INSTALLED_DETAILED with sign-out note', () => {
-			expect(CLOUD_MODE_DESC_INSTALLED_DETAILED).toContain('tied to your account');
-			expect(CLOUD_MODE_DESC_INSTALLED_DETAILED).toContain('discarded on sign-out');
+		it('should export CLOUD_MODE_DESC_INSTALLED mentioning offline use', () => {
+			expect(CLOUD_MODE_DESC_INSTALLED).toContain('offline use');
 		});
 
 		it('should export CLOUD_MODE_DESC_LINE2 mentioning multiple devices', () => {

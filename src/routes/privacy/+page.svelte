@@ -70,13 +70,13 @@
 				<ul class="list-disc space-y-2 pl-5 text-ring-800 dark:text-ring-300">
 					<li>Your journey data is stored in Firebase Cloud Firestore</li>
 					<li>
-						Journey data is saved on your device for offline access, and automatically deleted when
-						you're back online
+						<strong>When used from the browser:</strong> journey data is temporarily cached on your device
+						for offline access only, and automatically removed once you're back online and synced
 					</li>
 					<li>
-						If the app is installed on your device, journey data is also persistently stored on this
-						device (associated with your user account, and discarded on sign-out or when a different
-						user signs in)
+						<strong>When installed as an app (PWA):</strong> journey data is persistently stored on this
+						device to allow offline use; this local copy is discarded when you sign out or a different
+						user signs in
 					</li>
 					<li>You can access your progress from any device by logging in</li>
 					<li>Your data automatically syncs between devices</li>

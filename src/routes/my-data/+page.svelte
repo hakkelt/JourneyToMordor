@@ -12,7 +12,7 @@
 		changeStorageMode,
 		isInstalledPWA,
 		CLOUD_MODE_DESC_BROWSER,
-		CLOUD_MODE_DESC_INSTALLED_DETAILED,
+		CLOUD_MODE_DESC_INSTALLED,
 		CLOUD_MODE_DESC_LINE2,
 		LOCAL_MODE_DESC_LINE1,
 		LOCAL_MODE_DESC_LINE2,
@@ -406,7 +406,7 @@
 					>
 						<p class="font-semibold text-ring-900 dark:text-ring-300">Cloud mode</p>
 						<p class="text-xs text-ring-800 dark:text-ring-300">
-							{isInstalled ? CLOUD_MODE_DESC_INSTALLED_DETAILED : CLOUD_MODE_DESC_BROWSER}
+							{isInstalled ? CLOUD_MODE_DESC_INSTALLED : CLOUD_MODE_DESC_BROWSER}
 						</p>
 						<p class="text-xs text-ring-800 dark:text-ring-300">
 							{CLOUD_MODE_DESC_LINE2}

@@ -1,8 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import {
 	CLOUD_MODE_DESC_BROWSER,
-	CLOUD_MODE_DESC_INSTALLED,
-	CLOUD_MODE_DESC_INSTALLED_DETAILED
+	CLOUD_MODE_DESC_INSTALLED
 } from '../src/lib/storage.descriptions';
 
 const STORAGE_KEY = 'mordor_tracker_v1';
@@ -79,9 +78,7 @@ test.describe('Installed PWA – UI descriptions', () => {
 		await page.getByRole('button', { name: 'Choose local mode' }).click();
 		await page.getByRole('link', { name: 'My Data' }).first().click();
 
-		await expect(
-			page.getByText(CLOUD_MODE_DESC_INSTALLED_DETAILED, { exact: false })
-		).toBeVisible();
+		await expect(page.getByText(CLOUD_MODE_DESC_INSTALLED, { exact: false })).toBeVisible();
 		await expect(page.getByText(CLOUD_MODE_DESC_BROWSER, { exact: false })).not.toBeVisible();
 	});
 
@@ -93,9 +90,7 @@ test.describe('Installed PWA – UI descriptions', () => {
 		await page.getByRole('link', { name: 'My Data' }).first().click();
 
 		await expect(page.getByText(CLOUD_MODE_DESC_BROWSER, { exact: false })).toBeVisible();
-		await expect(
-			page.getByText(CLOUD_MODE_DESC_INSTALLED_DETAILED, { exact: false })
-		).not.toBeVisible();
+		await expect(page.getByText(CLOUD_MODE_DESC_INSTALLED, { exact: false })).not.toBeVisible();
 	});
 
 	test('should not render install prompt heading in standalone mode', async ({ page }) => {
