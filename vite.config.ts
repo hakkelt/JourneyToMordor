@@ -23,8 +23,6 @@ export default defineConfig({
 				type: 'module'
 			},
 			injectRegister: 'inline',
-			// Include static icon assets that are not picked up by globPatterns
-			includeAssets: ['apple-touch-icon.png', 'favicon-32.png'],
 			workbox: {
 				// globPatterns covers JS/CSS/HTML/icon bundles produced by Vite.
 				// Image assets (webp, avif, png) are intentionally excluded here:
